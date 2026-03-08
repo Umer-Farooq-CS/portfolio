@@ -14,7 +14,7 @@ export default function Footer() {
             </div>
             <div>
               <p className="font-bold text-foreground text-sm">Umer Farooq</p>
-              <p className="text-xs text-muted-foreground">AI & HPC Infrastructure Engineer</p>
+              <p className="text-xs text-muted-foreground">HPC · Quantum · AI Infrastructure Engineer</p>
             </div>
           </div>
 

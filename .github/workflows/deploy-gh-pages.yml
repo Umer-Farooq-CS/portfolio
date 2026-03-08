@@ -32,6 +32,8 @@ jobs:
         run: npm ci
 
       - name: Build for GitHub Pages
+        env:
+          VITE_FORMSPREE_FORM_ID: ${{ secrets.VITE_FORMSPREE_FORM_ID }}
         run: npm run build:gh-pages
 
       - name: Upload artifact

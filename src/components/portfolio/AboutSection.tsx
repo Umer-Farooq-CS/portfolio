@@ -1,27 +1,28 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { Link } from "react-router-dom";
-import { Server, GitBranch, Brain, MapPin, Code2, Award, ArrowRight } from "lucide-react";
+import { Server, Atom, Brain, MapPin, Code2, Award, ArrowRight } from "lucide-react";
 import { CERTIFICATIONS } from "@/data/profile";
 
+// Order: 1 HPC, 2 Quantum, 3 AI
 const strengths = [
   {
-    icon: GitBranch,
-    title: "Parallel & Distributed Computing",
-    tags: ["MPI", "OpenMP", "Kubernetes"],
-    description: "Designing scalable, fault-tolerant distributed systems that harness multi-node parallelism.",
+    icon: Server,
+    title: "HPC & GPU Computing",
+    tags: ["CUDA", "MPI", "OpenMP", "Kubernetes"],
+    description: "Parallel and distributed systems, GPU-accelerated workloads, and performance optimization for compute-heavy infrastructure.",
   },
   {
-    icon: Server,
-    title: "GPU & Accelerated Computing",
-    tags: ["CUDA", "Tensor Cores", "Profiling"],
-    description: "Optimizing compute-heavy workloads on GPU architectures for maximum throughput and efficiency.",
+    icon: Atom,
+    title: "Quantum Simulation & Systems",
+    tags: ["Qiskit", "Cirq", "PennyLane", "OpenQASM"],
+    description: "Quantum circuit simulation, multi-framework tooling, and hybrid classical–quantum systems for research and education.",
   },
   {
     icon: Brain,
-    title: "Agentic AI & ML Frameworks",
-    tags: ["PyTorch", "RAG Pipelines", "FAISS"],
-    description: "Building multi-agent AI systems with robust validation and hallucination-free outputs.",
+    title: "Agentic AI & ML",
+    tags: ["PyTorch", "RAG", "FAISS", "LLM Agents"],
+    description: "Multi-agent AI pipelines, RAG systems, and validated outputs for reasoning and code generation.",
   },
 ];
 
@@ -74,20 +75,24 @@ export default function AboutSection() {
                     <MapPin size={13} />
                     <span>Islamabad, Pakistan</span>
                   </div>
-                  <div className="flex items-center gap-2 mt-2">
+                  <div className="flex items-center gap-2 mt-2 flex-wrap">
                     <span className="px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-semibold border border-primary/20">
-                      HPC Engineer
+                      HPC
+                    </span>
+                    <span className="px-2.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 text-xs font-semibold border border-cyan-500/20">
+                      Quantum
                     </span>
                     <span className="px-2.5 py-0.5 rounded-full bg-violet-500/10 text-violet-400 text-xs font-semibold border border-violet-500/20">
-                      AI Researcher
+                      AI
                     </span>
                   </div>
                 </div>
               </div>
               <p className="text-muted-foreground leading-relaxed text-sm">
-                I am an HPC enthusiast and Software Engineer based in Islamabad, Pakistan. I specialize in{" "}
-                <span className="text-foreground font-medium">GPU acceleration</span>, parallel and distributed computing, and{" "}
-                <span className="text-foreground font-medium">multi-agent AI architectures</span>. My passion lies in solving compute-intensive problems through innovative infrastructure design.
+                I am a systems-focused engineer based in Islamabad, Pakistan. My focus is{" "}
+                <span className="text-foreground font-medium">high-performance and GPU computing</span> first,{" "}
+                <span className="text-foreground font-medium">quantum simulation and circuit systems</span> second, and{" "}
+                <span className="text-foreground font-medium">AI-augmented workflows</span> third—building scalable, accelerated infrastructure.
               </p>
 
               {/* Compact certifications preview */}

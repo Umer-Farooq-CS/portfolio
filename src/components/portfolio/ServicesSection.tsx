@@ -1,8 +1,9 @@
 import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, useInView } from "framer-motion";
-import { Gauge, BrainCircuit, Cloud, CheckCircle2, TrendingUp, ArrowRight } from "lucide-react";
+import { Gauge, Atom, BrainCircuit, CheckCircle2, TrendingUp, ArrowRight } from "lucide-react";
 
+// Order: 1 HPC, 2 Quantum, 3 AI
 const services = [
   {
     icon: Gauge,
@@ -20,12 +21,27 @@ const services = [
     tags: ["CUDA", "OpenMP", "MPI", "GPU Profiling"],
   },
   {
+    icon: Atom,
+    accent: "cyan",
+    title: "Quantum Simulation & Platforms",
+    subtitle: "Quantum Computing",
+    description:
+      "Quantum circuit simulation, multi-framework tooling (Qiskit, Cirq, PennyLane), and web-based platforms for research and education.",
+    benefits: [
+      "Unified quantum frameworks and OpenQASM",
+      "Real-time simulation and visualization",
+      "Scalable multi-node quantum simulation",
+      "Vendor-neutral, extensible platforms",
+    ],
+    tags: ["Qiskit", "Cirq", "PennyLane", "OpenQASM"],
+  },
+  {
     icon: BrainCircuit,
     accent: "violet",
     title: "Agentic AI & RAG Systems",
     subtitle: "AI Pipeline Development",
     description:
-      "Designing robust, multi-agent AI pipelines and tool-augmented workflows that automate complex reasoning with validated, reliable outputs.",
+      "Multi-agent AI pipelines and RAG workflows that automate complex reasoning with validated, reliable outputs.",
     benefits: [
       "Automates complex enterprise reasoning tasks",
       "92%+ validated AI output success rate",
@@ -33,21 +49,6 @@ const services = [
       "Scalable multi-agent orchestration",
     ],
     tags: ["PyTorch", "FAISS", "RAG", "LLM Agents"],
-  },
-  {
-    icon: Cloud,
-    accent: "cyan",
-    title: "Cloud-Native Infrastructure",
-    subtitle: "Job Orchestration & DevOps",
-    description:
-      "Building scalable backend platforms using Kubernetes, Docker, and customized job managers for fault-tolerant, predictable deployments.",
-    benefits: [
-      "Eliminates vendor lock-in completely",
-      "Fault-tolerant resource allocation",
-      "Priority scheduling for large-scale tasks",
-      "Cost-predictable cloud deployments",
-    ],
-    tags: ["Kubernetes", "Docker", "Job Scheduler", "OpenQASM"],
   },
 ];
 
@@ -89,7 +90,7 @@ export default function ServicesSection() {
             How I Help Your <span className="text-gradient">Business</span>
           </h2>
           <p className="mt-4 text-muted-foreground max-w-xl mx-auto text-base">
-            Specialized technical services designed to accelerate your infrastructure and AI capabilities.
+            HPC and GPU first, quantum simulation and platforms second, AI and RAG third—focused on your infrastructure.
           </p>
         </motion.div>
 

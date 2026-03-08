@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowRight, ChevronDown, Cpu, Zap, Network } from "lucide-react";
+import { ArrowRight, ChevronDown, Cpu, Atom, Network } from "lucide-react";
 import heroBg from "@/assets/hero-bg.jpg";
 
 const floatingBadges = [
-  { icon: Cpu, label: "CUDA / GPU", delay: 0 },
-  { icon: Zap, label: "HPC Systems", delay: 0.3 },
-  { icon: Network, label: "Multi-Agent AI", delay: 0.6 },
+  { icon: Cpu, label: "HPC / GPU", delay: 0 },
+  { icon: Atom, label: "Quantum Simulation", delay: 0.3 },
+  { icon: Network, label: "AI & RAG", delay: 0.6 },
 ];
 
 export default function HeroSection() {
@@ -52,7 +52,7 @@ export default function HeroSection() {
             className="text-4xl sm:text-5xl lg:text-7xl font-black tracking-tight leading-tight mb-6"
           >
             Aspiring{" "}
-            <span className="text-gradient">AI & HPC</span>
+            <span className="text-gradient">HPC & Quantum</span>
             <br />
             Infrastructure Engineer
           </motion.h1>
@@ -64,7 +64,7 @@ export default function HeroSection() {
             transition={{ duration: 0.7, delay: 0.25 }}
             className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed"
           >
-            Bridging theoretical computational models with practical, high-performance software engineering to build{" "}
+            High-performance and GPU computing first, quantum simulation and circuit systems second, and AI-augmented workflows third—building{" "}
             <span className="text-foreground font-medium">scalable, accelerated infrastructure</span>.
           </motion.p>
 

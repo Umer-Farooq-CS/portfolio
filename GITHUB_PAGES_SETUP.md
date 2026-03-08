@@ -111,6 +111,24 @@ Each push to `main` triggers a new build and deploy. The live site updates after
 
 ---
 
+## 8. (Optional) Contact form – Formspree
+
+The contact form uses [Formspree](https://formspree.io) so submissions are emailed to you. To enable it:
+
+1. Sign up at **https://formspree.io** and create a new form.
+2. Copy your **form ID** from the form’s endpoint (e.g. `https://formspree.io/f/abc123xy` → ID is `abc123xy`).
+3. **Local:** Create a `.env` in the project root (copy from `.env.example`) and set:
+   ```bash
+   VITE_FORMSPREE_FORM_ID=abc123xy
+   ```
+4. **GitHub Pages:** In the repo go to **Settings → Secrets and variables → Actions**, add a secret:
+   - **Name:** `VITE_FORMSPREE_FORM_ID`
+   - **Value:** your form ID (e.g. `abc123xy`)
+   The deploy workflow already passes this into the build; the next deploy will use it.
+5. If the secret is not set, the form shows a friendly error asking visitors to email you directly.
+
+---
+
 ## Troubleshooting
 
 | Issue | What to do |

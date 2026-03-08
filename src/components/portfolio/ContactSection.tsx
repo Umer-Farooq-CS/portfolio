@@ -1,22 +1,54 @@
 import { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion, useInView } from "framer-motion";
-import { Mail, Phone, Linkedin, Send, MapPin, CheckCircle2 } from "lucide-react";
+import { Mail, Phone, Linkedin, Send, MapPin, AlertCircle } from "lucide-react";
+
+const FORMSPREE_FORM_ID = import.meta.env.VITE_FORMSPREE_FORM_ID ?? "";
 
 export default function ContactSection() {
   const ref = useRef(null);
+  const navigate = useNavigate();
   const inView = useInView(ref, { once: true, margin: "-60px" });
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    if (status === "error") setStatus("idle");
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 4000);
-    setForm({ name: "", email: "", subject: "", message: "" });
+    if (!FORMSPREE_FORM_ID) {
+      setStatus("error");
+      setErrorMessage("Contact form is not configured. Please email me directly using the link below.");
+      return;
+    }
+    setStatus("sending");
+    setErrorMessage("");
+    try {
+      const res = await fetch(`https://formspree.io/f/${FORMSPREE_FORM_ID}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          subject: form.subject,
+          message: form.message,
+          _replyto: form.email,
+        }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error ?? `Submission failed (${res.status})`);
+      }
+      setForm({ name: "", email: "", subject: "", message: "" });
+      navigate("/thanks");
+    } catch (err) {
+      setStatus("error");
+      setErrorMessage(err instanceof Error ? err.message : "Something went wrong. Please try again or email me directly.");
+    }
   };
 
   const contactDetails = [
@@ -184,15 +216,20 @@ export default function ContactSection() {
                 />
               </div>
 
+              {status === "error" && errorMessage && (
+                <div className="mb-4 flex items-start gap-2 p-3 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-sm">
+                  <AlertCircle size={18} className="flex-shrink-0 mt-0.5" />
+                  <span>{errorMessage}</span>
+                </div>
+              )}
+
               <button
                 type="submit"
-                className="w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-accent text-primary-foreground font-semibold text-sm shadow-elevated hover:shadow-glow transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                disabled={status === "sending"}
+                className="w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-accent text-primary-foreground font-semibold text-sm shadow-elevated hover:shadow-glow transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:pointer-events-none disabled:hover:scale-100"
               >
-                {submitted ? (
-                  <>
-                    <CheckCircle2 size={16} />
-                    Message Sent!
-                  </>
+                {status === "sending" ? (
+                  <>Sending…</>
                 ) : (
                   <>
                     <Send size={16} />

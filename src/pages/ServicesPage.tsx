@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
-import { Gauge, BrainCircuit, Cloud, CheckCircle2, ArrowRight } from "lucide-react";
+import { Gauge, Atom, BrainCircuit, CheckCircle2, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
+// Order: 1 HPC, 2 Quantum, 3 AI
 const detailedServices = [
   {
     icon: Gauge,
@@ -23,6 +24,25 @@ const detailedServices = [
     keywords: ["CUDA", "Tensor Cores", "OpenMP", "MPI", "Nsight profiling"],
   },
   {
+    icon: Atom,
+    accent: "cyan",
+    title: "Quantum Simulation & Platforms",
+    subtitle: "Quantum Computing",
+    summary:
+      "Quantum circuit simulation, multi-framework tooling, and web-based platforms for research and education—Qiskit, Cirq, PennyLane, OpenQASM.",
+    scenarios: [
+      "You need a unified platform to run or compare circuits across multiple quantum frameworks.",
+      "You want to bring quantum simulation to the browser or to non-expert users.",
+      "You are building hybrid classical–quantum pipelines or teaching materials.",
+    ],
+    outcomes: [
+      "Multi-framework support and circuit conversion (e.g. Cirq ↔ Qiskit ↔ PennyLane).",
+      "Real-time simulation and visualization for circuits and states.",
+      "Scalable, vendor-neutral tooling with extensible backends.",
+    ],
+    keywords: ["Qiskit", "Cirq", "PennyLane", "OpenQASM", "Quantum simulation"],
+  },
+  {
     icon: BrainCircuit,
     accent: "violet",
     title: "Agentic AI & RAG Systems",
@@ -39,26 +59,7 @@ const detailedServices = [
       "Document indexing and retrieval pipelines with embeddings and vector search.",
       "Evaluation harnesses using ranking/IR metrics (NDCG, MAP) and quality dashboards.",
     ],
-    keywords: ["RAG", "Multi-agent", "PyTorch", "FAISS", "Cirq", "LLMs"],
-  },
-  {
-    icon: Cloud,
-    accent: "cyan",
-    title: "Cloud-Native Infrastructure",
-    subtitle: "Job Orchestration & DevOps",
-    summary:
-      "Building and hardening the backend layer that runs HPC and AI workloads reliably across clusters and clouds.",
-    scenarios: [
-      "You want a job manager that can queue, schedule, and monitor heavy workloads.",
-      "You need a vendor-neutral abstraction instead of tying everything to a single cloud provider.",
-      "You are preparing research or production systems for multi-user, multi-tenant usage.",
-    ],
-    outcomes: [
-      "Kubernetes-native job orchestration patterns and custom controllers where needed.",
-      "Priority queues, fair-share scheduling, and resource limits for predictable operations.",
-      "CI/CD pipelines and observability hooks so systems are repeatable and debuggable.",
-    ],
-    keywords: ["Kubernetes", "Docker", "Job schedulers", "Observability", "GitHub Actions"],
+    keywords: ["RAG", "Multi-agent", "PyTorch", "FAISS", "LLMs"],
   },
 ];
 
@@ -92,8 +93,8 @@ export default function ServicesPage() {
             How I Help <span className="text-gradient">Teams Ship Faster</span>
           </h1>
           <p className="mt-4 text-muted-foreground max-w-2xl mx-auto text-sm sm:text-base">
-            I partner with research groups, startups, and engineering teams to turn demanding
-            high-performance and AI ideas into well-architected, measurable systems.
+            HPC and GPU first, quantum simulation and platforms second, AI and RAG third—turning demanding
+            infrastructure and research ideas into well-architected, measurable systems.
           </p>
         </motion.div>
 

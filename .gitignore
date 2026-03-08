@@ -10,6 +10,11 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+
+# Local env (secrets – use .env.example as template)
+.env
+.env.local
+.env.*.local
 *.local
 
 # Editor directories and files
