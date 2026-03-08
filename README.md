@@ -15,8 +15,8 @@ A personal portfolio website built with React, TypeScript, Vite, and Tailwind CS
 Requirements: Node.js and npm.
 
 ```bash
-git clone <YOUR_REPO_URL>
-cd portfolio-website
+git clone https://github.com/Umer-Farooq-CS/portfolio.git
+cd portfolio
 npm install
 npm run dev
 ```
