@@ -13,12 +13,21 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
+// GitHub Pages serves the app at /repo-name/ so the router needs that basename
+function getBasename(): string {
+  if (typeof window === "undefined") return "";
+  const path = window.location.pathname;
+  if (path === "/" || path === "") return "";
+  const segments = path.split("/").filter(Boolean);
+  return segments.length > 0 ? `/${segments[0]}` : "";
+}
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
+      <BrowserRouter basename={getBasename()}>
         <Routes>
           <Route element={<Layout />}>
             <Route path="/" element={<Index />} />
