@@ -25,11 +25,12 @@ const strengths = [
   },
 ];
 
+// Stats from CV: Fiverr (100+ projects, 98% satisfaction), Cirq-RAG (92% success), Huawei ICT award
 const stats = [
-  { value: "92%", label: "RAG Success Rate" },
-  { value: "3rd", label: "Huawei ICT Finals" },
-  { value: "2+", label: "HPC Projects" },
-  { value: "∞", label: "Curiosity" },
+  { value: "100+", label: "Projects Delivered" },
+  { value: "98%", label: "Client Satisfaction" },
+  { value: "92%", label: "RAG Circuit Success" },
+  { value: "3rd", label: "Huawei ICT National Finals" },
 ];
 
 export default function AboutSection() {
