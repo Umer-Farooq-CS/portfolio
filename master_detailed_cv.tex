@@ -1,0 +1,1142 @@
+%-----------------------------------------------------------------------------------------------------------------------------------------------%
+%	MASTER DETAILED CV - UMER FAROOQ
+%	This document contains comprehensive details of all projects, experiences, and skills
+%	Use this as a source to create targeted resumes for specific opportunities
+%-----------------------------------------------------------------------------------------------------------------------------------------------%
+
+\documentclass[a4paper,12pt]{article}
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES
+%----------------------------------------------------------------------------------------
+\usepackage{url}
+\usepackage{parskip}
+\RequirePackage{color}
+\RequirePackage{graphicx}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage[scale=0.85]{geometry}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+\usepackage{supertabular}
+\newlength{\fullcollw}
+\setlength{\fullcollw}{0.47\textwidth}
+\usepackage{titlesec}
+\usepackage{multicol}
+\usepackage{multirow}
+\titleformat{\section}{\Large\scshape\raggedright}{}{0em}{}[\titlerule]
+\titlespacing{\section}{0pt}{10pt}{10pt}
+\usepackage[unicode, draft=false]{hyperref}
+\definecolor{linkcolour}{rgb}{0,0.2,0.6}
+\hypersetup{colorlinks,breaklinks,urlcolor=linkcolour,linkcolor=linkcolour}
+\usepackage{fontawesome5}
+
+% Custom environments for detailed project descriptions
+\newenvironment{projectdetailed}[3]
+    {
+    \begin{tabularx}{\linewidth}{@{}l X r@{}}
+    \textbf{#1} & \hfill & #2 \\
+    \textit{#3} & & \\[3.75pt]
+    \end{tabularx}
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=2pt,label=--]
+    }
+    {
+    \end{itemize}
+    \end{minipage}
+    \vspace{6pt}
+    }
+
+\newenvironment{jobdetailed}[3]
+    {
+    \begin{tabularx}{\linewidth}{@{}l X r@{}}
+    \textbf{#1} & \hfill & #2 \\
+    \textit{#3} & & \\[3.75pt]
+    \end{tabularx}
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=2pt,label=--]
+    }
+    {
+    \end{itemize}
+    \end{minipage}
+    \vspace{6pt}
+    }
+
+%----------------------------------------------------------------------------------------
+%	BEGIN DOCUMENT
+%----------------------------------------------------------------------------------------
+\begin{document}
+\pagestyle{empty}
+
+%----------------------------------------------------------------------------------------
+%	TITLE
+%----------------------------------------------------------------------------------------
+\begin{tabularx}{\linewidth}{@{} C @{}}
+\Huge{Umer Farooq} \\[7.5pt]
+\large{Master Detailed CV - Complete Professional Portfolio} \\[7.5pt]
+\href{https://github.com/Umer-Farooq-CS}{\raisebox{-0.05\height}\faGithub\ Umer-Farooq-CS} \ $|$ \ 
+\href{https://linkedin.com/in/umer-farooq-a0838a2a1}{\raisebox{-0.05\height}\faLinkedin\ umer-farooq-a0838a2a1} \
+\\\href{mailto:umerfarooqcs0891@gmail.com}{\raisebox{-0.05\height}\faEnvelope \ umerfarooqcs0891@gmail.com} \ $|$ \ 
+\href{tel:+923365522666}{\raisebox{-0.05\height}\faMobile \ +92 336 5522666} \\
+\textit{Location: Islamabad, Pakistan}
+\end{tabularx}
+
+%----------------------------------------------------------------------------------------
+%	PROFESSIONAL SUMMARY
+%----------------------------------------------------------------------------------------
+\section{Professional Summary}
+A systems-focused computer scientist with deep expertise in high-performance computing, parallel and distributed systems, and full-stack development. I build efficient, scalable systems—from low-level GPU-accelerated algorithms and compiler design to interactive full-stack applications and distributed systems. My work spans quantum simulation, high-performance neural networks, retrieval-augmented generation (RAG) systems, custom language implementation, distributed hash tables, and real-time networked systems.
+
+\subsection*{Core Competencies}
+\begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=2pt]
+\item High-Performance Computing: GPU acceleration, parallel algorithms, performance optimization
+\item Distributed Systems: DHT implementation, networking protocols, distributed file systems
+\item Machine Learning: Deep learning models, GPU-optimized training, generative AI
+\item LLM Systems \& Information Retrieval: RAG pipelines, semantic search, evaluation metrics (NDCG/MAP), prompt engineering
+\item Quantum Computing: Quantum circuit simulation, hybrid classical-quantum algorithms
+\item Compiler Design: Language implementation, parsing, code generation
+\item Full-Stack Development: MERN stack, .NET, real-time systems
+\item System Architecture: Scalable design, performance profiling, memory optimization
+\end{itemize}
+
+%----------------------------------------------------------------------------------------
+%	EDUCATION
+%----------------------------------------------------------------------------------------
+\section{Education}
+\begin{tabularx}{\linewidth}{@{}l X@{}}
+\textbf{Bachelor of Computer Science} & \textbf{Aug 2022 - Jun 2026 (Expected)} \\
+\multicolumn{2}{@{}X@{}}{National University of Computer and Emerging Sciences (NUCES/FAST), Islamabad Campus} \\
+\multicolumn{2}{@{}X@{}}{\textit{Dean's List Award - Spring 2023}} \\
+\multicolumn{2}{@{}X@{}}{Relevant Coursework: High-Performance Computing, Parallel \& Distributed Computing, Compiler Construction, Operating Systems, Advanced Programming, Data Structures \& Algorithms, Database Systems, Computer Networks, Artificial Intelligence, Machine Learning} \\
+\end{tabularx}
+
+%----------------------------------------------------------------------------------------
+%	CERTIFICATIONS
+%----------------------------------------------------------------------------------------
+\section{Professional Certifications}
+\begin{tabularx}{\linewidth}{@{}l X@{}}
+\textbf{2025} & Oracle Cloud Infrastructure Certified Generative AI Professional \hfill \href{https://catalog-education.oracle.com/pls/certview/sharebadge?id=BBA28841241A387615C60D761D610210FCC9BC8028300E10D96E95890EEB68B7}{Credential} \\
+\textbf{2025} & Oracle Cloud Infrastructure Certified AI Foundations Associate \hfill \href{https://catalog-education.oracle.com/pls/certview/sharebadge?id=BBA28841241A387615C60D761D610210FCC9BC8028300E10D96E95890EEB68B7}{Credential} \\
+\end{tabularx}
+
+%----------------------------------------------------------------------------------------
+%	WORK EXPERIENCE
+%----------------------------------------------------------------------------------------
+\section{Work Experience}
+
+\begin{jobdetailed}{Software Engineer - Open Quantum Workbench}{September 2025 - Present}{FAST-NUCES, Islamabad Campus}
+\item Contributing to the Open Quantum Workbench initiative, a key research and development project focused on creating an accessible, web-based platform for quantum simulation and advanced numerical computing
+\item Bridging theoretical quantum mechanics with practical, user-friendly software engineering to create powerful tools for the research community
+\item Developing full-stack solutions for quantum simulation with focus on accessibility and performance
+\item Working on integration of quantum circuit simulators with web-based interfaces for educational and research purposes
+\item Collaborating with academic researchers to understand requirements and translate theoretical concepts into practical software implementations
+\item Technologies: Python, JavaScript, React, Quantum Computing Libraries (Qiskit, PennyLane), Web Technologies
+\end{jobdetailed}
+
+\begin{jobdetailed}{Freelance Developer (Fiverr - Level 2 Seller)}{August 2023 - August 2024}{Remote}
+\item Delivered 30+ full-stack web applications using MERN stack (MongoDB, Express, React, Node.js) and .NET framework, serving over 500 end users across diverse clients globally
+\item Architected and developed high-performance 2D games in C++/SFML/SDL2 including custom physics engines, collision detection systems, and optimized rendering pipelines achieving 30\%+ performance improvements
+\item Built enterprise desktop applications in C\#/Java with SQL backends (PostgreSQL, MySQL) following MVC architecture patterns, serving 100+ concurrent users with robust data management
+\item Developed complete game suite including Snake, Tetris, and RPG prototypes with OOP design patterns and modular architecture for maintainability and extensibility
+\item Created DJ Web Application with real-time music streaming interface featuring React frontend with Vite, Express backend, and REST API integration with MongoDB for playlist management
+\item Built Student Management System and Torrent Management System using JavaFX with CRUD operations, user authentication, and client-server networking using TCP sockets
+\item Achieved Level 2 Seller status on Fiverr (top tier), completing 100+ projects with 98\% client satisfaction rate and 80\% repeat customer rate demonstrating consistent quality and reliability
+\item Collaborated directly with international clients to gather requirements, design solutions, and deliver projects consistently 20\% ahead of schedule through efficient project management
+\item Followed Agile methodologies with Git/GitHub for version control, code reviews, and collaborative development
+\item Maintained detailed documentation for all projects ensuring easy handoff and future maintainability
+\item Technologies: React, Node.js, Express, MongoDB, PostgreSQL, MySQL, C++, C\#, Java, JavaFX, .NET, SFML, SDL2, Git, REST APIs, Socket Programming, MVC Architecture
+\end{jobdetailed}
+
+\begin{jobdetailed}{Core Team Member - PR and Marketing}{February 2025 - May 2025}{NaSCon (National Software Conference)}
+\item Served as Core Team Member for NaSCon-25 PR and Marketing division, one of Pakistan's largest student-run technology conferences
+\item Managed community partners representing 15+ universities across Pakistan, coordinating communication and collaboration among partner organizations
+\item Organized and facilitated regular inter-university meetings to ensure stakeholder engagement and gather feedback from partner institutions
+\item Developed and implemented promotional strategies to highlight contributions of each participating university and enhance conference visibility
+\item Leveraged social media platforms (LinkedIn, Instagram, Facebook) to enhance outreach efforts, increasing engagement by coordinating content across multiple channels
+\item Contributed to creation of marketing materials including digital brochures, social media content, and online promotional content to effectively showcase event objectives
+\item Coordinated confirmation of invitations and managed RSVP tracking for speakers, sponsors, and attendees
+\item Fostered collaborations and built relationships with partner universities, industry sponsors, and technology communities
+\item Gained valuable experience in public relations, outreach strategies, event management, and cross-organizational communication
+\end{jobdetailed}
+
+\begin{jobdetailed}{Officer - Communications and Outreach}{February 2025 - May 2025}{NaSCon (National Software Conference)}
+\item Facilitated and managed communication between FAST-NUCES Islamabad and several other universities for NaSCon-25 coordination
+\item Played key role in promoting conference events and initiatives across multiple institutions, ensuring clear and effective messaging
+\item Coordinated confirmation of invitations received from partner universities, industry leaders, and potential speakers
+\item Fostered collaborations and built relationships with partner universities to maximize conference participation and impact
+\item Enhanced organizational and communication skills through cross-institutional coordination and stakeholder management
+\end{jobdetailed}
+
+%----------------------------------------------------------------------------------------
+%	TECHNICAL PROJECTS - HIGH-PERFORMANCE COMPUTING
+%----------------------------------------------------------------------------------------
+\section{Technical Projects - High-Performance Computing \& GPU Acceleration}
+
+\begin{projectdetailed}{Parallel Tensor Network Quantum Simulator (Q-Tensor)}{Academic/Research Project}{\href{https://github.com/Umer-Farooq-CS/Q-Tensor}{GitHub: Umer-Farooq-CS/Q-Tensor}}
+\item Enhanced quantum circuit simulator using hybrid MPI/OpenMP parallelization and GPU acceleration via CUDA for large-scale quantum simulations
+\item Integrated METIS graph partitioning library for improved load balancing across distributed compute nodes, reducing inter-process communication overhead by optimizing tensor network partitioning
+\item Achieved scalable performance for simulating large-scale quantum circuits with more than 20 qubits, enabling research-grade quantum algorithm testing
+\item Implemented hybrid parallelization strategy combining distributed memory (MPI) for inter-node communication and shared memory (OpenMP) for intra-node parallelism
+\item Utilized CUDA for GPU acceleration of tensor contractions, the most computationally intensive operation in quantum simulation
+\item Optimized memory access patterns and data structures for efficient handling of sparse tensor networks
+\item Conducted extensive performance profiling and benchmarking to identify bottlenecks and optimize critical code paths
+\item Enabled researchers to simulate quantum algorithms that were previously computationally infeasible on single-node systems
+\item Technologies: C++, CUDA, OpenMP, MPI, METIS, CMake, Quantum Computing Concepts
+\item Key Achievements: Scalable multi-node execution, Efficient load balancing, GPU-accelerated tensor operations
+\end{projectdetailed}
+
+\begin{projectdetailed}{QCanvas: Unified Quantum Simulator}{Mar 2025 - Present}{Open Quantum Workbench (FAST-NUCES)}
+\item Web-based quantum computing platform that unifies different quantum frameworks and provides an accessible interface for simulation, conversion, and visualization
+\item Multi-Framework Support: Convert circuits bi-directionally between Cirq, Qiskit, and PennyLane
+\item Real-Time Simulation: Execute quantum circuits with multiple backend options (local simulators, extensible plugins)
+\item Interactive Visualization: Visualize quantum circuits, states, operations, and measurement results in-browser
+\item Hybrid Architecture: Next.js for UI/routing and FastAPI for compute-heavy quantum operations
+\item Shared TypeScript Types: End-to-end type safety across frontend and backend services
+\item OpenQASM 3.0 Integration: Standardized intermediate representation enabling portable circuit exchange
+\item Extensible Plugins: Plugin-based system to add support for additional quantum frameworks and backends
+\item Responsibilities: Full-stack development, framework conversion logic, visualization workflows, API design
+\item Technologies: Next.js, TypeScript, FastAPI (Python), Qiskit, Cirq, PennyLane, OpenQASM, REST/Web APIs
+\end{projectdetailed}
+
+\begin{projectdetailed}{Retrieval-Augmented Generation for Cirq Quantum Code Generation (Multi-Agent System)}{Research Paper / Systems Project}{Tool-Augmented RAG + Multi-Agent Pipeline}
+\item Built a Cirq-focused RAG system that generates executable quantum circuits from natural-language prompts and provides tiered educational explanations
+\item Designed a multi-agent pipeline with specialized roles (Designer, Validator with self-correction loop, Optimizer-Validator loop, Educational agent) orchestrated via configuration
+\item Implemented validation-driven self-repair: on compiler/simulation failures, the system iteratively patches code and re-validates (bounded retries)
+\item Added circuit optimization passes to reduce depth, total gates, and two-qubit gates; validated every optimization step for correctness
+\item Constructed a curated Cirq knowledge base (140+ entries) and used embedding-based retrieval with vector indexing for fast semantic lookup
+\item Reported strong benchmark performance (92\% success vs 52\% single-agent baseline) with measured latency/quality trade-offs
+\item Technologies: Python, Cirq, RAG (embeddings + FAISS-style indexing), multi-agent orchestration, automated validation, prompt engineering
+\end{projectdetailed}
+
+\begin{projectdetailed}{MNIST Classification with GPU Acceleration}{Deep Learning Optimization Project}{\href{https://github.com/Umer-Farooq-CS/MNIST-Classification}{GitHub: Umer-Farooq-CS/MNIST-Classification}}
+\item Developed and optimized neural network for MNIST digit classification across five progressive versions (V1-V5) from serial CPU implementation to highly parallel GPU execution
+\item Achieved 6× faster inference performance using NVIDIA Tensor Cores with FP16 mixed-precision training compared to baseline CPU implementation
+\item Implemented comprehensive CUDA optimizations including:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Shared memory utilization for reducing global memory access latency
+    \item Kernel fusion to minimize kernel launch overhead and improve data locality
+    \item CUDA streams for concurrent kernel execution and overlapping computation with data transfers
+    \item Tensor Core acceleration for matrix multiplication operations
+    \item Memory coalescing patterns for optimal memory bandwidth utilization
+\end{itemize}
+\item Profiled and analyzed performance using NVIDIA Nsight Systems and Nsight Compute to eliminate bottlenecks, identifying memory-bound vs compute-bound regions
+\item Implemented batch processing with optimal batch sizes to maximize GPU utilization while managing memory constraints
+\item Utilized FP16 precision for 2× speedup in computation while maintaining model accuracy through mixed-precision training techniques
+\item Achieved 95\%+ GPU utilization during training and inference phases through optimal workload distribution
+\item Conducted systematic performance analysis comparing CPU baseline, naive GPU, optimized GPU, and Tensor Core implementations
+\item Technologies: CUDA, Python, PyTorch, NVIDIA Nsight Systems, Nsight Compute, Tensor Cores, FP16 Mixed Precision
+\item Performance Metrics: 6× speedup, 95\%+ GPU utilization, Maintained 99\%+ accuracy
+\end{projectdetailed}
+
+\begin{projectdetailed}{GPU-Accelerated Canny Edge Detection}{Image Processing Optimization}{\href{https://github.com/Umer-Farooq-CS/Canny-Edge-Detector}{GitHub: Umer-Farooq-CS/Canny-Edge-Detector}}
+\item Implemented complete Canny edge detection algorithm in CUDA with focus on optimizing memory access patterns for high-resolution image processing
+\item Achieved 3.5× speedup over sequential CPU implementation through parallel processing of image pixels and optimized memory access
+\item Implemented multi-stage CUDA kernels for:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Gaussian blur filtering using shared memory for convolution operations
+    \item Sobel operator for gradient computation with coalesced memory access
+    \item Non-maximum suppression with efficient neighbor access patterns
+    \item Hysteresis thresholding with double-buffering technique
+\end{itemize}
+\item Optimized memory access patterns using:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Shared memory tiling for reducing global memory transactions
+    \item Texture memory for 2D spatial locality in image access
+    \item Memory coalescing for aligned access patterns
+    \item Padding strategies to avoid bank conflicts
+\end{itemize}
+\item Handled edge cases and image boundaries efficiently in parallel processing context
+\item Conducted performance profiling to identify and optimize memory bandwidth bottlenecks
+\item Implemented variable block and grid dimensions for different image sizes and GPU architectures
+\item Technologies: C++, CUDA, OpenCV (for I/O and validation), Image Processing Algorithms
+\item Key Results: 3.5× speedup, Real-time processing capability, Maintained edge detection quality
+\end{projectdetailed}
+
+\begin{projectdetailed}{Optimized RNN Character-Level Text Generation}{Deep Learning Optimization}{Shakespeare Text Generation — \href{https://github.com/Umer-Farooq-CS/RNN-Character-Level-Text-Generation}{GitHub}}
+\item Implemented high-performance LSTM-based character-level text generator trained on Shakespeare's complete works using PyTorch with advanced GPU optimizations
+\item Achieved 55.2\% accuracy with 3.5× faster training through Automatic Mixed Precision (AMP) training compared to baseline implementation
+\item Developed 5.8M parameter model (20× larger than baseline) with 3 LSTM layers, 512 hidden units each, and 256-dimensional embedding layer
+\item Implemented Mixed Precision Training (AMP) using PyTorch's autocast and GradScaler:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Utilized FP16 precision for forward and backward passes achieving 2× speed boost
+    \item Maintained FP32 precision for critical operations ensuring numerical stability
+    \item Implemented automatic loss scaling to prevent gradient underflow
+\end{itemize}
+\item Optimized training with large batch sizes (512 samples per batch vs 64 in baseline) for better GPU utilization and more stable gradients
+\item Implemented GPU memory optimization strategies:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Moved all data to GPU at initialization to eliminate CPU-GPU transfer overhead during training
+    \item Efficient gradient accumulation for handling large effective batch sizes
+    \item Memory-efficient data loading with proper batching strategies
+\end{itemize}
+\item Achieved training speed of 6.4 samples/second with optimal GPU memory usage (1.9GB on RTX 4070)
+\item Implemented temperature-based sampling for controllable text generation diversity
+\item Generated high-quality Shakespeare-like text with proper character names, dramatic dialogue structure, and coherent sentence flow
+\item Technologies: Python, PyTorch, CUDA, Mixed Precision Training, LSTM Networks, NLP
+\item Performance Metrics: 3.5× faster training, 55.2\% accuracy, 5.8M parameters, 6.4 samples/sec throughput
+\end{projectdetailed}
+
+\begin{projectdetailed}{Parallel Graph \& Text Analysis}{Multi-threading Optimization}{pthreads Implementation}
+\item Developed multithreaded solutions for computationally intensive graph analysis and large-text word frequency analysis using POSIX threads (pthreads)
+\item Implemented parallel graph analysis algorithms for:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Node counting and traversal in large-scale graphs
+    \item Edge counting and connectivity analysis
+    \item Graph property computation with work distribution across threads
+\end{itemize}
+\item Developed parallel word frequency analysis for large text corpora:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Chunk-based text processing with balanced workload distribution
+    \item Thread-safe hash map implementation for frequency counting
+    \item Lock-free data structures where possible for reduced contention
+\end{itemize}
+\item Achieved near-linear speedup through:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Thread affinity settings to bind threads to specific CPU cores
+    \item Cache-aware chunk-based processing to maximize data locality
+    \item Minimized synchronization overhead using fine-grained locking strategies
+\end{itemize}
+\item Utilized perf (Linux profiling tool) for:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Hotspot analysis to identify performance bottlenecks
+    \item Cache miss analysis to optimize data access patterns
+    \item CPU cycle analysis for instruction-level optimization
+\end{itemize}
+\item Implemented dynamic load balancing to handle irregular workloads efficiently
+\item Optimized memory allocation patterns to reduce false sharing between threads
+\item Technologies: C++, pthreads, perf (Linux profiler), Graph Algorithms, Multi-threading
+\item Key Achievements: Near-linear speedup, Optimized cache utilization, Efficient load balancing
+\end{projectdetailed}
+
+%----------------------------------------------------------------------------------------
+%	TECHNICAL PROJECTS - GENERATIVE AI & DEEP LEARNING
+%----------------------------------------------------------------------------------------
+\section{Technical Projects - Generative AI \& Deep Learning}
+
+\begin{projectdetailed}{PixelRNN Implementation}{Generative AI Research Project}{CIFAR-10 Image Generation — \href{https://github.com/Umer-Farooq-CS/PixelRNN-Implementation-CIFAR10}{GitHub}}
+\item Implemented complete Pixel Recurrent Neural Networks (PixelRNN) based on van den Oord et al. (2016) paper, featuring three different autoregressive generative models
+\item Developed three architectures with distinct trade-offs:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item \textbf{PixelCNN}: Masked convolutions for autoregressive generation with fully parallelizable training and bounded receptive field
+    \item \textbf{Row LSTM}: Row-by-row processing with triangular receptive field for balanced efficiency and quality
+    \item \textbf{Diagonal BiLSTM}: Diagonal processing with global receptive field for best theoretical performance
+\end{itemize}
+\item Implemented masked convolutions with proper Type A (first layer) and Type B (subsequent layers) masking to prevent information leakage
+\item Developed skewing and unskewing operations for Diagonal BiLSTM to process image diagonally while maintaining spatial structure
+\item Trained all models on CIFAR-10 dataset (32×32×3 RGB images) with discrete pixel value distributions (0-255)
+\item Achieved research-grade results with comprehensive evaluation using:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Negative Log-Likelihood (NLL) as primary metric
+    \item Bits per Dimension for normalized comparison
+    \item Visual quality assessment of generated samples
+    \item Training efficiency and convergence analysis
+\end{itemize}
+\item Implemented GPU-optimized training with TensorFlow/Keras achieving high utilization through batch processing
+\item Utilized advanced training techniques:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Adam optimizer with weight decay for regularization
+    \item Learning rate scheduling with ReduceLROnPlateau
+    \item Early stopping to prevent overfitting
+    \item Gradient clipping for training stability
+\end{itemize}
+\item Implemented temperature-based sampling for controllable generation diversity
+\item Generated high-quality CIFAR-10 samples demonstrating learned distributions
+\item Created comprehensive visualizations including training curves, generated samples, and model comparisons
+\item Technologies: Python, TensorFlow, Keras, CUDA, Autoregressive Models, Generative AI
+\item Key Contributions: Three complete architectures, Research-grade implementation, Comprehensive evaluation
+\end{projectdetailed}
+
+\begin{projectdetailed}{CNN CIFAR-10 Classification with Hyperparameter Optimization}{Deep Learning Project}{Systematic Model Tuning — \href{https://github.com/Umer-Farooq-CS/CNN-CIFAR10-Classification-GPU-Optimized}{GitHub}}
+\item Achieved 88.82\% accuracy on CIFAR-10 test set through systematic hyperparameter optimization, placing in top performance tier
+\item Conducted comprehensive hyperparameter tuning testing 81 model combinations across:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Learning rates: 0.0005, 0.001, 0.002
+    \item Batch sizes: 16, 32, 64
+    \item Filter counts: 32, 64, 128
+    \item Layer depths: 3, 5, 7 convolutional layers
+\end{itemize}
+\item Identified optimal configuration: Learning Rate=0.0005, Batch Size=16, Filters=64, Layers=7
+\item Implemented GPU acceleration optimizations:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Mixed precision training (FP16) for 2× speedup with maintained accuracy
+    \item XLA (Accelerated Linear Algebra) compilation for optimized GPU kernels
+    \item Automatic optimal batch size detection for memory efficiency
+    \item Data pipeline optimization with caching, prefetching, and parallel loading
+\end{itemize}
+\item Achieved 95\%+ GPU utilization during training with optimized data pipeline
+\item Designed CNN architecture with:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Multiple convolutional blocks with batch normalization
+    \item Dropout layers for regularization (20\% dropout rate)
+    \item MaxPooling for spatial dimension reduction
+    \item Dense classification layers with softmax output
+\end{itemize}
+\item Implemented early stopping with model checkpointing to save best performing models
+\item Generated comprehensive analysis outputs:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Training history plots showing loss and accuracy curves
+    \item Confusion matrices for error analysis
+    \item Per-class precision, recall, and F1-score metrics
+    \item Feature map visualizations from different CNN layers
+    \item Hyperparameter analysis plots comparing all 81 models
+\end{itemize}
+\item Training efficiency: 4-5 seconds per epoch for 50,000 training samples on NVIDIA RTX 4070 SUPER
+\item Technologies: Python, TensorFlow, Keras, CUDA, CNN Architecture, Hyperparameter Optimization
+\item Key Results: 88.82\% accuracy, 81 models evaluated, Systematic optimization approach, Comprehensive analysis
+\end{projectdetailed}
+
+\begin{projectdetailed}{CIFAR-10 Model Suite (ANN vs CNN vs Hybrid) with Config-Driven Training Pipeline}{Course Project (CS4045 - Deep Learning for Perception)}{Reproducible Training/Evaluation Framework}
+\item Implemented and compared three architectures for CIFAR-10 classification: ANN, CNN, and a Hybrid CNN+ANN model (custom implementations; no pretrained models)
+\item Built a modular codebase with separation of concerns (data, models, training, evaluation, utilities) and YAML configuration per model type
+\item Implemented professional training infrastructure: early stopping, learning-rate scheduling, checkpointing, TensorBoard logging, and reproducibility controls (seed management)
+\item Added GPU-focused optimizations including mixed-precision support and efficient data pipelines (caching/prefetching) for stable, faster training
+\item Produced comprehensive evaluation artifacts: confusion matrices, per-class metrics (precision/recall/F1), training curves, and model-comparison plots
+\item Technologies: Python, TensorFlow/Keras, GPU training, configuration management (YAML), experiment tracking (TensorBoard)
+\end{projectdetailed}
+
+\begin{projectdetailed}{Waste Object Detection \& Segmentation (TACO) — YOLOv8-n + U-Net}{Deep Learning for Perception (CS4045) Project}{Object Detection + Semantic Segmentation}
+\item Trained YOLOv8-n for waste object detection and a custom U-Net for semantic segmentation using the TACO dataset (real-world waste scenes)
+\item Reduced class imbalance by focusing on the 5 most frequent classes (860 images, 2,193 instances) with explicit train/val/test splits
+\item Used strong augmentation for detection (mosaic, HSV, affine, flips) and compared against a baseline training setup
+\item Achieved 2.2$\times$ mAP@50 improvement for YOLO (0.177 vs 0.081 baseline) and 2.4$\times$ mAP@50-95 improvement (0.125 vs 0.051)
+\item Evaluated U-Net segmentation with IoU/Dice; baseline IoU reached 0.160, while the tested augmentation policy reduced IoU to 0.114 (highlighting task-specific augmentation needs)
+\item Technologies: Python, YOLOv8, U-Net, data augmentation, computer vision metrics (mAP/IoU/Dice)
+\end{projectdetailed}
+
+\begin{projectdetailed}{Financial Sentiment Analysis \& Topic Modeling (FinBERT vs Local LLM vs RAG)}{NLP Project}{Financial PhraseBank + LDA}
+\item Built a sentiment classification pipeline on the Financial PhraseBank dataset (75\% agreement subset, 3,453 sentences; 3-class sentiment)
+\item Compared a domain model (ProsusAI/FinBERT) vs a local LLM (Mistral via Ollama, few-shot prompting) vs a RAG-augmented LLM using FAISS retrieval
+\item Achieved best performance with FinBERT (Accuracy 94.73\%, weighted F1 0.9480); local LLM achieved 86.42\% accuracy; RAG variant underperformed (54.65\%) and was analyzed as retrieval/context interference
+\item Performed topic modeling with LDA (15 topics) to extract dominant themes (earnings, market movements, acquisitions) from the corpus
+\item Technologies: HuggingFace Transformers, Ollama (Mistral), Sentence Embeddings (all-mpnet-base-v2), FAISS, scikit-learn
+\end{projectdetailed}
+
+\begin{projectdetailed}{Multimodal RAG System for PDF Question Answering (Text + Images)}{Generative AI Assignment}{Streamlit + Local LLM (Ollama)}
+\item Implemented an end-to-end multimodal RAG pipeline for PDF documents containing text, tables, and images (OCR + semantic retrieval + grounded generation)
+\item Parsed PDFs (page-aware chunking) and extracted embedded images; ran OCR with EasyOCR (GPU-enabled) and stored OCR text with image metadata
+\item Generated embeddings with Sentence-BERT (all-MiniLM-L6-v2, 384-d) for text and CLIP (ViT-B/32, 512-d) for images; indexed vectors in FAISS with metadata
+\item Supported prompt strategies (zero-shot, few-shot, chain-of-thought) and instrumented retrieval/generation latency for experiments
+\item Reported strong retrieval quality in evaluation (e.g., MAP 1.0 on evaluated queries; Precision@1/3 = 1.0 with measured Recall@K trade-offs)
+\item Delivered a Streamlit chat-style UI for interactive querying over the document collection
+\item Technologies: Python, PyMuPDF, EasyOCR, Sentence-BERT, CLIP, FAISS, Ollama (Mistral), Streamlit
+\end{projectdetailed}
+
+\begin{projectdetailed}{Semantic Product Search \& Neural Ranking System}{Generative AI Assignment}{Semantic Retrieval + Learning-to-Rank}
+\item Built a semantic product search system that ranks products by predicted relevance rather than keyword match; served results through a Streamlit web UI
+\item Implemented multiple embedding backends (TF-IDF, Word2Vec, BERT/Sentence-BERT-style embeddings) behind a unified interface
+\item Trained a neural ranking model on query--product pairs and evaluated with ranking metrics (Precision@K, Recall@K, F1@K, NDCG@K, MAP)
+\item Achieved strong ranking performance in evaluation (Precision@1: 0.85; NDCG@5: 0.79; F1@10: 0.68)
+\item Addressed practical constraints by generating synthetic data for demonstration when Amazon ESCI access was limited
+\item Technologies: Python, embeddings (TF-IDF/Word2Vec/BERT), neural ranking, IR metrics (NDCG/MAP), Streamlit
+\end{projectdetailed}
+
+\begin{projectdetailed}{English-to-Urdu Machine Translation using mBART-large-50}{NLP / Translation Project}{Fine-Tuning + Real-Time Web Interface}
+\item Fine-tuned mBART-large-50 for English$\rightarrow$Urdu translation using a combined multi-domain parallel corpus (Bible + Quran + general text; 33,020 training samples)
+\item Optimized training for speed and stability using mixed-precision training, gradient accumulation, and pre-tokenization + caching to accelerate data loading
+\item Reduced end-to-end training time from 60--90 hours to \(\sim\)1.5--3 hours via pre-tokenized dataset caching and pipeline optimizations
+\item Achieved BLEU (composite) 0.302 with full metric suite reported (ROUGE-1/2/L, METEOR, CHRF) and qualitative examples
+\item Built a production-ready Flask interface for real-time translation requests
+\item Technologies: Python, HuggingFace Transformers, mBART, AMP/mixed precision, Flask, NLP evaluation (BLEU/ROUGE/METEOR/CHRF)
+\end{projectdetailed}
+
+\begin{projectdetailed}{Diffusion Transformers (DiT) with REG/REPA vs U-Net for CIFAR-10 Image Generation}{Generative Modeling Project}{Diffusion Models + Vision Transformers}
+\item Implemented Diffusion Transformers (ViT backbone) with representation-enhancement guidance (REG/REPA) and compared against a U-Net diffusion baseline
+\item Evaluated sample quality and training dynamics using FID and convergence/stability analysis on CIFAR-10 (focused-class subset)
+\item Demonstrated competitive quality with improved training efficiency: DiT+REG achieved FID 18.7 vs 19.2 (U-Net baseline) and reduced training time by \(\sim\)30\%
+\item Built an inference pipeline suitable for interactive demos (including a web interface in the report)
+\item Technologies: Python, diffusion models, Vision Transformers, CIFAR-10, FID evaluation
+\end{projectdetailed}
+
+\begin{projectdetailed}{CycleGAN Face$\leftrightarrow$Sketch Translation}{GAN Project}{Unpaired Image-to-Image Translation}
+\item Implemented full CycleGAN for bidirectional translation between face photographs and sketches using unpaired training data
+\item Built dual generators/discriminators with cycle-consistency and identity losses to preserve facial structure and identity
+\item Trained on the Person Face Sketches dataset (20,655 training samples) and produced visually coherent translations after 11 epochs with stable convergence
+\item Delivered a Flask-based web interface for real-time conversion demos
+\item Technologies: Python, GANs (CycleGAN), unpaired image-to-image translation, Flask
+\end{projectdetailed}
+
+%----------------------------------------------------------------------------------------
+%	TECHNICAL PROJECTS - MACHINE LEARNING & DATA SCIENCE
+%----------------------------------------------------------------------------------------
+\section{Technical Projects - Machine Learning \& Data Science}
+
+\begin{projectdetailed}{California Housing Regression Study (Linear Regression vs SGD, CV Protocol)}{Machine Learning Experiment}{NumPy + scikit-learn (No pandas)}
+\item Conducted a structured regression study on the California Housing dataset using a five-phase experimental protocol (EDA, single-feature, polynomial multi-feature, train/test, and 5-fold CV)
+\item Compared closed-form Linear Regression against SGDRegressor with standardized inputs; analyzed stability/variance under cross-validation
+\item Evaluated consistently with MSE, RMSE, MAE, and \(R^2\); demonstrated that scaling and conservative learning rates were essential for stable SGD convergence
+\item Implemented polynomial feature expansions (degrees 2--3) to study capacity vs overfitting risks and quantified dimensionality growth
+\item Technologies: Python, NumPy, scikit-learn (pipelines, scaling, cross-validation), regression metrics
+\end{projectdetailed}
+
+%----------------------------------------------------------------------------------------
+%	TECHNICAL PROJECTS - COMPILER DESIGN
+%----------------------------------------------------------------------------------------
+\section{Technical Projects - Compiler Design \& Language Implementation}
+
+\begin{projectdetailed}{Compiler for Custom Language (IU)}{Compiler Design Project}{Educational Language Implementation}
+\item Designed and built complete compiler for custom educational programming language featuring unique syntax and semantics
+\item Implemented custom syntax features:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Program delimiters: hajimeru (begin) and gulegule (end)
+    \item Multiple data types: int, float, string, boolean
+    \item Custom I/O operations with specialized syntax
+    \item Control flow structures with unique keywords
+\end{itemize}
+\item Developed full compiler pipeline in C++ including:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item \textbf{Lexical Analyzer (Lexer)}: Tokenization of source code, keyword recognition, identifier and literal handling
+    \item \textbf{Syntax Analyzer (Parser)}: Context-free grammar implementation, parse tree construction, syntax error detection
+    \item \textbf{Semantic Analyzer}: Type checking, scope resolution, symbol table management, semantic error detection
+    \item \textbf{Code Generator}: Target code generation, optimization passes, register allocation
+\end{itemize}
+\item Implemented comprehensive symbol table with:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Scope management for nested blocks
+    \item Type information storage and retrieval
+    \item Variable and function declaration tracking
+\end{itemize}
+\item Developed robust error handling and reporting system providing meaningful error messages with line numbers and context
+\item Implemented optimization passes for generated code including constant folding and dead code elimination
+\item Created test suite for validating compiler correctness across various language features
+\item Technologies: C++, Compiler Design Principles, Context-Free Grammars, Data Structures
+\item Key Achievements: Complete working compiler, Custom language design, Full compilation pipeline
+\end{projectdetailed}
+
+\begin{projectdetailed}{LL(1) Parser Toolkit}{Parsing Theory Implementation}{\href{https://github.com/Umer-Farooq-CS/LL1-Parser-Plus}{GitHub: Umer-Farooq-CS/LL1-Parser-Plus}}
+\item Developed comprehensive toolkit for LL(1) grammar processing and parsing with complete parsing table generation
+\item Implemented core parsing algorithms:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item FIRST set computation for predicting production choices
+    \item FOLLOW set computation for determining parsing decisions
+    \item LL(1) parsing table construction with conflict detection
+    \item Predictive parser implementation using generated parsing tables
+\end{itemize}
+\item Created grammar validation system to verify LL(1) property and detect conflicts
+\item Developed user-friendly interface for:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Grammar input and representation
+    \item FIRST/FOLLOW set visualization
+    \item Parsing table display in tabular format
+    \item Step-by-step parsing demonstrations
+\end{itemize}
+\item Implemented left recursion elimination and left factoring for grammar transformation
+\item Technologies: C, Parsing Theory, LL(1) Grammars, Data Structures
+\item Applications: Educational tool for compiler construction, Grammar analysis and validation
+\end{projectdetailed}
+
+%----------------------------------------------------------------------------------------
+%	TECHNICAL PROJECTS - DISTRIBUTED SYSTEMS
+%----------------------------------------------------------------------------------------
+\section{Technical Projects - Distributed Systems \& Networking}
+
+\begin{projectdetailed}{Ring DHT with IPFS Integration}{Distributed Systems Project}{Distributed Hash Table Implementation}
+\item Built complete distributed hash table (DHT) system with circular linked list routing architecture inspired by Chord protocol
+\item Implemented IPFS (InterPlanetary File System) integration for distributed file storage and retrieval across network nodes
+\item Developed core DHT components:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Ring-based node organization in 160-bit address space (SHA-1 hash)
+    \item Routing tables implemented using double linked lists for efficient lookups
+    \item Finger table optimization for O(log N) routing complexity
+    \item Stabilization protocol for maintaining ring integrity during node joins/departures
+\end{itemize}
+\item Implemented B-Tree data structure for local file storage on each node with SHA-1 hashing for content addressing
+\item Developed comprehensive console interface providing:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Machine/node management (add, remove, status)
+    \item File insertion with automatic routing to responsible nodes
+    \item File retrieval with efficient DHT lookups
+    \item System monitoring and statistics display
+    \item Network topology visualization
+\end{itemize}
+\item Implemented consistent hashing for load balancing file distribution across nodes
+\item Developed replication strategy for fault tolerance and data availability
+\item Handled node failures gracefully with data migration and replication maintenance
+\item Created comprehensive testing suite simulating multi-node networks with various scenarios
+\item Technologies: C++, Distributed Systems, SHA-1 Hashing, B-Trees, IPFS, Networking, Data Structures
+\item Key Features: O(log N) routing, Fault tolerance, Consistent hashing, IPFS integration
+\end{projectdetailed}
+
+\begin{projectdetailed}{Doodle Dash - Multiplayer Drawing \& Guessing Game}{Networked Application}{Client-Server Architecture}
+\item Developed real-time multiplayer drawing and guessing game with client-server architecture using TCP sockets and multi-threaded server design
+\item Implemented server-side features:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Multi-threaded client handling using pthreads for concurrent connections
+    \item Game state management for multiple simultaneous game rooms
+    \item Real-time drawing stroke synchronization across all clients
+    \item Turn-based logic with role rotation (drawer vs guessers)
+    \item Scoring system and leaderboard management
+    \item Custom reliable send/receive functions for message integrity
+\end{itemize}
+\item Implemented client-side features:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Real-time drawing canvas using SFML graphics library
+    \item Smooth stroke rendering with line interpolation
+    \item Chat system for guessing and player communication
+    \item Real-time updates of other players' drawings
+    \item User interface with game status and player list
+\end{itemize}
+\item Developed custom networking protocol:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Message framing for reliable data transmission over TCP
+    \item Packet serialization/deserialization for structured data
+    \item Error handling and connection recovery mechanisms
+    \item Efficient delta encoding for drawing strokes to minimize bandwidth
+\end{itemize}
+\item Implemented graceful shutdown handling:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Proper socket cleanup on client disconnection
+    \item Game state persistence during player disconnections
+    \item Server-side cleanup of zombie connections
+\end{itemize}
+\item Optimized network performance through batching of drawing updates and compression
+\item Technologies: C++, SFML, TCP Sockets, pthreads, Network Programming, Game Development
+\item Key Features: Real-time multiplayer, Custom protocol, Multi-threaded server, Graceful error handling
+\end{projectdetailed}
+
+%----------------------------------------------------------------------------------------
+%	TECHNICAL PROJECTS - FULL-STACK DEVELOPMENT
+%----------------------------------------------------------------------------------------
+\section{Technical Projects - Full-Stack Web Development}
+
+\begin{projectdetailed}{ASCO Services API}{Backend Development}{\href{https://github.com/}{.NET 8 Web API}}
+\item Developed comprehensive .NET 8 Web API for managing users, organizations, and authentication with enterprise-grade security
+\item Implemented JWT (JSON Web Token) based authentication system:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Token generation with configurable expiration
+    \item Token validation and refresh mechanism
+    \item Secure token storage and transmission practices
+\end{itemize}
+\item Implemented role-based access control (RBAC):
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Multiple user roles with hierarchical permissions
+    \item Attribute-based authorization on controller actions
+    \item Custom authorization policies for fine-grained control
+\end{itemize}
+\item Designed and implemented clean architecture following best practices:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Repository Pattern for data access abstraction
+    \item Service Layer for business logic encapsulation
+    \item Dependency Injection for loose coupling
+    \item DTO (Data Transfer Object) pattern for API contracts
+\end{itemize}
+\item Developed complete user management system:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item CRUD operations for user entities
+    \item Secure password hashing using BCrypt
+    \item Email verification workflow
+    \item Password reset functionality
+\end{itemize}
+\item Implemented organization management features:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Multi-tenant architecture support
+    \item Organization-user relationship management
+    \item Organization-level permissions and settings
+\end{itemize}
+\item Utilized Entity Framework Core with PostgreSQL:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Code-first database approach with migrations
+    \item TPT (Table Per Type) inheritance for entity hierarchies
+    \item Optimized queries with eager/lazy loading strategies
+    \item Database indexing for performance optimization
+\end{itemize}
+\item Integrated Swagger/OpenAPI for comprehensive API documentation with interactive testing interface
+\item Conducted API testing using Postman with automated test collections
+\item Worked as backend engineer with responsibility for frontend integration coordination
+\item Technologies: .NET 8, ASP.NET Core Web API, Entity Framework Core, PostgreSQL, JWT, BCrypt, Swagger, Docker
+\item Key Features: JWT Authentication, RBAC, Clean Architecture, RESTful API Design, Comprehensive documentation
+\end{projectdetailed}
+
+\begin{projectdetailed}{Harmoniq - Audio Library Explorer}{Full-Stack Application}{\href{https://github.com/Umer-Farooq-CS/Harmoniq}{GitHub: Umer-Farooq-CS/Harmoniq}}
+\item Built full-stack audio library exploration platform with real-time music streaming capabilities
+\item Developed Express.js backend with RESTful API architecture:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Audio file management and metadata extraction
+    \item Playlist creation and management endpoints
+    \item User authentication and session management
+    \item Audio streaming with range request support for seeking
+    \item Search and filtering capabilities with optimized queries
+\end{itemize}
+\item Implemented React frontend with modern UI/UX:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Responsive design for desktop and mobile devices
+    \item Custom audio player with waveform visualization
+    \item Real-time search with debouncing for performance
+    \item Infinite scroll for large library browsing
+    \item Drag-and-drop playlist management
+\end{itemize}
+\item Designed PostgreSQL database schema:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Normalized schema for audio tracks, albums, artists
+    \item Playlist and user relationship management
+    \item Full-text search optimization with indexes
+    \item Efficient query patterns for common operations
+\end{itemize}
+\item Implemented audio streaming optimization:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item HTTP range request support for efficient streaming
+    \item Audio file caching strategy
+    \item Adaptive bitrate streaming considerations
+\end{itemize}
+\item Technologies: JavaScript, React, Node.js, Express, PostgreSQL, HTML5 Audio API
+\item Key Features: Real-time streaming, Responsive design, Search optimization, Playlist management
+\end{projectdetailed}
+
+\begin{projectdetailed}{DJ Web Application}{Full-Stack Music Platform}{Real-Time Streaming}
+\item Built comprehensive real-time music streaming platform with DJ-focused features using modern MERN stack
+\item Developed React frontend with Vite build tool:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Fast, responsive user interface with component-based architecture
+    \item Real-time audio visualization using Web Audio API
+    \item Drag-and-drop interface for playlist management
+    \item Live mixing controls with equalizer and effects
+    \item WebSocket integration for real-time updates
+\end{itemize}
+\item Implemented Express backend with Node.js:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item RESTful API for music library management
+    \item WebSocket server for real-time event streaming
+    \item Audio file processing and format conversion
+    \item User session management with JWT
+    \item Rate limiting and request validation
+\end{itemize}
+\item Integrated MongoDB for data persistence:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Schema design for tracks, playlists, and user preferences
+    \item GridFS for efficient large audio file storage
+    \item Optimized queries with proper indexing
+    \item Aggregation pipelines for analytics
+\end{itemize}
+\item Implemented real-time features:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item WebSocket-based live updates for multiple connected users
+    \item Synchronized playback across multiple clients
+    \item Real-time chat for collaborative DJ sessions
+\end{itemize}
+\item Technologies: React, Vite, Node.js, Express, MongoDB, GridFS, WebSockets, Web Audio API
+\item Key Features: Real-time streaming, Audio visualization, Collaborative features, Responsive design
+\end{projectdetailed}
+
+%----------------------------------------------------------------------------------------
+%	TECHNICAL PROJECTS - DESKTOP APPLICATIONS
+%----------------------------------------------------------------------------------------
+\section{Technical Projects - Desktop Application Development}
+
+\begin{projectdetailed}{Student Management System}{Enterprise Desktop Application}{JavaFX Implementation}
+\item Developed comprehensive student management system using JavaFX with complete CRUD operations for educational institution data management
+\item Implemented core functionality:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Student record management (Create, Read, Update, Delete)
+    \item Course enrollment and grade tracking
+    \item Attendance management with reporting
+    \item Fee payment tracking and invoice generation
+    \item Administrative user management with role-based access
+\end{itemize}
+\item Designed JavaFX user interface:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Multi-window application with navigation
+    \item Data tables with sorting and filtering
+    \item Form validation with real-time feedback
+    \item Custom controls for data input
+    \item Report generation with print preview
+\end{itemize}
+\item Implemented PostgreSQL database backend:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Normalized database schema design
+    \item JDBC integration for database connectivity
+    \item Prepared statements for SQL injection prevention
+    \item Transaction management for data consistency
+    \item Database connection pooling for performance
+\end{itemize}
+\item Developed authentication system:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item User login with password hashing (BCrypt)
+    \item Session management
+    \item Role-based access control (Admin, Teacher, Student)
+    \item Password reset functionality
+\end{itemize}
+\item Implemented client-server architecture using TCP sockets:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Multi-threaded server for concurrent client connections
+    \item Custom protocol for client-server communication
+    \item Reliable message delivery with acknowledgments
+    \item Server-side business logic processing
+\end{itemize}
+\item Technologies: Java, JavaFX, PostgreSQL, JDBC, TCP Sockets, Multi-threading, MVC Pattern
+\item Key Features: Complete CRUD operations, User authentication, Client-server architecture, Report generation
+\end{projectdetailed}
+
+\begin{projectdetailed}{Torrent Management System}{Desktop Application}{JavaFX \& Networking}
+\item Built desktop torrent management application with peer-to-peer networking capabilities using JavaFX
+\item Implemented torrent client features:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Torrent file parsing and metadata extraction
+    \item Download queue management with priority settings
+    \item Multi-threaded download engine for concurrent piece downloads
+    \item Upload/seeding functionality with bandwidth controls
+    \item Resume capability for interrupted downloads
+\end{itemize}
+\item Developed peer-to-peer networking:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item TCP socket-based peer connections
+    \item Custom protocol for piece exchange
+    \item Peer discovery and connection management
+    \item Piece selection algorithms (rarest-first, random-first)
+\end{itemize}
+\item Implemented JavaFX user interface:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Torrent list view with download progress
+    \item Real-time speed monitoring (download/upload)
+    \item Peer list display with connection status
+    \item File tree view for selective file downloads
+    \item Settings panel for configuration
+\end{itemize}
+\item Developed file management:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Piece verification with hash checking
+    \item Disk I/O optimization with buffering
+    \item File allocation and storage management
+\end{itemize}
+\item Technologies: Java, JavaFX, TCP Sockets, Multi-threading, P2P Networking, File I/O
+\item Key Features: P2P networking, Multi-threaded downloads, Progress tracking, Resume capability
+\end{projectdetailed}
+
+\begin{projectdetailed}{.NET Desktop Applications}{Enterprise Applications}{Multiple Projects}
+\item Developed various enterprise desktop applications using .NET framework (C\#) with Windows Forms and WPF
+\item Implemented applications following MVC and MVVM architectural patterns for maintainability and testability
+\item Created database-driven applications with PostgreSQL backends:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item ADO.NET for database connectivity
+    \item Entity Framework for ORM capabilities
+    \item Complex SQL queries with stored procedures
+    \item Database transaction management
+\end{itemize}
+\item Developed rich user interfaces:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Windows Forms applications for traditional desktop UI
+    \item WPF applications with XAML for modern UI/UX
+    \item Data binding for automatic UI updates
+    \item Custom controls and user controls
+    \item Responsive layouts for different screen sizes
+\end{itemize}
+\item Implemented business logic layers with:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Service-oriented architecture
+    \item Dependency injection using built-in DI container
+    \item Validation frameworks for data integrity
+    \item Logging and error handling
+\end{itemize}
+\item Applications served 100+ concurrent users with optimized performance and resource management
+\item Technologies: C\#, .NET Framework, Windows Forms, WPF, XAML, Entity Framework, PostgreSQL, MVC, MVVM
+\item Key Features: Enterprise-grade architecture, Database integration, Rich UI, Scalable design
+\end{projectdetailed}
+
+%----------------------------------------------------------------------------------------
+%	TECHNICAL PROJECTS - GAME DEVELOPMENT
+%----------------------------------------------------------------------------------------
+\section{Technical Projects - Game Development}
+
+\begin{projectdetailed}{Pac-Man with Multi-threaded Ghost AI}{Game Development}{C++ \& SFML}
+\item Built complete Pac-Man clone with custom graphics, game mechanics, and intelligent multi-threaded ghost AI using C++ and SFML
+\item Implemented core game mechanics:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Player controls with smooth 4-directional movement
+    \item Collision detection system using tile-based grid
+    \item Pellet collection and scoring system
+    \item Power-up mechanics (power pellets) with timed effects
+    \item Level progression with increasing difficulty
+    \item Life system and game over conditions
+\end{itemize}
+\item Developed multi-threaded ghost AI using pthreads:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Each ghost runs in separate thread with independent AI
+    \item Blinky (Red): Aggressive chasing algorithm targeting player position
+    \item Pinky (Pink): Ambush strategy targeting ahead of player
+    \item Inky (Cyan): Flanking behavior with complex targeting
+    \item Clyde (Orange): Random/scared behavior based on distance
+    \item Thread synchronization for accessing shared game state
+    \item Mutex locks for thread-safe ghost position updates
+\end{itemize}
+\item Implemented pathfinding algorithms:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item A* pathfinding for intelligent ghost movement
+    \item Tile-based navigation with wall avoidance
+    \item Dynamic path recalculation based on player movement
+\end{itemize}
+\item Developed custom graphics system using SFML:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Sprite rendering for characters and game elements
+    \item Animation systems for character movement
+    \item Particle effects for visual feedback
+    \item HUD rendering for score and lives display
+\end{itemize}
+\item Implemented game state management:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Menu system with state transitions
+    \item Pause/resume functionality
+    \item Level loading and initialization
+    \item Score persistence between games
+\end{itemize}
+\item Optimized performance with efficient rendering and update loops achieving 60+ FPS
+\item Technologies: C++, SFML, pthreads, Game AI, Pathfinding Algorithms (A*), Object-Oriented Design
+\item Key Features: Multi-threaded AI, Smooth gameplay, Custom graphics, Authentic game mechanics
+\end{projectdetailed}
+
+\begin{projectdetailed}{2D Game Suite}{Game Development Portfolio}{Multiple Genres}
+\item Developed comprehensive 2D game suite including Snake, Tetris, and RPG prototypes using C++/SFML/SDL2
+\item Implemented with strict OOP principles and MVC architecture for clean, maintainable code:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Model: Game logic and state management
+    \item View: Rendering and visual presentation
+    \item Controller: Input handling and game flow
+\end{itemize}
+\item Achieved 30\%+ performance improvements through:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Efficient memory management with object pooling
+    \item Algorithmic optimizations in game logic
+    \item Render batching for reduced draw calls
+    \item Cache-friendly data structures
+\end{itemize}
+\item \textbf{Snake Game} features:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Smooth snake movement with grid-based collision
+    \item Food generation with random placement
+    \item Self-collision detection and game over
+    \item Score tracking and high score persistence
+\end{itemize}
+\item \textbf{Tetris Game} features:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Seven tetromino shapes with rotation
+    \item Line clearing with scoring system
+    \item Progressive difficulty with speed increase
+    \item Next piece preview and hold functionality
+\end{itemize}
+\item \textbf{RPG Prototype} features:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Tile-based world with scrolling camera
+    \item Character movement and collision detection
+    \item Basic combat system with turn-based mechanics
+    \item Inventory system and item management
+\end{itemize}
+\item Implemented custom physics engines for realistic game mechanics:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Collision detection and resolution
+    \item Movement physics with acceleration/deceleration
+    \item Gravity and jumping mechanics for platformer elements
+\end{itemize}
+\item Developed optimized rendering pipelines:
+\begin{itemize}[nosep, leftmargin=2em]
+    \item Sprite batching for efficient GPU usage
+    \item Texture atlases for reduced texture switching
+    \item Culling for off-screen objects
+    \item Double buffering for smooth frame delivery
+\end{itemize}
+\item Technologies: C++, SFML, SDL2, OOP, MVC Architecture, Game Design Patterns
+\item Performance: 30\%+ optimization, 60+ FPS, Low memory footprint
+\item Key Achievements: Multiple complete games, Modular architecture, Performance optimization
+\end{projectdetailed}
+
+%----------------------------------------------------------------------------------------
+%	TECHNICAL SKILLS - COMPREHENSIVE
+%----------------------------------------------------------------------------------------
+\section{Technical Skills - Comprehensive Breakdown}
+
+\subsection*{Programming Languages}
+\begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=1pt]
+\item \textbf{Expert Level}: C, C++ (Modern C++11/14/17), Python
+\item \textbf{Advanced Level}: CUDA, Java, C\#, JavaScript/TypeScript
+\item \textbf{Proficient}: HTML5, CSS3, SQL
+\item \textbf{Familiar}: Julia, Shell Scripting (Bash), Assembly (x86)
+\end{itemize}
+
+\subsection*{Parallel \& High-Performance Computing}
+\begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=1pt]
+\item \textbf{GPU Computing}: CUDA Programming, Kernel Optimization, Memory Management (Shared/Texture/Constant), Tensor Cores, CUDA Streams, OpenCL
+\item \textbf{Parallel Programming}: OpenMP (Shared Memory), MPI (Distributed Memory), Hybrid MPI+OpenMP Programming
+\item \textbf{Multi-threading}: pthreads (POSIX Threads), Thread Synchronization, Lock-free Programming
+\item \textbf{Performance Tools}: NVIDIA Nsight Systems, Nsight Compute, perf (Linux Profiler), Valgrind
+\item \textbf{Optimization Techniques}: Memory Access Optimization, Cache Optimization, Vectorization, Algorithmic Optimization
+\end{itemize}
+
+\subsection*{Machine Learning \& AI}
+\begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=1pt]
+\item \textbf{Deep Learning Frameworks}: PyTorch, TensorFlow, Keras
+\item \textbf{ML Techniques}: Convolutional Neural Networks (CNNs), Recurrent Neural Networks (RNNs/LSTMs), Large Language Models (LLMs), Retrieval-Augmented Generation (RAG), LangChain, Generative Models (GANs, PixelRNN)
+\item \textbf{Optimization}: Hyperparameter Tuning, Mixed Precision Training (AMP), GPU-Accelerated Training, Model Optimization
+\item \textbf{NLP}: Character-level Models, Sequence Models, Text Generation
+\item \textbf{Computer Vision}: Image Classification, Edge Detection, Image Segmentation
+\end{itemize}
+
+\subsection*{Cloud \& DevOps}
+\begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=1pt]
+\item \textbf{Cloud}: Oracle Cloud Infrastructure (OCI)
+\item \textbf{CI/CD}: GitHub Actions, Automated Build/Deploy Pipelines
+\item \textbf{Containers}: Docker, Docker Compose
+\end{itemize}
+
+\subsection*{Quantum Computing}
+\begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=1pt]
+\item \textbf{Frameworks}: Qiskit, PennyLane, Cirq
+\item \textbf{Concepts}: Quantum Circuit Simulation, Quantum Algorithms, Tensor Network Methods
+\item \textbf{Tools}: JAX, OpenQASM
+\end{itemize}
+
+\subsection*{Compiler Design \& Language Theory}
+\begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=1pt]
+\item \textbf{Compiler Construction}: Lexical Analysis, Syntax Analysis (LL/LR Parsing), Semantic Analysis, Code Generation
+\item \textbf{Tools}: Lex/Flex, Yacc/Bison, LLVM
+\item \textbf{Concepts}: Context-Free Grammars, Parse Trees, Symbol Tables, Optimization Passes
+\end{itemize}
+
+\subsection*{Web Development}
+\begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=1pt]
+\item \textbf{Frontend}: React, Next.js, Vite, HTML5, CSS3, JavaScript ES6+, TypeScript
+\item \textbf{Backend}: Node.js, Express.js, RESTful API Design
+\item \textbf{Full Stack}: MERN Stack (MongoDB, Express, React, Node.js)
+\item \textbf{Real-time}: WebSockets, Socket.io, Server-Sent Events
+\end{itemize}
+
+\subsection*{Desktop Application Development}
+\begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=1pt]
+\item \textbf{Java}: JavaFX, Swing, AWT
+\item \textbf{.NET}: Windows Forms, WPF (Windows Presentation Foundation), XAML
+\item \textbf{C++}: Qt Framework (basic)
+\item \textbf{Patterns}: MVC (Model-View-Controller), MVVM (Model-View-ViewModel)
+\end{itemize}
+
+\subsection*{Game Development}
+\begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=1pt]
+\item \textbf{Graphics Libraries}: SFML (Simple and Fast Multimedia Library), SDL2 (Simple DirectMedia Layer)
+\item \textbf{Concepts}: Game Loop Architecture, Sprite Management, Collision Detection, Game AI, Pathfinding (A*)
+\item \textbf{Physics}: Custom Physics Engines, Collision Resolution, Movement Mechanics
+\end{itemize}
+
+\subsection*{Databases}
+\begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=1pt]
+\item \textbf{Relational}: PostgreSQL (Advanced), MySQL, SQL Server
+\item \textbf{NoSQL}: MongoDB, GridFS
+\item \textbf{ORM}: Entity Framework (Core/.NET), Sequelize, Mongoose
+\item \textbf{Optimization}: Query Optimization, Indexing Strategies, Database Design
+\item \textbf{Data Structures}: B-Trees, Hash Tables, Full-Text Search
+\end{itemize}
+
+\subsection*{Distributed Systems \& Networking}
+\begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=1pt]
+\item \textbf{Protocols}: TCP/IP, UDP, HTTP/HTTPS, WebSocket
+\item \textbf{Concepts}: Distributed Hash Tables (DHT), P2P Networks, Client-Server Architecture
+\item \textbf{Socket Programming}: TCP Sockets, Unix Domain Sockets, Socket Options
+\item \textbf{Distributed Storage}: IPFS (InterPlanetary File System)
+\item \textbf{Algorithms}: Consistent Hashing, Chord Protocol, Routing Algorithms
+\end{itemize}
+
+\subsection*{Software Engineering \& Architecture}
+\begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=1pt]
+\item \textbf{Design Patterns}: MVC, MVVM, Repository Pattern, Service Layer Pattern, Factory, Singleton, Observer
+\item \textbf{Architecture}: Clean Architecture, Layered Architecture, Microservices Concepts
+\item \textbf{Principles}: SOLID Principles, DRY, KISS, Separation of Concerns
+\item \textbf{Methodologies}: Agile, Scrum (basic), Test-Driven Development concepts
+\end{itemize}
+
+\subsection*{Development Tools \& Platforms}
+\begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=1pt]
+\item \textbf{Version Control}: Git (Advanced), GitHub, GitLab
+\item \textbf{Build Tools}: CMake, Make, Maven, npm, pip
+\item \textbf{Containerization}: Docker (Intermediate), Docker Compose
+\item \textbf{IDEs}: Visual Studio, Visual Studio Code, IntelliJ IDEA, PyCharm, Eclipse
+\item \textbf{API Testing}: Postman, curl
+\item \textbf{Documentation}: Swagger/OpenAPI, Doxygen
+\end{itemize}
+
+\subsection*{Operating Systems \& System Programming}
+\begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=1pt]
+\item \textbf{Linux}: Ubuntu, Shell Scripting, System Administration (Intermediate)
+\item \textbf{Windows}: Windows 10/11, PowerShell
+\item \textbf{Concepts}: Process Management, Memory Management, File Systems, Inter-Process Communication
+\end{itemize}
+
+\subsection*{Security}
+\begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=1pt]
+\item \textbf{Authentication}: JWT (JSON Web Tokens), OAuth 2.0 (basic), Session Management
+\item \textbf{Cryptography}: Password Hashing (BCrypt, SHA), SSL/TLS
+\item \textbf{Best Practices}: SQL Injection Prevention, XSS Prevention, CSRF Protection, Secure API Design
+\end{itemize}
+
+\subsection*{Data Structures \& Algorithms}
+\begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=1pt]
+\item \textbf{Data Structures}: Arrays, Linked Lists, Trees (Binary, B-Trees, AVL), Graphs, Hash Tables, Heaps, Stacks, Queues
+\item \textbf{Algorithms}: Sorting, Searching, Graph Algorithms (DFS, BFS, Dijkstra, A*), Dynamic Programming, Greedy Algorithms
+\item \textbf{Complexity Analysis}: Big-O Notation, Time/Space Complexity Analysis, Optimization Techniques
+\end{itemize}
+
+%----------------------------------------------------------------------------------------
+%	ADDITIONAL INFORMATION
+%----------------------------------------------------------------------------------------
+\section{Additional Information}
+
+\subsection*{Leadership \& Outreach}
+\begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=1pt]
+\item Core Team Member – PR \& Marketing, NaSCon (Business Development, Public Relations, Promotions)
+\item Officer – Communications \& Outreach, NaSCon (Communication, Outreach, Collaboration)
+\item Team competencies: Priority Management, Leadership, Team Management, Marketing Strategy, Professional Communication
+\end{itemize}
+
+\subsection*{Languages}
+\begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=1pt]
+\item \textbf{Urdu}: Native or Bilingual Proficiency
+\item \textbf{English}: Native or Bilingual Proficiency
+\item \textbf{Japanese}: Elementary Proficiency
+\end{itemize}
+
+\subsection*{Areas of Interest}
+\begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=1pt]
+\item GPU Architecture \& Low-Level Optimization
+\item Compiler Design \& Language Theory
+\item Quantum Computing \& Quantum Simulation
+\item Parallel \& Distributed Systems
+\item High-Performance Computing
+\item Full-Stack Development
+\item Machine Learning \& AI
+\end{itemize}
+
+\subsection*{Professional Development}
+\begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=1pt]
+\item Continuously learning and staying updated with latest technologies and best practices
+\item Active participant in online developer communities and forums
+\item Regular contributor to open-source projects
+\item Strong problem-solving skills with systematic debugging approach
+\item Excellent collaboration and communication abilities
+\item Self-motivated with ability to work independently and in team environments
+\end{itemize}
+
+\subsection*{Key Strengths}
+\begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=1pt]
+\item Strong foundation in computer science fundamentals
+\item Ability to quickly learn and adapt to new technologies
+\item Performance-oriented mindset with focus on optimization
+\item Clean code practices with emphasis on maintainability
+\item End-to-end project delivery from conception to deployment
+\item Cross-platform development experience
+\item Strong analytical and problem-solving abilities
+\end{itemize}
+
+%----------------------------------------------------------------------------------------
+%	GITHUB STATISTICS
+%----------------------------------------------------------------------------------------
+\section{GitHub \& Online Presence}
+
+\begin{itemize}[nosep,after=\strut, leftmargin=1em, itemsep=1pt]
+\item \textbf{GitHub}: \href{https://github.com/Umer-Farooq-CS}{github.com/Umer-Farooq-CS}
+\item \textbf{LinkedIn}: \href{https://linkedin.com/in/umer-farooq-a0838a2a1}{linkedin.com/in/umer-farooq-a0838a2a1}
+\item \textbf{Fiverr}: Level 2 Seller (100+ completed projects, 98\% satisfaction rate)
+\item \textbf{Notable Repositories}: Q-Tensor, MNIST-Classification, Canny-Edge-Detector, Harmoniq, LL1-Parser-Plus
+\end{itemize}
+
+%----------------------------------------------------------------------------------------
+%	FOOTER
+%----------------------------------------------------------------------------------------
+\vfill
+\center{\footnotesize Master Detailed CV - Umer Farooq}
+\center{\footnotesize Last updated: \today}
+\center{\footnotesize This document contains comprehensive details for creating targeted resumes}
+
+\end{document}
+
