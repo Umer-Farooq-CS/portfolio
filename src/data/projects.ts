@@ -1,4 +1,5 @@
 // Project portfolio data derived from master_detailed_cv.tex
+import cirqRagDiagram from "@/assets/Cirq-RAG-Agent.png";
 
 export interface ProjectItem {
   slug: string;
@@ -12,6 +13,8 @@ export interface ProjectItem {
   description: string[];
   technologies: string[];
   featured?: boolean; // shown on homepage
+  image?: string; // optional diagram or hero image
+  architectureHighlights?: string[]; // optional key architecture bullets
 }
 
 export const PROJECTS: ProjectItem[] = [
@@ -33,6 +36,10 @@ export const PROJECTS: ProjectItem[] = [
       "OpenQASM 3.0 integration for portable circuit exchange; plugin-based system for additional frameworks.",
     ],
     technologies: ["Next.js", "TypeScript", "FastAPI", "Qiskit", "Cirq", "PennyLane", "OpenQASM", "REST/Web APIs"],
+    architectureHighlights: [
+      "OpenQASM 3.0 intermediate representation core decouples the web UI from backend simulators.",
+      "Kubernetes-backed job manager schedules quantum simulations across containerized workers for fair, efficient resource usage.",
+    ],
   },
   {
     slug: "cirq-rag",
@@ -49,6 +56,11 @@ export const PROJECTS: ProjectItem[] = [
       "92% success rate vs 52% single-agent baseline; reported latency/quality trade-offs.",
     ],
     technologies: ["Python", "Cirq", "RAG", "FAISS", "Multi-Agent", "Prompt Engineering"],
+    image: cirqRagDiagram,
+    architectureHighlights: [
+      "Multi-agent pipeline orchestrates designer, validator, optimizer, and educator agents with explicit hand-off and feedback channels.",
+      "FAISS-backed vector store over a curated Cirq knowledge base grounds generation and validation, minimizing hallucinations in produced circuits.",
+    ],
   },
   // HPC & GPU
   {

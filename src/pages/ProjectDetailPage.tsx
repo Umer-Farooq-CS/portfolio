@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Github, ExternalLink, Calendar, FolderGit2, Trophy } from "lucide-react";
+import { ArrowLeft, Github, ExternalLink, Calendar, FolderGit2, Trophy, Network } from "lucide-react";
 import { getProjectBySlug } from "@/data/projects";
 import NotFound from "./NotFound";
 
@@ -85,6 +85,24 @@ export default function ProjectDetailPage() {
           )}
         </motion.header>
 
+        {/* Diagram / hero image */}
+        {project.image && (
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.08 }}
+            className="mb-10"
+          >
+            <div className="relative rounded-2xl overflow-hidden border border-border/70 bg-card">
+              <img
+                src={project.image}
+                alt={`${project.title} architecture diagram`}
+                className="w-full h-full object-contain bg-gradient-to-br from-background via-background to-muted"
+              />
+            </div>
+          </motion.div>
+        )}
+
         {/* Description */}
         <motion.section
           initial={{ opacity: 0, y: 16 }}
@@ -108,6 +126,32 @@ export default function ProjectDetailPage() {
             ))}
           </ul>
         </motion.section>
+
+        {/* Key architecture */}
+        {project.architectureHighlights && project.architectureHighlights.length > 0 && (
+          <motion.section
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.12 }}
+            className="mb-10"
+          >
+            <h2 className="text-sm font-semibold text-primary uppercase tracking-widest mb-4 flex items-center gap-2">
+              <Network size={14} />
+              Key Architecture
+            </h2>
+            <ul className="space-y-3">
+              {project.architectureHighlights.map((point) => (
+                <li
+                  key={point.slice(0, 40)}
+                  className="flex items-start gap-3 text-muted-foreground leading-relaxed"
+                >
+                  <span className="text-primary mt-1.5 w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
+                  {point}
+                </li>
+              ))}
+            </ul>
+          </motion.section>
+        )}
 
         {/* Technologies */}
         <motion.section

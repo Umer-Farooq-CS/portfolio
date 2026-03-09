@@ -99,6 +99,9 @@ export default function ContactSection() {
           <p className="mt-4 text-muted-foreground max-w-xl mx-auto text-base">
             Have a challenging HPC or AI project? I'd love to hear about it and explore how we can collaborate.
           </p>
+          <p className="mt-2 text-xs sm:text-sm text-muted-foreground">
+            I typically reply within <span className="font-semibold text-foreground">24–48 hours</span>.
+          </p>
         </motion.div>
 
         <div className="grid lg:grid-cols-5 gap-10 lg:gap-16 max-w-5xl mx-auto">
@@ -237,6 +240,18 @@ export default function ContactSection() {
                   </>
                 )}
               </button>
+
+              {/* Alternative contact */}
+              <p className="mt-4 text-xs text-muted-foreground text-center">
+                Prefer email?{" "}
+                <a
+                  href="mailto:umerfarooqcs0891@gmail.com"
+                  className="font-semibold text-primary hover:underline"
+                >
+                  Email me directly
+                </a>
+                .
+              </p>
             </form>
           </motion.div>
         </div>

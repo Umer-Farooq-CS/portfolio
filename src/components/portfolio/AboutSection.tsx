@@ -3,6 +3,7 @@ import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { Server, Atom, Brain, MapPin, Code2, Award, ArrowRight } from "lucide-react";
 import { CERTIFICATIONS } from "@/data/profile";
+import meImage from "@/assets/me.jpg";
 
 // Order: 1 HPC, 2 Quantum, 3 AI
 const strengths = [
@@ -66,8 +67,12 @@ export default function AboutSection() {
             {/* Profile card */}
             <div className="card-surface shadow-card border border-border rounded-2xl p-8 mb-8">
               <div className="flex items-start gap-5 mb-6">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-accent flex items-center justify-center shadow-glow flex-shrink-0">
-                  <Code2 size={28} className="text-primary-foreground" />
+                <div className="w-16 h-16 rounded-2xl overflow-hidden shadow-glow flex-shrink-0 border border-border/70">
+                  <img
+                    src={meImage}
+                    alt="Portrait of Umer Farooq"
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-foreground">Umer Farooq</h3>
