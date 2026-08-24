@@ -25,6 +25,7 @@ export default function UsesPage() {
           eyebrow="Uses"
           title="The machine and the toolchain"
           lede="What the code is written in, what the numbers were measured on, and what runs this site. Anything not confirmed is marked as such rather than filled in."
+          as="h1"
         />
 
         <div className="mt-14 max-w-3xl">

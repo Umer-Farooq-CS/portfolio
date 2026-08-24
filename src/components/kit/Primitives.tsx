@@ -87,12 +87,15 @@ export function ChapterHeader({
   title,
   lede,
   className,
+  as: Heading = "h2",
 }: {
   index?: number;
   eyebrow: string;
   title: ReactNode;
   lede?: ReactNode;
   className?: string;
+  /** "h1" when this is the page's own title; "h2" for a chapter within a page. */
+  as?: "h1" | "h2";
 }) {
   return (
     <div className={cn("max-w-2xl", className)}>
@@ -103,7 +106,7 @@ export function ChapterHeader({
         <span aria-hidden="true" className="h-px w-6 bg-border" />
         <MonoLabel>{eyebrow}</MonoLabel>
       </div>
-      <h2 className="mt-4 text-3xl text-foreground">{title}</h2>
+      <Heading className="mt-4 text-3xl text-foreground">{title}</Heading>
       {lede && <p className="mt-4 text-base text-muted-foreground">{lede}</p>}
     </div>
   );

@@ -25,6 +25,7 @@ export default function LabPage() {
           eyebrow="Lab"
           title="Things you can run, not just read about"
           lede="Two of the claims on this site are executable. Both of these run in your browser: the benchmark uses your cores, and the simulator is exact rather than sampled."
+          as="h1"
         />
 
         <section aria-labelledby="lab-bench" className="mt-16 border-t border-border pt-10">

@@ -49,6 +49,7 @@ export default function NotesPage() {
           eyebrow="Notes"
           title="Working notes"
           lede="Short write-ups on the parts of the work that are worth explaining once rather than repeating."
+          as="h1"
         />
 
         {notes.length > 0 ? (

@@ -87,6 +87,7 @@ export default function ProjectsPage() {
           eyebrow="Work"
           title="Thirty projects, filtered how you like"
           lede="HPC and GPU acceleration, quantum simulation, AI systems, compilers, distributed systems, and full-stack builds. Most have a repository."
+          as="h1"
         />
 
         {/* Controls */}

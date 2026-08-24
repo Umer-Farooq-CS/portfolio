@@ -31,6 +31,7 @@ export default function ServicesPage() {
           eyebrow="Services"
           title="Start from the problem, not the toolchain"
           lede="Six things people usually need. Open one to see what it involves, what you get back, and roughly how I'd approach it."
+          as="h1"
         />
 
         <ul className="mt-14 border-t border-border">

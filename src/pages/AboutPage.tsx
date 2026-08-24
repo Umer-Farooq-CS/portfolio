@@ -78,6 +78,7 @@ export default function AboutPage() {
           eyebrow="About"
           title="Umer Farooq"
           lede="Systems-focused computer scientist. High-performance and parallel computing, quantum simulation, and full-stack development — with a preference for problems where success is a measurable number."
+          as="h1"
         />
 
         <div className="mt-14 grid gap-12 lg:grid-cols-[minmax(0,18rem)_minmax(0,1fr)] lg:gap-16">
