@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { BenchResult, BenchTask } from "./bench.worker";
+import { createBenchPoint, karpFlatt, stripeRows } from "./bench-core";
+import type { BenchPoint, BenchResult, BenchTask } from "./bench-core";
+
+export type { BenchPoint } from "./bench-core";
 
 /**
  * Runs a real parallel speedup sweep in the visitor's browser: the same workload
@@ -7,23 +10,15 @@ import type { BenchResult, BenchTask } from "./bench.worker";
  *
  * The numbers are honest measurements, so they include the things that actually
  * limit parallel scaling — worker startup, scheduler contention, shared caches,
- * and hyperthreaded cores that are not full cores. That is the point.
+ * and logical CPU threads that share physical execution resources. That is the point.
  */
-
-export interface BenchPoint {
-  workers: number;
-  ms: number;
-  speedup: number;
-  /** Speedup divided by worker count. 1.0 would be perfect scaling. */
-  efficiency: number;
-}
 
 export type BenchStatus = "idle" | "calibrating" | "running" | "done" | "skipped" | "unsupported";
 
 export interface BenchState {
   status: BenchStatus;
   points: BenchPoint[];
-  cores: number;
+  logicalCpus: number;
   maxWorkers: number;
   /** Karp–Flatt metric: the experimentally determined serial fraction. */
   serialFraction: number | null;
@@ -37,33 +32,19 @@ const MAX_WORKERS = 8;
 const STEPS = [1, 2, 4, 8];
 /** Best of N per step: a scheduler hiccup should not become a data point. */
 const REPEATS = 2;
-/** Target duration for the single-worker pass; the sweep costs ~2.7× this. */
-const TARGET_BASELINE_MS = 110;
+/** Target duration for the single-worker pass; long enough to amortize messaging. */
+const TARGET_BASELINE_MS = 160;
 const CALIBRATION_ITER = 220;
 
 function createWorker(): Worker {
   return new Worker(new URL("./bench.worker.ts", import.meta.url), { type: "module" });
 }
 
-/** Splits `height` rows across `count` workers, giving the remainder to the first ones. */
-function bands(height: number, count: number): { rowStart: number; rowEnd: number }[] {
-  const base = Math.floor(height / count);
-  const extra = height % count;
-  const result: { rowStart: number; rowEnd: number }[] = [];
-  let row = 0;
-  for (let i = 0; i < count; i++) {
-    const rows = base + (i < extra ? 1 : 0);
-    result.push({ rowStart: row, rowEnd: row + rows });
-    row += rows;
-  }
-  return result;
-}
-
 function runOnce(
   workers: Worker[],
-  task: Omit<BenchTask, "rowStart" | "rowEnd">,
+  task: Omit<BenchTask, "rowStart" | "rowEnd" | "rowStep">,
 ): Promise<{ ms: number; checksum: number }> {
-  const split = bands(task.height, workers.length);
+  const split = stripeRows(task.height, workers.length);
   const started = performance.now();
 
   return Promise.all(
@@ -91,30 +72,19 @@ function runOnce(
   }));
 }
 
-/**
- * Karp–Flatt: e = (1/S - 1/p) / (1 - 1/p). It reports the serial fraction implied
- * by a measured speedup, which is more informative than efficiency alone because
- * it separates "inherently serial" from "just more overhead at higher p".
- */
-function karpFlatt(speedup: number, p: number): number | null {
-  if (p < 2 || speedup <= 0) return null;
-  const e = (1 / speedup - 1 / p) / (1 - 1 / p);
-  return Math.min(1, Math.max(0, e));
-}
-
 interface UseBenchmarkOptions {
   /** When false, the live run is skipped and a precomputed curve is used instead. */
   enabled: boolean;
 }
 
 export function useBenchmark({ enabled }: UseBenchmarkOptions) {
-  const cores = typeof navigator === "undefined" ? 0 : (navigator.hardwareConcurrency ?? 0);
-  const maxWorkers = Math.max(1, Math.min(cores || 1, MAX_WORKERS));
+  const logicalCpus = typeof navigator === "undefined" ? 0 : (navigator.hardwareConcurrency ?? 0);
+  const maxWorkers = Math.max(1, Math.min(logicalCpus || 1, MAX_WORKERS));
 
   const [state, setState] = useState<BenchState>({
     status: "idle",
     points: [],
-    cores,
+    logicalCpus,
     maxWorkers,
     serialFraction: null,
     skipReason: null,
@@ -130,11 +100,11 @@ export function useBenchmark({ enabled }: UseBenchmarkOptions) {
       setState((s) => ({ ...s, status: "unsupported", skipReason: "This browser has no Web Workers." }));
       return;
     }
-    if (cores <= 2) {
+    if (logicalCpus <= 2) {
       setState((s) => ({
         ...s,
         status: "skipped",
-        skipReason: `Only ${cores || "1"} core${cores === 1 ? "" : "s"} available — a sweep here would measure noise.`,
+        skipReason: `Only ${logicalCpus || "1"} logical CPU${logicalCpus === 1 ? "" : "s"} available — a sweep here would measure noise.`,
       }));
       return;
     }
@@ -152,23 +122,30 @@ export function useBenchmark({ enabled }: UseBenchmarkOptions) {
 
       for (let i = 0; i < maxWorkers; i++) pool.push(createWorker());
 
-      // Size the problem to this machine: a short calibration pass, then scale the
-      // row count so the single-worker baseline lands near the time budget.
       const width = 320;
-      const calibration = await runOnce([pool[0]], {
+
+      // Warm every worker before calibration. Otherwise module startup and the
+      // first JIT pass inflate calibration and leave the measured task too small.
+      await runOnce(pool, {
         width,
-        height: 60,
+        height: Math.max(80, maxWorkers * 12),
         maxIter: CALIBRATION_ITER,
       });
       if (cancelled.current) return;
 
-      // Warm every worker: first-call JIT and thread start-up would otherwise be
-      // charged to whichever measurement happened to run first.
-      await runOnce(pool, { width, height: 40, maxIter: CALIBRATION_ITER });
-      if (cancelled.current) return;
+      // Size the problem from two warmed passes and ignore a scheduler hiccup.
+      let calibrationMs = Number.POSITIVE_INFINITY;
+      for (let attempt = 0; attempt < 2; attempt++) {
+        const calibration = await runOnce([pool[0]], {
+          width,
+          height: 60,
+          maxIter: CALIBRATION_ITER,
+        });
+        calibrationMs = Math.min(calibrationMs, calibration.ms);
+      }
 
-      const rowsPerMs = 60 / Math.max(calibration.ms, 1);
-      const height = Math.max(80, Math.min(1400, Math.round(rowsPerMs * TARGET_BASELINE_MS)));
+      const rowsPerMs = 60 / Math.max(calibrationMs, 1);
+      const height = Math.max(80, Math.min(1800, Math.round(rowsPerMs * TARGET_BASELINE_MS)));
       const task = { width, height, maxIter: CALIBRATION_ITER };
 
       setState((s) => ({ ...s, status: "running" }));
@@ -200,8 +177,7 @@ export function useBenchmark({ enabled }: UseBenchmarkOptions) {
           throw new Error("Checksum mismatch across worker counts");
         }
 
-        const speedup = baselineMs / ms;
-        points.push({ workers, ms, speedup, efficiency: speedup / workers });
+        points.push(createBenchPoint(baselineMs, workers, ms));
         setState((s) => ({ ...s, points: [...points] }));
 
         // Yield so the reveal animates rather than blocking to the final frame.
@@ -225,7 +201,7 @@ export function useBenchmark({ enabled }: UseBenchmarkOptions) {
       for (const worker of pool) worker.terminate();
       running.current = false;
     }
-  }, [cores, enabled, maxWorkers]);
+  }, [enabled, logicalCpus, maxWorkers]);
 
   useEffect(() => {
     return () => {
@@ -237,17 +213,21 @@ export function useBenchmark({ enabled }: UseBenchmarkOptions) {
 }
 
 /**
- * A real sweep measured on an 8-core laptop, shown when the live run is skipped
- * (reduced motion, data saving, too few cores, or no worker support) so the figure
+ * A recorded browser sweep, shown when the live run is skipped
+ * (reduced motion, data saving, too few logical CPUs, or no worker support) so the figure
  * is never empty. Labelled as recorded, never passed off as the visitor's own.
  */
-export const RECORDED_SWEEP: BenchPoint[] = [
-  { workers: 1, ms: 112, speedup: 1, efficiency: 1 },
-  { workers: 2, ms: 58, speedup: 1.93, efficiency: 0.966 },
-  { workers: 3, ms: 40, speedup: 2.8, efficiency: 0.933 },
-  { workers: 4, ms: 31, speedup: 3.61, efficiency: 0.903 },
-  { workers: 5, ms: 26, speedup: 4.31, efficiency: 0.862 },
-  { workers: 6, ms: 23, speedup: 4.87, efficiency: 0.812 },
-  { workers: 7, ms: 21, speedup: 5.33, efficiency: 0.762 },
-  { workers: 8, ms: 18, speedup: 6.22, efficiency: 0.778 },
+const RECORDED_TIMINGS = [
+  { workers: 1, ms: 112 },
+  { workers: 2, ms: 58 },
+  { workers: 3, ms: 40 },
+  { workers: 4, ms: 31 },
+  { workers: 5, ms: 26 },
+  { workers: 6, ms: 23 },
+  { workers: 7, ms: 21 },
+  { workers: 8, ms: 18 },
 ];
+
+export const RECORDED_SWEEP: BenchPoint[] = RECORDED_TIMINGS.map(({ workers, ms }) =>
+  createBenchPoint(RECORDED_TIMINGS[0].ms, workers, ms),
+);

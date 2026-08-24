@@ -14,10 +14,10 @@ export default function Rail() {
   const sections = sectionsForRoute(pathname);
   const clock = useIslamabadClock();
   const [active, setActive] = useState<string | null>(sections[0]?.id ?? null);
-  const [cores, setCores] = useState<number | null>(null);
+  const [logicalCpus, setLogicalCpus] = useState<number | null>(null);
 
   useEffect(() => {
-    setCores(navigator.hardwareConcurrency ?? null);
+    setLogicalCpus(navigator.hardwareConcurrency ?? null);
   }, []);
 
   // Track which section is in view so the index reads like a position indicator.
@@ -87,8 +87,8 @@ export default function Rail() {
             </dd>
           </div>
           <div>
-            <dt className="label-mono">Cores</dt>
-            <dd className="readout text-xs text-foreground">{cores ?? "—"}</dd>
+            <dt className="label-mono">CPU threads</dt>
+            <dd className="readout text-xs text-foreground">{logicalCpus ?? "—"}</dd>
           </div>
         </dl>
         <p className="flex items-center gap-1.5">

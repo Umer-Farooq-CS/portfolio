@@ -13,6 +13,11 @@ export type ResolvedTheme = "light" | "dark";
 
 export const THEME_STORAGE_KEY = "uf-theme";
 
+const THEME_COLORS: Record<ResolvedTheme, string> = {
+  light: "#e9eaec",
+  dark: "#08090b",
+};
+
 interface ThemeContextValue {
   /** What the visitor picked, including "system". */
   choice: ThemeChoice;
@@ -50,6 +55,25 @@ function resolve(choice: ThemeChoice): ResolvedTheme {
   return choice === "system" ? systemTheme() : choice;
 }
 
+function applyResolvedTheme(next: ResolvedTheme): void {
+  const root = document.documentElement;
+  root.classList.toggle("dark", next === "dark");
+  root.dataset.theme = next;
+  root.style.colorScheme = next;
+  document
+    .querySelector<HTMLMetaElement>('meta[name="theme-color"]')
+    ?.setAttribute("content", THEME_COLORS[next]);
+
+  const favicon = document.querySelector<HTMLLinkElement>("link[data-theme-favicon]");
+  const faviconFile =
+    next === "dark" ? favicon?.dataset.darkFavicon : favicon?.dataset.lightFavicon;
+  const faviconHref = favicon?.getAttribute("href");
+  if (favicon && faviconFile && faviconHref) {
+    // Replace only the filename, preserving Vite's /portfolio/ base prefix.
+    favicon.setAttribute("href", faviconHref.replace(/[^/]+$/, faviconFile));
+  }
+}
+
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [choice, setChoiceState] = useState<ThemeChoice>(readStoredChoice);
   const [resolved, setResolved] = useState<ResolvedTheme>(() => resolve(readStoredChoice()));
@@ -58,10 +82,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const next = resolve(choice);
     setResolved(next);
-    const root = document.documentElement;
-    root.classList.toggle("dark", next === "dark");
-    root.dataset.theme = next;
-    root.style.colorScheme = next;
+    applyResolvedTheme(next);
   }, [choice]);
 
   // Follow the OS while the choice is "system".
@@ -71,9 +92,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     const onChange = () => {
       const next = systemTheme();
       setResolved(next);
-      document.documentElement.classList.toggle("dark", next === "dark");
-      document.documentElement.dataset.theme = next;
-      document.documentElement.style.colorScheme = next;
+      applyResolvedTheme(next);
     };
     query.addEventListener("change", onChange);
     return () => query.removeEventListener("change", onChange);

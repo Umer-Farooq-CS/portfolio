@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <title>Cirq quantum circuit</title>
+  <path fill-rule="evenodd" d="M2 5h20v2H2V5Zm0 12h20v2H2v-2Zm5-5a3 3 0 1 1 6 0 3 3 0 0 1-6 0Zm2 0a1 1 0 1 0 2 0 1 1 0 0 0-2 0Zm7-3h5v6h-5V9Zm2 2v2h1v-2h-1ZM4 6h2v12H4V6Z"/>
+</svg>

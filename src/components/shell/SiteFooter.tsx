@@ -5,6 +5,7 @@ import { useIslamabadClock } from "@/lib/clock";
 import { MonoLabel } from "@/components/kit/Primitives";
 import { NOTES_ARE_PUBLIC } from "@/data/notes";
 import { accent, type VisualAccent } from "@/lib/accent";
+import UFMark from "@/components/brand/UFMark";
 
 const SOCIAL: { label: string; href: string; icon: typeof Github; tone: VisualAccent }[] = [
   { label: "GitHub", href: SITE_LINKS.github, icon: Github, tone: "interface" },
@@ -39,14 +40,12 @@ export default function SiteFooter() {
       <div className="container grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-4">
         <div>
           <div className="flex items-center gap-2.5">
-            <span
-              aria-hidden="true"
-              className="flex h-7 w-7 items-center justify-center rounded-sm bg-thermal font-mono text-2xs font-semibold text-on-thermal"
-            >
-              UF
-            </span>
+            <UFMark height={32} />
             <span className="font-display text-sm font-semibold text-foreground">Umer Farooq</span>
           </div>
+          <p className="mt-2 font-mono text-2xs uppercase tracking-widest text-primary-type">
+            Performance · simulation · validation
+          </p>
           <p className="mt-3 max-w-[26ch] text-xs leading-relaxed text-muted-foreground">
             High-performance and <span className="text-primary-type">GPU computing</span>,{" "}
             <span className="text-cryo-type">quantum simulation</span>, and{" "}

@@ -7,7 +7,8 @@ import { getDomain } from "@/data/taxonomy";
 import { accent } from "@/lib/accent";
 import Picture from "@/components/Picture";
 import JsonLd from "@/components/JsonLd";
-import { Metric, Tag } from "@/components/kit/Primitives";
+import { Metric } from "@/components/kit/Primitives";
+import { TechnologyChip } from "@/components/technology/TechnologyMark";
 import { useDocumentMeta } from "@/lib/meta";
 import { breadcrumbSchema, projectSchema } from "@/lib/seo";
 import { useMotionPolicy } from "@/lib/motion-policy";
@@ -307,7 +308,11 @@ export default function ProjectDetailPage() {
           </h2>
           <div className="mt-4 flex flex-wrap gap-1.5">
             {project.technologies.map((tech) => (
-              <Tag key={tech} tone={domain.accent}>{tech}</Tag>
+              <TechnologyChip
+                key={tech}
+                technology={tech}
+                fallbackTone={domain.accent}
+              />
             ))}
           </div>
         </motion.section>

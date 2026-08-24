@@ -16,11 +16,24 @@ function ThemeProbe() {
   );
 }
 
+function addThemeFavicon() {
+  const favicon = document.createElement("link");
+  favicon.rel = "icon";
+  favicon.type = "image/svg+xml";
+  favicon.href = "/portfolio/favicon-light-v3.svg";
+  favicon.dataset.themeFavicon = "";
+  favicon.dataset.lightFavicon = "favicon-light-v3.svg";
+  favicon.dataset.darkFavicon = "favicon-dark-v3.svg";
+  document.head.append(favicon);
+  return favicon;
+}
+
 describe("theme provider", () => {
   beforeEach(() => {
     localStorage.clear();
     document.documentElement.className = "";
     delete document.documentElement.dataset.theme;
+    document.querySelectorAll("link[data-theme-favicon]").forEach((link) => link.remove());
   });
 
   it("opens in light when nothing is stored, whatever the OS says", () => {
@@ -89,6 +102,67 @@ describe("theme provider", () => {
     expect(localStorage.getItem(THEME_STORAGE_KEY)).toBe("dark");
     expect(document.documentElement.classList.contains("dark")).toBe(true);
     expect(document.documentElement.dataset.theme).toBe("dark");
+  });
+
+  it("keeps browser chrome and the base-safe favicon in sync with the resolved theme", async () => {
+    const themeColor = document.createElement("meta");
+    themeColor.name = "theme-color";
+    document.head.append(themeColor);
+    const favicon = addThemeFavicon();
+
+    try {
+      const user = userEvent.setup();
+      render(
+        <ThemeProvider>
+          <ThemeProbe />
+        </ThemeProvider>,
+      );
+
+      expect(themeColor.content).toBe("#e9eaec");
+      expect(favicon.getAttribute("href")).toBe("/portfolio/favicon-light-v3.svg");
+      await user.click(screen.getByRole("button", { name: "toggle" }));
+      expect(themeColor.content).toBe("#08090b");
+      expect(favicon.getAttribute("href")).toBe("/portfolio/favicon-dark-v3.svg");
+    } finally {
+      themeColor.remove();
+      favicon.remove();
+    }
+  });
+
+  it("updates the favicon when a system theme preference changes", () => {
+    localStorage.setItem(THEME_STORAGE_KEY, "system");
+    let dark = true;
+    let notifyPreferenceChange: (() => void) | undefined;
+    const matchMedia = vi.fn().mockImplementation((query: string) => ({
+      matches: query.includes("dark") && dark,
+      media: query,
+      addEventListener: (_type: string, listener: () => void) => {
+        notifyPreferenceChange = listener;
+      },
+      removeEventListener: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+      onchange: null,
+    }));
+    vi.stubGlobal("matchMedia", matchMedia);
+    const favicon = addThemeFavicon();
+
+    try {
+      render(
+        <ThemeProvider>
+          <ThemeProbe />
+        </ThemeProvider>,
+      );
+
+      expect(favicon.getAttribute("href")).toBe("/portfolio/favicon-dark-v3.svg");
+      dark = false;
+      act(() => notifyPreferenceChange?.());
+      expect(favicon.getAttribute("href")).toBe("/portfolio/favicon-light-v3.svg");
+    } finally {
+      favicon.remove();
+      vi.unstubAllGlobals();
+    }
   });
 
   it("restores a stored choice on mount, so it survives a reload", () => {

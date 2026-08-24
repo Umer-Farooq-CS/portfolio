@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { useMotionPolicy } from "@/lib/motion-policy";
 import SpeedupChart from "./SpeedupChart";
 import { RECORDED_SWEEP, useBenchmark } from "./useBenchmark";
+import { karpFlatt } from "./bench-core";
 
 /**
  * The hero instrument: a real parallel speedup sweep, run on the visitor's own
@@ -54,12 +55,20 @@ export default function SpeedupBench() {
   const busy = bench.status === "calibrating" || bench.status === "running";
 
   const statusLine = (() => {
-    if (isRecorded) return "recorded on an 8-core laptop";
+    if (isRecorded) return "recorded reference sweep";
     if (bench.status === "calibrating") return "sizing the problem for this machine";
-    if (bench.status === "running") return `measuring ${points.length} of ${maxWorkers}`;
+    if (bench.status === "running") {
+      return last ? `measured through ${last.workers} workers` : `measuring up to ${maxWorkers} workers`;
+    }
     if (bench.status === "done") return "measured on your machine, just now";
     return "ready";
   })();
+
+  const effectiveSerialFraction = isRecorded
+    ? last
+      ? karpFlatt(last.speedup, last.workers)
+      : null
+    : bench.serialFraction;
 
   return (
     <div
@@ -82,8 +91,8 @@ export default function SpeedupBench() {
       {/* The readout. Every value is a measurement, and each says what it means. */}
       <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-border pt-4 sm:grid-cols-4">
         <div>
-          <dt className="label-mono">Cores</dt>
-          <dd className="readout text-lg text-foreground">{isRecorded ? 8 : bench.cores || "—"}</dd>
+          <dt className="label-mono">Workers</dt>
+          <dd className="readout text-lg text-foreground">{last?.workers ?? "—"}</dd>
         </div>
         <div>
           <dt className="label-mono">Speedup</dt>
@@ -97,7 +106,7 @@ export default function SpeedupBench() {
           </motion.dd>
         </div>
         <div>
-          <dt className="label-mono">Efficiency</dt>
+          <dt className="label-mono">Parallel efficiency</dt>
           <motion.dd
             key={`efficiency-${last?.efficiency ?? "empty"}`}
             initial={motionEnabled ? { opacity: 0.35, y: 3 } : false}
@@ -108,15 +117,11 @@ export default function SpeedupBench() {
           </motion.dd>
         </div>
         <div>
-          <dt className="label-mono" title="Karp–Flatt metric">
-            Serial part
+          <dt className="label-mono" title="Karp–Flatt effective serial fraction">
+            Serial + overhead
           </dt>
           <dd className="readout text-lg text-foreground">
-            {bench.serialFraction !== null && !isRecorded
-              ? `${(bench.serialFraction * 100).toFixed(1)}%`
-              : isRecorded
-                ? "3.2%"
-                : "—"}
+            {effectiveSerialFraction !== null ? `${(effectiveSerialFraction * 100).toFixed(1)}%` : "—"}
           </dd>
         </div>
       </dl>
@@ -125,7 +130,7 @@ export default function SpeedupBench() {
         <p className="max-w-[34ch] text-xs leading-relaxed text-muted-foreground">
           {isRecorded
             ? (bench.skipReason ?? "Showing a recorded sweep.")
-            : "The same workload at 1 to N workers. The gap from ideal is scheduling, shared cache, and cores that aren't really cores."}
+            : `The same compute-bound workload at 1, 2, 4 … N workers. Efficiency is speedup per worker; the gap includes coordination, scheduling, and shared hardware.${bench.logicalCpus ? ` ${bench.logicalCpus} logical CPUs reported by the browser.` : ""}`}
         </p>
         <button
           type="button"

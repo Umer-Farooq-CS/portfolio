@@ -8,6 +8,7 @@ import WorkChapter from "@/components/home/WorkChapter";
 import ProofChapter from "@/components/home/ProofChapter";
 import AboutChapter from "@/components/home/AboutChapter";
 import TalkChapter from "@/components/home/TalkChapter";
+import TechLogoRail from "@/components/technology/TechLogoRail";
 
 // Below the fold, and its data module imports zod — so it loads on demand rather
 // than in the homepage's first-load chunk.
@@ -25,6 +26,7 @@ export default function Index() {
     <>
       <JsonLd id="person" data={personSchema()} />
       <BenchChapter />
+      <TechLogoRail />
       <WorkChapter />
       <ProofChapter />
       <div id="activity" className="scroll-mt-20">

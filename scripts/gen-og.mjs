@@ -16,7 +16,6 @@ const INK = "#0b0d10";
 const PAPER = "#e9eaec";
 const GRAPHITE = "#5a6169";
 const THERMAL = "#ff5a1f";
-const CRYO = "#14a3c7";
 
 // Measured-vs-ideal speedup curve — the site's signature figure, drawn as paths
 // so it needs no font and no runtime.
@@ -59,10 +58,13 @@ const svg = `
     return `<line x1="${x}" y1="72" x2="${x}" y2="88" stroke="${GRAPHITE}" stroke-width="1" opacity="0.5" />`;
   }).join("")}
 
-  <rect x="80" y="128" width="56" height="4" fill="${THERMAL}" />
-  <rect x="144" y="128" width="28" height="4" fill="${CRYO}" />
+  <!-- Supplied UF identity, reduced directly from the tightly cropped vector master. -->
+  <svg x="80" y="146" width="88" height="44" viewBox="0 0 421 209">
+    <path fill="${PAPER}"
+          d="M53 0h42L44 89c-8 14-10 29-7 44 5 24 23 39 47 39 22 0 41-10 53-29L225 0h42L163 179c-15 19-36 29-58 30H82c-27-1-49-11-64-28C4 164-2 137 1 111c1-11 3-20 7-29L53 0ZM277 0h144l-19 38H256l21-38ZM232 77h103l-21 37H212l20-37Z" />
+  </svg>
 
-  <text x="80" y="196" fill="${PAPER}" font-family="Segoe UI, Arial, sans-serif"
+  <text x="188" y="196" fill="${PAPER}" font-family="Segoe UI, Arial, sans-serif"
         font-size="72" font-weight="700" letter-spacing="-1">Umer Farooq</text>
 
   <text x="80" y="272" fill="${PAPER}" font-family="Segoe UI, Arial, sans-serif"
@@ -71,7 +73,7 @@ const svg = `
         font-size="34" font-weight="600" opacity="0.92">and hard systems runnable.</text>
 
   <text x="80" y="392" fill="${GRAPHITE}" font-family="Consolas, Menlo, monospace"
-        font-size="20" letter-spacing="1.6">HPC · GPU · QUANTUM SIMULATION · AGENTIC AI</text>
+        font-size="20" letter-spacing="1.6">HPC · GPU · QUANTUM SIMULATION · VERIFIED AI</text>
   <text x="80" y="424" fill="${GRAPHITE}" font-family="Consolas, Menlo, monospace"
         font-size="20" letter-spacing="1.6">ISLAMABAD, PKT</text>
 

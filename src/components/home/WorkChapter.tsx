@@ -4,7 +4,8 @@ import { ArrowUpRight, Trophy } from "lucide-react";
 import { getFeaturedProjects } from "@/data/projects";
 import { getDomain } from "@/data/taxonomy";
 import { accent } from "@/lib/accent";
-import { ChapterHeader, Metric, Tag, TextAction } from "@/components/kit/Primitives";
+import { ChapterHeader, Metric, TextAction } from "@/components/kit/Primitives";
+import { TechnologyChip } from "@/components/technology/TechnologyMark";
 import { useMotionPolicy } from "@/lib/motion-policy";
 
 /**
@@ -85,7 +86,11 @@ export default function WorkChapter() {
 
                     <div className="mt-6 flex flex-wrap gap-1.5">
                       {project.technologies.slice(0, 7).map((tech) => (
-                        <Tag key={tech} tone={domain.accent}>{tech}</Tag>
+                        <TechnologyChip
+                          key={tech}
+                          technology={tech}
+                          fallbackTone={domain.accent}
+                        />
                       ))}
                     </div>
 

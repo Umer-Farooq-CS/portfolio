@@ -6,6 +6,7 @@ import { useTheme } from "@/lib/theme";
 import { useMotionPolicy } from "@/lib/motion-policy";
 import { NOTES_ARE_PUBLIC } from "@/data/notes";
 import { accent, type VisualAccent } from "@/lib/accent";
+import UFMark from "@/components/brand/UFMark";
 
 const NAV: { label: string; to: string; tone: VisualAccent }[] = [
   { label: "Work", to: "/projects", tone: "interface" },
@@ -58,14 +59,9 @@ export default function TopBar() {
         <Link
           to="/"
           onClick={goHome}
-          className="group flex items-center gap-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="group -ml-2 flex min-h-11 items-center gap-2 rounded-md px-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
-          <span
-            aria-hidden="true"
-            className="flex h-7 w-7 items-center justify-center rounded-sm bg-thermal font-mono text-2xs font-semibold text-on-thermal"
-          >
-            UF
-          </span>
+          <UFMark height={22} animated />
           <span className="font-display text-sm font-semibold tracking-tight text-foreground [font-variation-settings:'wdth'_108]">
             Umer Farooq
           </span>

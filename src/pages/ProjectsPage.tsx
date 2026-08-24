@@ -5,7 +5,8 @@ import { ArrowUpRight, ExternalLink, Github, Search, SlidersHorizontal, Trophy, 
 import { PROJECTS, getFeaturedProjects, getTechnologyFacets } from "@/data/projects";
 import { DOMAINS, getDomain, type Domain } from "@/data/taxonomy";
 import { accent, type VisualAccent } from "@/lib/accent";
-import { AccentText, ChapterHeader, MonoLabel, Tag } from "@/components/kit/Primitives";
+import { AccentText, ChapterHeader, MonoLabel } from "@/components/kit/Primitives";
+import { TechnologyChip } from "@/components/technology/TechnologyMark";
 import { useDocumentMeta } from "@/lib/meta";
 import { routeMeta } from "@/data/routeMeta";
 import { useMotionPolicy } from "@/lib/motion-policy";
@@ -337,7 +338,11 @@ export default function ProjectsPage() {
                           <div className="mt-auto pt-4">
                             <div className="flex flex-wrap gap-1">
                               {project.technologies.slice(0, 3).map((item) => (
-                                <Tag key={item} tone={meta.accent}>{item}</Tag>
+                                <TechnologyChip
+                                  key={item}
+                                  technology={item}
+                                  fallbackTone={meta.accent}
+                                />
                               ))}
                               {project.technologies.length > 3 && (
                                 <span className="readout self-center text-2xs text-muted-foreground">

@@ -3,10 +3,19 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon-v3.ico" sizes="16x16 32x32 48x48" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="/favicon-light-v3.svg"
+      sizes="any"
+      data-theme-favicon
+      data-light-favicon="favicon-light-v3.svg"
+      data-dark-favicon="favicon-dark-v3.svg"
+    />
+    <link rel="apple-touch-icon" href="/apple-touch-icon-v3.png" sizes="180x180" />
     <link rel="manifest" href="/site.webmanifest" />
-    <meta name="theme-color" content="#0b0d10" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#e9eaec" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#e9eaec" />
 
     <title>Umer Farooq — HPC, quantum simulation, and AI systems engineer</title>
     <meta
@@ -53,6 +62,15 @@
           root.classList.toggle("dark", dark);
           root.dataset.theme = dark ? "dark" : "light";
           root.style.colorScheme = dark ? "dark" : "light";
+          var themeColor = document.querySelector('meta[name="theme-color"]');
+          if (themeColor) themeColor.setAttribute("content", dark ? "#08090b" : "#e9eaec");
+          var favicon = document.querySelector("link[data-theme-favicon]");
+          var faviconFile = favicon &&
+            (dark ? favicon.dataset.darkFavicon : favicon.dataset.lightFavicon);
+          var faviconHref = favicon && favicon.getAttribute("href");
+          if (faviconFile && faviconHref) {
+            favicon.setAttribute("href", faviconHref.replace(/[^/]+$/, faviconFile));
+          }
         } catch (e) {
           /* storage blocked — the app applies the theme on mount */
         }

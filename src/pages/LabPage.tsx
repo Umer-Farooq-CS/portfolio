@@ -76,14 +76,14 @@ export default function LabPage() {
           <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,28rem)] lg:gap-14">
             <div className="text-sm leading-relaxed text-muted-foreground">
               <p>
-                The same compute-bound workload is run at one worker, then two, and so on, and timed.
-                The payload in and out is a handful of numbers, so what you see is parallel compute
-                rather than the cost of moving data between threads.
+                The same compute-bound workload is run at 1, 2, 4, and up to 8 workers. Rows are
+                cyclically striped across workers so each one samples both light and expensive parts
+                of the fractal instead of inheriting an uneven contiguous band.
               </p>
               <p className="mt-4">
-                The gap from the ideal line is real: scheduling, shared cache, and hyperthreaded cores
-                that aren&apos;t whole cores. Each point is the best of two runs, after a warm-up pass,
-                so a single scheduler hiccup doesn&apos;t become a data point.
+                The payload is only a small task descriptor and checksum, so the remaining gap from
+                ideal mainly reflects coordination, scheduling, shared cache, and logical CPU threads
+                sharing execution resources. Each point is the best of two warmed runs.
               </p>
               <div className="mt-6 rounded-md border border-thermal/25 bg-thermal/5 p-4">
                 <MonoLabel className="text-primary-type">How to read it</MonoLabel>
@@ -106,7 +106,7 @@ export default function LabPage() {
                 <div>
                   <dt className="label-mono">Workload</dt>
                   <dd className="mt-1 text-sm text-foreground">
-                    Mandelbrot escape-time over a band of rows
+                    Mandelbrot escape-time over cyclically striped rows
                   </dd>
                 </div>
                 <div>
@@ -116,7 +116,7 @@ export default function LabPage() {
                   </dd>
                 </div>
                 <div>
-                  <dt className="label-mono">Serial fraction</dt>
+                  <dt className="label-mono">Serial + overhead</dt>
                   <dd className="mt-1 text-sm text-foreground">
                     Karp&ndash;Flatt, from the measured speedup at the highest worker count
                   </dd>

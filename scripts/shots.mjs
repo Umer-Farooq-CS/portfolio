@@ -85,6 +85,13 @@ for (const theme of ["light", "dark"]) {
       deviceScaleFactor: 1,
       colorScheme: theme,
     });
+    // The product deliberately defaults to light and follows the OS only after
+    // a visitor chooses "system". Seed the same persisted choice the theme
+    // control writes so captures named dark actually exercise the dark UI.
+    await context.addInitScript(
+      ({ selectedTheme, storageKey }) => localStorage.setItem(storageKey, selectedTheme),
+      { selectedTheme: theme, storageKey: "uf-theme" },
+    );
 
     for (const route of routes) {
       const page = await context.newPage();

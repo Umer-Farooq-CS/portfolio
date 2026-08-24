@@ -1,0 +1,125 @@
+.viewport {
+  overflow: hidden;
+  padding-block: 0.75rem;
+}
+
+.track {
+  display: flex;
+  width: max-content;
+  transform: translate3d(0, 0, 0);
+  animation: technology-rail-shift 64s linear infinite;
+  animation-play-state: paused;
+}
+
+.viewport[data-running="true"] .track {
+  animation-play-state: running;
+}
+
+.viewport[data-running="true"]:hover .track,
+.rail:focus-within .viewport[data-running="true"] .track {
+  animation-play-state: paused;
+}
+
+.group {
+  display: flex;
+  flex: none;
+  gap: 0.625rem;
+  margin: 0;
+  padding: 0 0.625rem 0 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  min-height: 2.75rem;
+  min-width: max-content;
+  align-items: center;
+  gap: 0.625rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: color-mix(in oklab, var(--color-card) 82%, transparent);
+  padding: 0.55rem 0.75rem;
+  transition:
+    border-color 180ms ease,
+    opacity 180ms ease;
+}
+
+.viewport:hover .item {
+  opacity: 0.62;
+}
+
+.viewport:hover .item:hover {
+  border-color: currentColor;
+  opacity: 1;
+}
+
+.viewport[data-static="true"] .track {
+  transform: none;
+  animation: none;
+}
+
+.viewport[data-static="true"] .duplicate {
+  display: none;
+}
+
+@keyframes technology-rail-shift {
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@media (width < 640px) {
+  .viewport {
+    overflow-x: auto;
+    padding-inline: 1rem;
+    scroll-snap-type: x proximity;
+    scrollbar-width: thin;
+  }
+
+  .track {
+    transform: none;
+    animation: none;
+  }
+
+  .group {
+    padding-right: 1rem;
+  }
+
+  .item {
+    scroll-snap-align: start;
+  }
+
+  .duplicate,
+  .motionControl {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .viewport {
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+
+  .track {
+    transform: none;
+    animation: none;
+  }
+
+  .duplicate,
+  .motionControl {
+    display: none;
+  }
+}
+
+@media print {
+  .track {
+    transform: none;
+    animation: none;
+  }
+
+  .duplicate,
+  .motionControl {
+    display: none;
+  }
+}
