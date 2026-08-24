@@ -9,6 +9,7 @@ import { allRoutes, root } from "./routes.mjs";
 const SITE_URL = ((process.env.VITE_SITE_URL || "").trim() ||
   "https://umer-farooq-cs.github.io/portfolio").replace(/\/+$/, "");
 
+// Trailing slashes match what Pages serves and what the canonical tags say.
 const today = new Date().toISOString().slice(0, 10);
 
 // Only indexable routes: /notes sets noIndex while it has no posts, and /thanks is
@@ -20,7 +21,7 @@ const xml = `<?xml version="1.0" encoding="UTF-8"?>
 ${urls
   .map(
     (url) => `  <url>
-    <loc>${SITE_URL}${url.path === "/" ? "/" : url.path}</loc>
+    <loc>${SITE_URL}${url.path === "/" ? "/" : `${url.path}/`}</loc>
     <lastmod>${today}</lastmod>
     <changefreq>${url.changefreq}</changefreq>
     <priority>${url.priority}</priority>

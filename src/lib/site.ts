@@ -21,9 +21,21 @@ export const SITE = {
   ogImage: "og-portfolio.png",
 } as const;
 
-/** Absolute URL for a route path, with exactly one slash between segments. */
+/**
+ * Absolute URL for a route or an asset.
+ *
+ * Routes get a trailing slash because that is what GitHub Pages actually serves:
+ * each route is a prerendered <route>/index.html, and Pages 301s the slashless
+ * form to it. A canonical URL that redirects is a weak signal, so the canonical,
+ * the sitemap and the served URL all need to agree.
+ *
+ * Assets must NOT get one — this function also builds the social-card URL, and
+ * "og-portfolio.png/" is not a file. The extension test is what separates them.
+ */
 export function absoluteUrl(path = "/"): string {
   const base = SITE.url.replace(/\/+$/, "");
-  const suffix = path === "/" ? "" : `/${path.replace(/^\/+/, "")}`;
-  return `${base}${suffix}`;
+  const clean = path.replace(/^\/+/, "").replace(/\/+$/, "");
+  if (!clean) return `${base}/`;
+  const isAsset = /\.[a-z0-9]{2,5}$/i.test(clean);
+  return `${base}/${clean}${isAsset ? "" : "/"}`;
 }
