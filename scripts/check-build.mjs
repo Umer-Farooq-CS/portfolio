@@ -10,10 +10,8 @@
 // A unit test cannot catch that: it only manifests in the built HTML.
 
 import { readFile } from "node:fs/promises";
-import { dirname, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
-
-const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+import { resolve } from "node:path";
+import { allRoutes, root } from "./routes.mjs";
 const failures = [];
 
 async function read(relative) {
@@ -62,6 +60,22 @@ if (!sitemap) {
   failures.push("sitemap.xml has no absolute <loc> URLs — VITE_SITE_URL resolved to blank.");
 }
 
+// 5. Every route must have a real index.html, or Pages answers 404 for it and
+//    the per-page metadata is never read by anything that checks status codes.
+const routes = await allRoutes();
+const notPrerendered = [];
+for (const route of routes) {
+  if (route.path === "/") continue;
+  if (!(await read(`dist${route.path}/index.html`))) notPrerendered.push(route.path);
+}
+if (notPrerendered.length > 0) {
+  failures.push(
+    `${notPrerendered.length} route(s) are not prerendered, so Pages will 404 them: ` +
+      `${notPrerendered.slice(0, 4).join(", ")}${notPrerendered.length > 4 ? ", …" : ""}. ` +
+      "Run `npm run prerender` after the build.",
+  );
+}
+
 if (failures.length > 0) {
   console.error("Build check failed:\n");
   for (const failure of failures) console.error(`  - ${failure}`);
@@ -69,5 +83,6 @@ if (failures.length > 0) {
 }
 
 console.log(
-  `build check passed — ${absolute.length} absolute asset refs, 404 fallback, social card, and sitemap all present`,
+  `build check passed — ${absolute.length} absolute asset refs, ${routes.length} routes prerendered, ` +
+    "404 fallback, social card and sitemap all present",
 );
