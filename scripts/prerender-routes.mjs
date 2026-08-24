@@ -14,7 +14,7 @@
 // This is not server-side rendering: the body is still client-rendered. It fixes
 // the status code and the head. 404.html stays for paths that really don't exist.
 
-import { copyFile, mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { allRoutes, projectSlugs, root } from "./routes.mjs";
 
@@ -34,15 +34,29 @@ try {
 
 const routeMeta = JSON.parse(await readFile(resolve(root, "src/data/route-meta.json"), "utf8"));
 
-/** Project titles come from the data file, the same place the pages read them. */
+/**
+ * Project titles and descriptions come from the data file, the same place the
+ * pages read them — and composed the way ProjectDetailPage composes them
+ * ("subtitle — first description bullet"), so the prerendered head and the
+ * runtime head say the same thing rather than one being a truncated version.
+ *
+ * Parsed per entry rather than with one pattern, because the fields between
+ * subtitle and description vary from project to project.
+ */
 async function projectMeta() {
   const source = await readFile(resolve(root, "src/data/projects.ts"), "utf8");
   const meta = new Map();
-  // Each entry declares slug, then title, then subtitle, in that order.
-  const pattern =
-    /^\s{4}slug:\s*"([^"]+)",\s*\n\s{4}title:\s*"([^"]+)",\s*\n\s{4}subtitle:\s*"([^"]+)",/gm;
-  for (const [, slug, title, subtitle] of source.matchAll(pattern)) {
-    meta.set(slug, { title, description: subtitle });
+
+  for (const chunk of source.split(/^\s{4}slug: "/m).slice(1)) {
+    const slug = chunk.slice(0, chunk.indexOf('"'));
+    const title = chunk.match(/^\s{4}title:\s*"([^"]+)",/m)?.[1];
+    const subtitle = chunk.match(/^\s{4}subtitle:\s*"([^"]+)",/m)?.[1];
+    const firstBullet = chunk.match(/^\s{4}description:\s*\[\s*\n\s+"([^"]+)"/m)?.[1];
+    if (!title || !subtitle) continue;
+    meta.set(slug, {
+      title,
+      description: firstBullet ? `${subtitle} — ${firstBullet}` : subtitle,
+    });
   }
   return meta;
 }
@@ -56,31 +70,40 @@ const escape = (value) =>
 
 const SUFFIX = "HPC, quantum simulation, and AI systems engineer";
 
+/**
+ * Replaces a whole <meta> element, whatever its attribute layout.
+ *
+ * index.html wraps the long description tags across several lines, and the first
+ * version of this script matched only single-line tags — so titles were rewritten
+ * per route while all three description tags silently kept the homepage text.
+ * Matching the element rather than a line avoids that whole class of miss.
+ */
+function setMeta(html, attr, name, content) {
+  const element = new RegExp(`<meta\s+${attr}="${name}"[\s\S]*?/>`);
+  const replacement = `<meta ${attr}="${name}" content="${escape(content)}" />`;
+  return element.test(html)
+    ? html.replace(element, replacement)
+    : html.replace("</head>", `    ${replacement}
+  </head>`);
+}
+
 /** Rewrites the head so this file describes its own route, not the homepage. */
 function withMeta(html, { path, title, description }) {
   const canonical = `${SITE_URL}${path === "/" ? "/" : `${path}/`}`;
   const fullTitle = path === "/" ? `Umer Farooq — ${SUFFIX}` : `${title} — Umer Farooq`;
 
-  let out = html
-    .replace(/<title>[^<]*<\/title>/, `<title>${escape(fullTitle)}</title>`)
-    .replace(
-      /(<meta name="description" content=")[^"]*(")/,
-      `$1${escape(description)}$2`,
-    )
-    .replace(/(<meta property="og:title" content=")[^"]*(")/, `$1${escape(fullTitle)}$2`)
-    .replace(
-      /(<meta property="og:description" content=")[^"]*(")/,
-      `$1${escape(description)}$2`,
-    )
-    .replace(/(<meta property="og:url" content=")[^"]*(")/, `$1${canonical}$2`)
-    .replace(/(<meta name="twitter:title" content=")[^"]*(")/, `$1${escape(fullTitle)}$2`)
-    .replace(
-      /(<meta name="twitter:description" content=")[^"]*(")/,
-      `$1${escape(description)}$2`,
-    );
+  let out = html.replace(/<title>[\s\S]*?<\/title>/, `<title>${escape(fullTitle)}</title>`);
 
-  // The shell has no canonical (useDocumentMeta adds it at runtime), so insert one.
-  out = out.replace("</head>", `    <link rel="canonical" href="${canonical}" />\n  </head>`);
+  out = setMeta(out, "name", "description", description);
+  out = setMeta(out, "property", "og:title", fullTitle);
+  out = setMeta(out, "property", "og:description", description);
+  out = setMeta(out, "property", "og:url", canonical);
+  out = setMeta(out, "name", "twitter:title", fullTitle);
+  out = setMeta(out, "name", "twitter:description", description);
+
+  // The shell has no canonical — useDocumentMeta adds it at runtime — so insert one.
+  out = out.replace("</head>", `    <link rel="canonical" href="${canonical}" />
+  </head>`);
   return out;
 }
 
@@ -118,7 +141,6 @@ for (const route of routes) {
 
 // 404.html must stay the generic shell: it answers for unknown paths, so it can't
 // claim to be any particular route.
-await copyFile(shellPath, join(dist, "404.html"));
 await writeFile(join(dist, "404.html"), withMeta(shell, {
   path: "/",
   title: "Page not found",
