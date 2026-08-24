@@ -44,7 +44,7 @@ describe("project routes", () => {
 
   it("shows the 404 page for an unknown slug", () => {
     renderAt("/projects/not-a-real-project");
-    expect(screen.getByText("404")).toBeInTheDocument();
+    expect(screen.getByText(/404/)).toBeInTheDocument();
   });
 
   it("gives each project page its own document title", () => {

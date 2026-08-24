@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -7,9 +7,6 @@ import { AlertCircle, CheckCircle2, Send } from "lucide-react";
 import { SITE_LINKS } from "@/data/siteLinks";
 
 const FORMSPREE_FORM_ID = import.meta.env.VITE_FORMSPREE_FORM_ID ?? "";
-
-/** Bots fill hidden fields and submit instantly; humans do neither. */
-const MIN_FILL_MS = 2500;
 
 const contactSchema = z.object({
   name: z.string().trim().min(2, "Tell me your name (2 characters or more)."),
@@ -33,12 +30,11 @@ interface ContactFormProps {
 }
 
 const fieldClass =
-  "w-full rounded-md border border-border bg-background px-3 py-2.5 text-sm text-foreground transition-colors placeholder:text-muted-foreground focus:border-thermal focus:outline-none focus-visible:ring-2 focus-visible:ring-ring aria-[invalid=true]:border-destructive";
-const labelClass = "label-mono mb-1.5 block";
+  "w-full rounded-md border border-border bg-background px-3 py-2.5 text-sm text-foreground transition-colors placeholder:text-muted-foreground focus:border-neural focus:outline-none focus-visible:ring-2 focus-visible:ring-ring aria-[invalid=true]:border-destructive";
+const labelClass = "label-mono mb-1.5 block text-neural-type";
 
 export default function ContactForm({ defaultSubject = "", defaultMessage = "" }: ContactFormProps) {
   const navigate = useNavigate();
-  const mountedAt = useRef(Date.now());
   const [submitError, setSubmitError] = useState("");
   const [sent, setSent] = useState(false);
 
@@ -57,7 +53,7 @@ export default function ContactForm({ defaultSubject = "", defaultMessage = "" }
     setSubmitError("");
 
     // Silently accept obvious bot submissions instead of telling them why.
-    if (values.company || Date.now() - mountedAt.current < MIN_FILL_MS) {
+    if (values.company) {
       setSent(true);
       reset();
       return;
@@ -103,11 +99,11 @@ export default function ContactForm({ defaultSubject = "", defaultMessage = "" }
   if (sent) {
     return (
       <div
-        className="rounded-lg border border-thermal/40 bg-thermal/5 p-8 text-center"
+        className="rounded-lg border border-systems/40 bg-systems/5 p-8 text-center"
         role="status"
         aria-live="polite"
       >
-        <CheckCircle2 size={32} className="mx-auto mb-4 text-primary-type" aria-hidden="true" />
+        <CheckCircle2 size={32} className="mx-auto mb-4 text-systems-type" aria-hidden="true" />
         <h3 className="text-xl text-foreground">Message sent</h3>
         <p className="mt-2 text-sm text-muted-foreground">
           I read everything that arrives here and usually reply within 24–48 hours.
@@ -115,7 +111,7 @@ export default function ContactForm({ defaultSubject = "", defaultMessage = "" }
         <button
           type="button"
           onClick={() => setSent(false)}
-          className="mt-5 font-mono text-2xs uppercase tracking-widest text-primary-type hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="mt-5 font-mono text-2xs uppercase tracking-widest text-systems-type hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           Send another message
         </button>
@@ -127,7 +123,7 @@ export default function ContactForm({ defaultSubject = "", defaultMessage = "" }
     <form
       onSubmit={handleSubmit(onSubmit)}
       noValidate
-      className="rounded-lg border border-border bg-card p-6 sm:p-7"
+      className="rounded-lg border border-neural/25 bg-card p-6 sm:p-7"
     >
       <div className="mb-4 grid gap-4 sm:grid-cols-2">
         <div>
@@ -247,7 +243,7 @@ export default function ContactForm({ defaultSubject = "", defaultMessage = "" }
         Prefer email?{" "}
         <a
           href={SITE_LINKS.email}
-          className="text-primary-type underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="text-interface-type underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           Email me directly
         </a>

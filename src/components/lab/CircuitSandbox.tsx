@@ -137,7 +137,7 @@ export default function CircuitSandbox() {
   return (
     <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] lg:gap-12">
       <div>
-        <MonoLabel>Gates</MonoLabel>
+        <MonoLabel className="text-cryo-type">Gates</MonoLabel>
         <div className="mt-3 flex flex-wrap gap-2" role="radiogroup" aria-label="Gate to place">
           {PALETTE.map((gate) => (
             <button
@@ -149,7 +149,7 @@ export default function CircuitSandbox() {
               onClick={() => setSelected(gate.id)}
               className={`rounded-md border px-3 py-1.5 font-mono text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                 selected === gate.id
-                  ? "border-cryo bg-cryo/10 text-accent-type"
+                  ? "border-cryo bg-cryo/10 text-cryo-type"
                   : "border-border text-muted-foreground hover:text-foreground"
               }`}
             >
@@ -166,7 +166,7 @@ export default function CircuitSandbox() {
           <div className="min-w-[26rem]">
             {Array.from({ length: QUBITS }, (_, qubit) => (
               <div key={qubit} className="flex items-center gap-2 py-1.5">
-                <span className="readout w-8 shrink-0 text-2xs text-muted-foreground">q[{qubit}]</span>
+                <span className="readout w-8 shrink-0 text-2xs text-cryo-type">q[{qubit}]</span>
                 <div className="relative flex flex-1 items-center">
                   <span aria-hidden="true" className="absolute inset-x-0 top-1/2 h-px bg-border" />
                   <div className="relative grid flex-1 grid-cols-6 gap-1.5">
@@ -187,9 +187,9 @@ export default function CircuitSandbox() {
                           }
                           className={`relative flex h-9 items-center justify-center rounded-sm border font-mono text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                             cell
-                              ? "border-cryo bg-card text-accent-type"
+                              ? "border-cryo bg-cryo/5 text-cryo-type"
                               : isCnotTarget
-                                ? "border-cryo/40 bg-card text-accent-type"
+                                ? "border-cryo/40 bg-cryo/5 text-cryo-type"
                                 : "border-transparent bg-transparent text-transparent hover:border-border hover:text-muted-foreground"
                           }`}
                         >
@@ -239,7 +239,7 @@ export default function CircuitSandbox() {
                   onClick={() => setTarget(format.id)}
                   className={`rounded-md px-2.5 py-1 font-mono text-2xs uppercase tracking-widest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                     target === format.id
-                      ? "bg-muted text-foreground"
+                      ? "bg-cryo/10 text-cryo-type"
                       : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
@@ -250,13 +250,17 @@ export default function CircuitSandbox() {
             <button
               type="button"
               onClick={() => void copy()}
-              className="inline-flex items-center gap-1.5 rounded-md border border-border px-2.5 py-1 font-mono text-2xs uppercase tracking-widest text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className={`inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 font-mono text-2xs uppercase tracking-widest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                copied
+                  ? "border-systems/35 bg-systems/10 text-systems-type"
+                  : "border-cryo/25 text-cryo-type hover:border-cryo"
+              }`}
             >
               {copied ? <Check size={11} aria-hidden="true" /> : <Copy size={11} aria-hidden="true" />}
               {copied ? "Copied" : "Copy"}
             </button>
           </div>
-          <pre className="mt-3 max-h-64 overflow-auto rounded-md border border-border bg-card p-4 text-2xs leading-relaxed text-foreground">
+          <pre className="mt-3 max-h-64 overflow-auto rounded-md border border-cryo/25 bg-cryo/5 p-4 text-2xs leading-relaxed text-foreground">
             <code>{source}</code>
           </pre>
         </div>
@@ -264,7 +268,7 @@ export default function CircuitSandbox() {
 
       {/* Measurement outcomes: the reason to build the circuit at all. */}
       <div>
-        <MonoLabel>Measurement probability</MonoLabel>
+        <MonoLabel className="text-cryo-type">Measurement probability</MonoLabel>
         <p className="mt-2 text-xs text-muted-foreground">
           Exact, from the statevector — not sampled. Qubit 0 is the rightmost bit, as in Qiskit.
         </p>
@@ -280,7 +284,7 @@ export default function CircuitSandbox() {
                   style={{ width: `${(probability / maxProb) * 100}%` }}
                 />
               </span>
-              <span className="readout text-2xs text-foreground">
+              <span className="readout text-2xs text-cryo-type">
                 {(probability * 100).toFixed(1)}%
               </span>
             </li>
@@ -289,12 +293,12 @@ export default function CircuitSandbox() {
 
         <dl className="mt-6 grid grid-cols-2 gap-4 border-t border-border pt-5">
           <div>
-            <dt className="label-mono">Gates</dt>
-            <dd className="readout text-lg text-foreground">{ops.length}</dd>
+            <dt className="label-mono text-cryo-type">Gates</dt>
+            <dd className="readout text-lg text-cryo-type">{ops.length}</dd>
           </div>
           <div>
-            <dt className="label-mono">Two-qubit</dt>
-            <dd className="readout text-lg text-foreground">
+            <dt className="label-mono text-cryo-type">Two-qubit</dt>
+            <dd className="readout text-lg text-cryo-type">
               {ops.filter((op) => op.id === "CNOT").length}
             </dd>
           </div>

@@ -88,6 +88,7 @@ export const certificationSchema = z.object({
 export const skillGroupSchema = z.object({
   title: nonEmpty,
   items: z.array(nonEmpty).min(1),
+  accent: z.enum(["thermal", "cryo", "neural", "systems", "interface", "none"]),
 });
 
 export const siteLinksSchema = z.object({

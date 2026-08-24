@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useIslamabadClock } from "@/lib/clock";
 import { sectionIndex, sectionsForRoute } from "@/lib/sections";
+import { accent } from "@/lib/accent";
 
 /**
  * The rail is the site's status display and its section index at once — the one
@@ -51,20 +52,21 @@ export default function Rail() {
         <ul className="flex flex-col gap-3">
           {sections.map((section, index) => {
             const isActive = active === section.id;
+            const tone = accent(section.tone);
             return (
               <li key={section.id}>
                 <a
                   href={`#${section.id}`}
                   aria-current={isActive ? "true" : undefined}
                   className={`group flex items-baseline gap-1.5 font-mono text-2xs uppercase tracking-widest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
-                    isActive ? "text-primary-type" : "text-muted-foreground hover:text-foreground"
+                    isActive ? tone.value : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   <span className="readout">{sectionIndex(index)}</span>
                   <span
                     aria-hidden="true"
                     className={`h-px transition-all duration-300 ${
-                      isActive ? "w-3 bg-thermal" : "w-1.5 bg-border group-hover:w-3"
+                      isActive ? `w-3 ${tone.mark}` : "w-1.5 bg-border group-hover:w-3"
                     }`}
                   />
                   <span>{section.label}</span>
@@ -91,7 +93,7 @@ export default function Rail() {
         </dl>
         <p className="flex items-center gap-1.5">
           <span
-            className={`h-1.5 w-1.5 rounded-full ${clock.awake ? "bg-thermal" : "bg-graphite"}`}
+            className={`h-1.5 w-1.5 rounded-full ${clock.awake ? "bg-systems" : "bg-graphite"}`}
             aria-hidden="true"
           />
           <span className="label-mono">{clock.awake ? "Open" : "Asleep"}</span>

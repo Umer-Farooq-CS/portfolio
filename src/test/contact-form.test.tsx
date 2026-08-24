@@ -72,7 +72,7 @@ describe("contact form", () => {
     await waitFor(() => expect(fetch).not.toHaveBeenCalled());
   });
 
-  it("tells the visitor where to go when the form service is not configured", async () => {
+  it("never fakes success for a fast valid submission when the service is not configured", async () => {
     const user = userEvent.setup();
     renderForm();
 
@@ -83,8 +83,6 @@ describe("contact form", () => {
       "We would like to talk to you about an HPC role.",
     );
 
-    // The time-trap requires a realistic fill duration before a real send.
-    vi.setSystemTime(Date.now() + 5000);
     await user.click(screen.getByRole("button", { name: /send message/i }));
 
     expect(await screen.findByRole("alert")).toHaveTextContent(/email me directly/i);

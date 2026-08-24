@@ -1,8 +1,10 @@
 import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { getFeaturedProjects } from "@/data/projects";
-import { MonoLabel } from "@/components/kit/Primitives";
+import { AccentText, MonoLabel } from "@/components/kit/Primitives";
 import { useDocumentMeta } from "@/lib/meta";
+import { getDomain } from "@/data/taxonomy";
+import { accent } from "@/lib/accent";
 
 /**
  * A 404 should give directions, not an apology. It offers the three most useful
@@ -21,8 +23,10 @@ export default function NotFound() {
   return (
     <div className="flex min-h-[70vh] items-center pb-20 pt-28">
       <div className="container max-w-2xl">
-        <MonoLabel>404</MonoLabel>
-        <h1 className="mt-4 text-4xl text-foreground">That page isn&apos;t here</h1>
+        <MonoLabel className="text-interface-type">404 · route miss</MonoLabel>
+        <h1 className="mt-4 text-4xl text-foreground">
+          That page <AccentText tone="interface">isn&apos;t here</AccentText>
+        </h1>
         <p className="mt-4 text-base leading-relaxed text-muted-foreground">
           Nothing matches{" "}
           <code className="readout rounded-sm border border-border bg-card px-1.5 py-0.5 text-xs">
@@ -35,10 +39,10 @@ export default function NotFound() {
           <li>
             <Link
               to="/projects"
-              className="block rounded-md border border-border bg-card p-5 transition-colors hover:border-thermal/40 hover:bg-surface-alt focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="block rounded-md border border-interface/30 bg-interface/5 p-5 transition-colors hover:border-interface hover:bg-interface/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
-              <span className="label-mono">Everything</span>
-              <span className="mt-1.5 block text-base font-semibold text-foreground">
+              <span className="label-mono text-interface-type">Everything</span>
+              <span className="mt-1.5 block text-base font-semibold text-interface-type">
                 All thirty projects
               </span>
             </Link>
@@ -46,27 +50,30 @@ export default function NotFound() {
           <li>
             <Link
               to="/lab"
-              className="block rounded-md border border-border bg-card p-5 transition-colors hover:border-thermal/40 hover:bg-surface-alt focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="block rounded-md border border-neural/30 bg-neural/5 p-5 transition-colors hover:border-neural hover:bg-neural/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
-              <span className="label-mono">Runnable</span>
-              <span className="mt-1.5 block text-base font-semibold text-foreground">
+              <span className="label-mono text-neural-type">Runnable</span>
+              <span className="mt-1.5 block text-base font-semibold text-cryo-type">
                 The lab
               </span>
             </Link>
           </li>
-          {suggestions.map((project) => (
+          {suggestions.map((project) => {
+            const tone = accent(getDomain(project.domains[0]).accent);
+            return (
             <li key={project.slug}>
               <Link
                 to={`/projects/${project.slug}`}
-                className="block rounded-md border border-border bg-card p-5 transition-colors hover:border-thermal/40 hover:bg-surface-alt focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className={`block rounded-md border bg-card p-5 transition-colors hover:bg-surface-alt focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${tone.panel}`}
               >
-                <span className="label-mono">Featured</span>
-                <span className="mt-1.5 block text-base font-semibold text-foreground">
+                <span className={`label-mono ${tone.label}`}>Featured</span>
+                <span className={`mt-1.5 block text-base font-semibold ${tone.value}`}>
                   {project.title}
                 </span>
               </Link>
             </li>
-          ))}
+            );
+          })}
         </ul>
 
         <Link

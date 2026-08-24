@@ -4,10 +4,13 @@
    One rule drives every decision: nothing is decorative. Every mark either is
    data, labels data, or measures the grid.
 
-   Colour encodes the two physical domains of the work:
-     thermal (orange) = compute / GPU / HPC, and the one primary action per view
-     cryo    (cyan)   = quantum / simulation
-   AI content deliberately gets no accent — ink and mono labels only.
+   Colour is a compact legend for the work, not decoration:
+     thermal   (orange) = compute / GPU / HPC, and the one primary action per view
+     cryo      (cyan)   = quantum / simulation
+     neural    (violet) = AI / evaluation / orchestration
+     systems   (green)  = systems / distributed / verified state
+     interface (blue)   = full-stack / applications
+     award     (amber)  = recognition only
 
    Each accent has two values per theme: a vivid one for fills and marks, and a
    darkened one for type, so both themes hold WCAG AA on text.
@@ -89,11 +92,19 @@
   --graphite: #5a6169;
   --hairline: #c9cdd2;
 
-  --thermal: #ff5a1f; /* fills, marks, data */
+  --thermal: #d94a16; /* fills, marks, data */
   --on-thermal: #0b0d10; /* text on a vivid thermal fill — industrial signage contrast */
   --thermal-type: #a83306; /* same hue; holds AA on --bench and on its own 10% tint */
-  --cryo: #14a3c7;
+  --cryo: #05809f;
   --cryo-type: #096376; /* holds AA on --bench and on its own 10% tint */
+  --neural: #7c3aed;
+  --neural-type: #5b3bb5;
+  --systems: #0d8f68;
+  --systems-type: #087052;
+  --interface: #2563eb;
+  --interface-type: #174ea6;
+  --award: #b7791f;
+  --award-type: #7a5100;
 
   /* --- semantic tokens (light) ------------------------------------------- */
   --background: var(--bench);
@@ -147,6 +158,14 @@
   --thermal-type: #ff8452; /* raised for type on near-black */
   --cryo: #35bedf;
   --cryo-type: #58cfea;
+  --neural: #9f7aea;
+  --neural-type: #b7a4ff;
+  --systems: #34d399;
+  --systems-type: #6ee7b7;
+  --interface: #60a5fa;
+  --interface-type: #8ab4ff;
+  --award: #eab54b;
+  --award-type: #f6c453;
 
   --background: var(--bench);
   --foreground: var(--ink);
@@ -210,8 +229,18 @@
   --color-surface-alt: var(--surface-alt);
 
   --color-thermal: var(--thermal);
+  --color-thermal-type: var(--thermal-type);
   --color-on-thermal: var(--on-thermal);
   --color-cryo: var(--cryo);
+  --color-cryo-type: var(--cryo-type);
+  --color-neural: var(--neural);
+  --color-neural-type: var(--neural-type);
+  --color-systems: var(--systems);
+  --color-systems-type: var(--systems-type);
+  --color-interface: var(--interface);
+  --color-interface-type: var(--interface-type);
+  --color-award: var(--award);
+  --color-award-type: var(--award-type);
   --color-graphite: var(--graphite);
 
   /* --- type -------------------------------------------------------------- */

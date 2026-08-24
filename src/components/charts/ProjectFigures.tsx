@@ -1,4 +1,6 @@
+import type { CSSProperties } from "react";
 import { cn } from "@/lib/utils";
+import type { VisualAccent } from "@/lib/accent";
 
 /**
  * Small, self-contained figures a project page can drop in: a before/after
@@ -11,8 +13,8 @@ import { cn } from "@/lib/utils";
  * which rules out the `role="img"` + label these figures need. Two bars and a
  * delta do not justify fighting that.
  *
- * Colour follows the chart tokens: thermal is the measured series, graphite is
- * the reference. Every value carries its unit, and every comparison carries the
+ * Colour follows the project's semantic domain while graphite remains the
+ * reference. Every value carries its unit, and every comparison carries the
  * baseline it improved on.
  */
 
@@ -168,13 +170,14 @@ export function BeforeAfterBars({
           width={Math.max(1, xResult - BA.plotX)}
           height={BA.barH}
           rx="1"
-          fill="var(--color-thermal)"
+          fill="var(--figure-mark, var(--color-thermal))"
         />
         <text
           x={BA.valueX}
           y={BA.rowB + 14}
           textAnchor="end"
-          className="readout fill-[var(--color-foreground)]"
+          className="readout"
+          style={{ fill: "var(--figure-type, var(--color-primary-type))" }}
           fontSize="11"
         >
           {resultText}
@@ -196,14 +199,15 @@ export function BeforeAfterBars({
         <path
           d={`M ${bracketFrom} 94 V 102 M ${bracketFrom} 98 H ${bracketTo} M ${bracketTo} 94 V 102`}
           fill="none"
-          stroke="var(--color-thermal)"
+          stroke="var(--figure-mark, var(--color-thermal))"
           strokeWidth="1"
         />
         <text
           x={deltaX}
           y="113"
           textAnchor="middle"
-          className="fill-[var(--color-primary-type)] font-mono"
+          className="font-mono"
+          style={{ fill: "var(--figure-type, var(--color-primary-type))" }}
           fontSize="9"
           fontWeight="500"
           letterSpacing="0.06em"
@@ -316,13 +320,23 @@ export function StepSeries({
                 height={Math.max(1, height)}
                 rx="1"
                 // The first variant is what the rest are measured against.
-                fill={index === 0 ? "var(--color-graphite)" : "var(--color-thermal)"}
+                fill={
+                  index === 0
+                    ? "var(--color-graphite)"
+                    : "var(--figure-mark, var(--color-thermal))"
+                }
               />
               <text
                 x={x + barW / 2}
                 y={y - 5}
                 textAnchor="middle"
-                className="readout fill-[var(--color-foreground)]"
+                className="readout"
+                style={{
+                  fill:
+                    index === 0
+                      ? "var(--color-foreground)"
+                      : "var(--figure-type, var(--color-primary-type))",
+                }}
                 fontSize="8.5"
               >
                 {formatValue(point.value, unit, decimals)}
@@ -441,16 +455,26 @@ export function getProjectFigures(slug: string): ProjectFigure[] {
  */
 export default function ProjectFigures({
   slug,
+  tone = "thermal",
   className,
 }: {
   slug: string;
+  tone?: VisualAccent;
   className?: string;
 }) {
   const figures = getProjectFigures(slug);
   if (figures.length === 0) return null;
 
   return (
-    <div className={cn("grid gap-4", figures.length > 1 && "sm:grid-cols-2", className)}>
+    <div
+      className={cn("grid gap-4", figures.length > 1 && "sm:grid-cols-2", className)}
+      style={
+        {
+          "--figure-mark": `var(--${tone === "none" ? "graphite" : tone})`,
+          "--figure-type": `var(--${tone === "none" ? "foreground" : `${tone}-type`})`,
+        } as CSSProperties
+      }
+    >
       {figures.map((figure) =>
         figure.kind === "before-after" ? (
           <BeforeAfterBars key={figure.props.title} {...figure.props} />

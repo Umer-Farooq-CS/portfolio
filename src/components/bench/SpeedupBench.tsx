@@ -62,12 +62,14 @@ export default function SpeedupBench() {
   return (
     <div
       ref={containerRef}
-      className="rounded-lg border border-border bg-card p-4 sm:p-5"
+      className="rounded-lg border border-thermal/25 bg-thermal/5 p-4 sm:p-5"
       aria-busy={busy}
     >
       <div className="mb-3 flex items-baseline justify-between gap-3">
-        <p className="label-mono">Live benchmark</p>
-        <p className="readout text-2xs text-muted-foreground">{statusLine}</p>
+        <p className="label-mono text-primary-type">Live benchmark</p>
+        <p className={`readout text-2xs ${bench.status === "done" ? "text-systems-type" : "text-muted-foreground"}`}>
+          {statusLine}
+        </p>
       </div>
 
       <SpeedupChart points={points} maxWorkers={maxWorkers} animate={motionEnabled} />
@@ -86,7 +88,7 @@ export default function SpeedupBench() {
         </div>
         <div>
           <dt className="label-mono">Efficiency</dt>
-          <dd className="readout text-lg text-foreground">
+          <dd className="readout text-lg text-cryo-type">
             {last ? `${Math.round(last.efficiency * 100)}%` : "—"}
           </dd>
         </div>

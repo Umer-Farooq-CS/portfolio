@@ -6,6 +6,14 @@
 // union, and `src/test/content.test.ts` fails the build if a project references
 // a domain that isn't here. A project can no longer go invisible.
 
+export type DomainAccent =
+  | "thermal"
+  | "cryo"
+  | "neural"
+  | "systems"
+  | "interface"
+  | "none";
+
 export const DOMAINS = [
   {
     id: "hpc",
@@ -23,30 +31,34 @@ export const DOMAINS = [
     id: "ai",
     label: "AI & ML",
     blurb: "Deep learning, generative models, retrieval-augmented and multi-agent systems.",
-    accent: "none",
+    accent: "neural",
   },
   {
     id: "systems",
     label: "Systems & Distributed",
     blurb: "Compilers, distributed hash tables, networking, concurrency.",
-    accent: "none",
+    accent: "systems",
   },
   {
     id: "web",
     label: "Full-stack",
     blurb: "Web platforms, APIs, and real-time services.",
-    accent: "none",
+    accent: "interface",
   },
   {
     id: "apps",
     label: "Apps & Games",
     blurb: "Desktop applications and game engines.",
-    accent: "none",
+    accent: "interface",
   },
-] as const;
+] as const satisfies readonly {
+  id: string;
+  label: string;
+  blurb: string;
+  accent: DomainAccent;
+}[];
 
 export type Domain = (typeof DOMAINS)[number]["id"];
-export type DomainAccent = (typeof DOMAINS)[number]["accent"];
 
 export const DOMAIN_IDS = DOMAINS.map((d) => d.id) as readonly Domain[];
 

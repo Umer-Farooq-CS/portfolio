@@ -15,7 +15,8 @@ import { cn } from "@/lib/utils";
  *
  * Colour: the feedback edges are thermal because they are the measured mechanism,
  * the retrieval feeds are cryo because the knowledge base is the quantum half.
- * The agents themselves are AI, so they get no accent.
+ * Agent stages are neural violet; the validator and validated output switch to
+ * systems green so the successful check is visually distinct from generation.
  *
  * The layout is portrait, not a wide row: at 360 units across it renders near 1:1
  * on a 390px phone, so every label stays above 8px there instead of collapsing.
@@ -32,6 +33,8 @@ interface Stage {
   /** Spoken form, used by the screen-reader alternative. */
   spoken: string;
   y: number;
+  stroke: string;
+  text: string;
 }
 
 const STAGES: Stage[] = [
@@ -40,6 +43,8 @@ const STAGES: Stage[] = [
     detail: "DRAFTS CIRQ CODE",
     spoken: "Designer drafts Cirq code from the prompt, grounded by retrieval.",
     y: 42,
+    stroke: "var(--neural)",
+    text: "var(--neural-type)",
   },
   {
     name: "VALIDATOR",
@@ -47,6 +52,8 @@ const STAGES: Stage[] = [
     spoken:
       "Validator compiles and simulates the circuit. On a compile or simulation failure it sends the code back to the Designer to patch, for a bounded number of retries.",
     y: 116,
+    stroke: "var(--systems)",
+    text: "var(--systems-type)",
   },
   {
     name: "OPTIMIZER",
@@ -54,12 +61,16 @@ const STAGES: Stage[] = [
     spoken:
       "Optimizer reduces circuit depth, total gates, and two-qubit gates, then hands the result back for re-validation.",
     y: 190,
+    stroke: "var(--neural)",
+    text: "var(--neural-type)",
   },
   {
     name: "EDUCATOR",
     detail: "TIERED EXPLANATION",
     spoken: "Educator produces tiered explanations of the validated circuit.",
     y: 264,
+    stroke: "var(--neural)",
+    text: "var(--neural-type)",
   },
 ];
 
@@ -190,7 +201,7 @@ export default function PipelineTrace({ className }: { className?: string }) {
           <button
             type="button"
             onClick={() => scopeRef.current?.methods.replay?.()}
-            className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-border px-3 py-1.5 font-mono text-2xs uppercase tracking-widest text-foreground transition-colors hover:border-thermal hover:text-primary-type focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-border px-3 py-1.5 font-mono text-2xs uppercase tracking-widest text-foreground transition-colors hover:border-neural hover:text-neural-type focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <RotateCw size={12} aria-hidden="true" />
             Replay
@@ -244,7 +255,7 @@ export default function PipelineTrace({ className }: { className?: string }) {
         />
         <path className="pt-feed-head" d={headRight(BOX.x, 140)} fill="var(--color-cryo)" />
         <text
-          className="pt-feed-label fill-[var(--color-accent-type)] font-mono"
+          className="pt-feed-label fill-[var(--color-cryo-type)] font-mono"
           x="6"
           y="144"
           fontSize="8.5"
@@ -321,7 +332,7 @@ export default function PipelineTrace({ className }: { className?: string }) {
         {/* Terminals and boxes. */}
         <g className="pt-node">
           <text
-            className="fill-[var(--color-muted-foreground)] font-mono"
+            className="fill-[var(--neural-type)] font-mono"
             x={CX}
             y="12"
             fontSize="9.5"
@@ -342,11 +353,12 @@ export default function PipelineTrace({ className }: { className?: string }) {
               height={BOX.h}
               rx="3"
               fill="var(--color-card)"
-              stroke="var(--color-border)"
+              stroke={stage.stroke}
               strokeWidth="1"
             />
             <text
-              className="fill-[var(--color-foreground)] font-mono"
+              className="font-mono"
+              fill={stage.text}
               x={CX}
               y={stage.y + 20}
               fontSize="13"
@@ -377,11 +389,11 @@ export default function PipelineTrace({ className }: { className?: string }) {
             height="58"
             rx="3"
             fill="var(--color-card)"
-            stroke="var(--color-border)"
+            stroke="var(--cryo)"
             strokeWidth="1"
           />
           <text
-            className="fill-[var(--color-accent-type)] font-mono"
+            className="fill-[var(--color-cryo-type)] font-mono"
             x="61"
             y="90"
             fontSize="9"
@@ -431,16 +443,16 @@ export default function PipelineTrace({ className }: { className?: string }) {
           className="pt-out-line"
           d="M 216 308 V 326"
           fill="none"
-          stroke="var(--color-muted-foreground)"
+          stroke="var(--systems)"
           strokeWidth="1.25"
         />
         <path
           className="pt-out-head"
           d={headDown(CX, 332)}
-          fill="var(--color-muted-foreground)"
+          fill="var(--systems)"
         />
         <text
-          className="pt-out fill-[var(--color-foreground)] font-mono"
+          className="pt-out fill-[var(--systems-type)] font-mono"
           x={CX}
           y="348"
           fontSize="9.5"
@@ -460,7 +472,7 @@ export default function PipelineTrace({ className }: { className?: string }) {
       </ol>
 
       <figcaption className="mt-4 border-t border-border pt-3 text-xs leading-relaxed text-muted-foreground">
-        <span className="readout text-primary-type">92%</span> of prompts produce a circuit that
+        <span className="readout text-neural-type">92%</span> of prompts produce a circuit that
         compiles and simulates, against <span className="readout text-foreground">52%</span> for a
         single-agent baseline. The retry loop is the difference.
       </figcaption>

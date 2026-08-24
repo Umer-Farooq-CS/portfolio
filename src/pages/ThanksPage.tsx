@@ -22,10 +22,11 @@ export default function ThanksPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: duration(0.5) }}
         >
-          <MonoLabel>Sent</MonoLabel>
-          <h1 className="mt-4 text-4xl text-foreground">Message received</h1>
+          <MonoLabel className="text-systems-type">Sent</MonoLabel>
+          <h1 className="mt-4 text-4xl text-systems-type">Message received</h1>
           <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-            It&apos;s {clock.hh}:{clock.mm} {clock.label} where I am. I read everything that arrives
+            It&apos;s <span className="readout text-systems-type">{clock.hh}:{clock.mm} {clock.label}</span>{" "}
+            where I am. I read everything that arrives
             and usually reply within 24 to 48 hours — sooner if it&apos;s a problem I find
             interesting.
           </p>
@@ -40,7 +41,7 @@ export default function ThanksPage() {
             </Link>
             <Link
               to="/lab"
-              className="inline-flex items-center gap-2 rounded-md border border-border px-5 py-2.5 font-mono text-2xs uppercase tracking-widest text-foreground transition-colors hover:border-thermal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="inline-flex items-center gap-2 rounded-md border border-neural/30 px-5 py-2.5 font-mono text-2xs uppercase tracking-widest text-neural-type transition-colors hover:border-neural focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               Something to play with
             </Link>
@@ -50,7 +51,7 @@ export default function ThanksPage() {
             If it&apos;s urgent, email me directly at{" "}
             <a
               href={SITE_LINKS.email}
-              className="text-primary-type underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="text-interface-type underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               {SITE_LINKS.email.replace("mailto:", "")}
             </a>

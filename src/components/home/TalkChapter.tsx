@@ -4,7 +4,7 @@ import { Check } from "lucide-react";
 import { INTENTS, type Intent } from "@/data/intents";
 import { SITE_LINKS } from "@/data/siteLinks";
 import { accent } from "@/lib/accent";
-import { ChapterHeader, MonoLabel } from "@/components/kit/Primitives";
+import { AccentText, ChapterHeader, MonoLabel } from "@/components/kit/Primitives";
 import { useMotionPolicy } from "@/lib/motion-policy";
 
 const ContactForm = lazy(() => import("@/components/portfolio/ContactForm"));
@@ -22,10 +22,15 @@ export default function TalkChapter() {
     <section id="talk" className="scroll-mt-20 border-t border-border py-20 lg:py-28">
       <div className="container">
         <ChapterHeader
-          index={4}
+          index={5}
           eyebrow="Get in touch"
-          title="What do you need done?"
+          title={
+            <>
+              What do you need <AccentText tone="neural">done</AccentText>?
+            </>
+          }
           lede="Pick the closest one and it fills in the message. Or write your own — both land in the same inbox."
+          tone="neural"
         />
 
         <div className="mt-12 grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:gap-14">
@@ -46,15 +51,15 @@ export default function TalkChapter() {
                     onClick={() => setSelected(isSelected ? null : intent)}
                     aria-pressed={isSelected}
                     className={`group flex h-full w-full flex-col rounded-lg border p-4 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
-                      isSelected ? "border-thermal bg-thermal/5" : `bg-card ${tone.panel}`
+                      isSelected ? tone.selected : `bg-card ${tone.panel}`
                     }`}
                   >
                     <span className="flex items-start justify-between gap-2">
-                      <span className="text-sm font-semibold leading-snug text-foreground">
+                      <span className={`text-sm font-semibold leading-snug ${tone.value}`}>
                         {intent.title}
                       </span>
                       {isSelected && (
-                        <Check size={14} className="mt-0.5 shrink-0 text-primary-type" aria-hidden="true" />
+                        <Check size={14} className={`mt-0.5 shrink-0 ${tone.value}`} aria-hidden="true" />
                       )}
                     </span>
                     <span className="mt-2 text-xs leading-relaxed text-muted-foreground">
@@ -69,7 +74,7 @@ export default function TalkChapter() {
                             <span key={item} className="flex gap-2 text-2xs text-muted-foreground">
                               <span
                                 aria-hidden="true"
-                                className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-thermal"
+                                className={`mt-1.5 h-1 w-1 shrink-0 rounded-full ${tone.mark}`}
                               />
                               {item}
                             </span>
@@ -85,8 +90,10 @@ export default function TalkChapter() {
 
           <div>
             <div className="mb-4 flex items-baseline justify-between gap-3">
-              <MonoLabel>{selected ? `Re: ${selected.subject}` : "Send a message"}</MonoLabel>
-              <span className="readout text-2xs text-muted-foreground">reply in 24–48h</span>
+              <MonoLabel className={selected ? accent(selected.accent).label : "text-neural-type"}>
+                {selected ? `Re: ${selected.subject}` : "Send a message"}
+              </MonoLabel>
+              <span className="readout text-2xs text-systems-type">reply in 24–48h</span>
             </div>
 
             <Suspense

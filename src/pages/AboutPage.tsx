@@ -5,11 +5,12 @@ import Picture from "@/components/Picture";
 import JsonLd from "@/components/JsonLd";
 import { CERTIFICATIONS, EDUCATION, PROFESSIONAL_SUMMARY, SKILL_GROUPS } from "@/data/profile";
 import { SITE_LINKS } from "@/data/siteLinks";
-import { ChapterHeader, Tag } from "@/components/kit/Primitives";
+import { AccentText, ChapterHeader, Tag } from "@/components/kit/Primitives";
 import { useDocumentMeta } from "@/lib/meta";
 import { routeMeta } from "@/data/routeMeta";
 import { personSchema } from "@/lib/seo";
 import { useMotionPolicy } from "@/lib/motion-policy";
+import { accent, type VisualAccent } from "@/lib/accent";
 
 /** A typed timeline: order carries information here, so it is numbered and dated. */
 const TIMELINE = [
@@ -17,41 +18,47 @@ const TIMELINE = [
     period: "Aug 2022 – Jun 2026",
     title: "BS Computer Science, FAST-NUCES",
     detail: "Islamabad. Dean's List, Spring 2023. Coursework centred on HPC, systems, and applied AI.",
+    tone: "systems",
   },
   {
     period: "Aug 2023 – Aug 2024",
     title: "Freelance developer, Fiverr",
     detail:
       "Level 2 seller — the top tier. 100+ projects completed at 98% client satisfaction and 80% repeat custom, including 30+ full-stack MERN and .NET applications.",
+    tone: "interface",
   },
   {
     period: "2024",
     title: "Huawei ICT Competition, national finals",
     detail: "Third place with QCanvas, as part of the UniQ team.",
+    tone: "award",
   },
   {
     period: "Feb – May 2025",
     title: "NaSCon'25, PR and marketing",
     detail: "Core team. Partner outreach and campaigns for a national tech event.",
+    tone: "interface",
   },
   {
     period: "2025",
     title: "Oracle AI certifications",
     detail: "Generative AI Professional, and AI Foundations Associate.",
+    tone: "neural",
   },
   {
     period: "Sep 2025 – present",
     title: "Software engineer, Open Quantum Workbench",
     detail: "FAST-NUCES. Full-stack work on an open quantum simulation and numerical computing workbench.",
+    tone: "cryo",
   },
 ];
 
 const LOOKING_FOR = ["HPC and GPU internships", "Research collaborations", "Infrastructure and platform roles"];
 
-const QUICK_LINKS = [
-  { label: "GitHub", href: SITE_LINKS.github, icon: Github },
-  { label: "LinkedIn", href: SITE_LINKS.linkedin, icon: Linkedin },
-  { label: "Email", href: SITE_LINKS.email, icon: Mail },
+const QUICK_LINKS: { label: string; href: string; icon: typeof Github; tone: VisualAccent }[] = [
+  { label: "GitHub", href: SITE_LINKS.github, icon: Github, tone: "interface" },
+  { label: "LinkedIn", href: SITE_LINKS.linkedin, icon: Linkedin, tone: "neural" },
+  { label: "Email", href: SITE_LINKS.email, icon: Mail, tone: "systems" },
 ];
 
 export default function AboutPage() {
@@ -72,15 +79,20 @@ export default function AboutPage() {
       <div className="container">
         <ChapterHeader
           eyebrow="About"
-          title="Umer Farooq"
+          title={
+            <>
+              Umer <AccentText tone="systems">Farooq</AccentText>
+            </>
+          }
           lede="Systems-focused computer scientist. High-performance and parallel computing, quantum simulation, and full-stack development — with a preference for problems where success is a measurable number."
           as="h1"
+          tone="systems"
         />
 
         <div className="mt-14 grid gap-12 lg:grid-cols-[minmax(0,18rem)_minmax(0,1fr)] lg:gap-16">
           {/* Left: the spec sheet. */}
           <motion.div {...rise(0)}>
-            <div className="overflow-hidden rounded-lg border border-border">
+            <div className="overflow-hidden rounded-lg border border-systems/25">
               <Picture
                 image={portrait}
                 alt="Portrait of Umer Farooq"
@@ -106,43 +118,46 @@ export default function AboutPage() {
               </div>
               <div>
                 <dt className="label-mono">Graduating</dt>
-                <dd className="readout mt-1 text-sm text-foreground">Jun 2026</dd>
+                <dd className="readout mt-1 text-sm text-systems-type">Jun 2026</dd>
               </div>
             </dl>
 
             <div className="mt-6 flex flex-wrap gap-2 border-t border-border pt-5">
-              {QUICK_LINKS.map(({ label, href, icon: Icon }) => (
+              {QUICK_LINKS.map(({ label, href, icon: Icon, tone: toneName }) => {
+                const tone = accent(toneName);
+                return (
                 <a
                   key={label}
                   href={href}
                   target={href.startsWith("http") ? "_blank" : undefined}
                   rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-                  className="inline-flex items-center gap-1.5 rounded-md border border-border px-2.5 py-1.5 font-mono text-2xs uppercase tracking-widest text-muted-foreground transition-colors hover:border-thermal hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className={`inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1.5 font-mono text-2xs uppercase tracking-widest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${tone.panel} ${tone.value}`}
                 >
                   <Icon size={12} aria-hidden="true" />
                   {label}
                 </a>
-              ))}
+                );
+              })}
             </div>
           </motion.div>
 
           {/* Right: the prose and the record. */}
           <div>
             <motion.section {...rise(0.05)} aria-labelledby="summary">
-              <h2 id="summary" className="label-mono">
+              <h2 id="summary" className="label-mono text-systems-type">
                 Summary
               </h2>
               <p className="mt-4 text-lg leading-relaxed text-foreground">{PROFESSIONAL_SUMMARY}</p>
             </motion.section>
 
             <motion.section {...rise(0.08)} aria-labelledby="looking" className="mt-12">
-              <h2 id="looking" className="label-mono">
+              <h2 id="looking" className="label-mono text-systems-type">
                 Looking for
               </h2>
               <ul className="mt-4 flex flex-wrap gap-2">
                 {LOOKING_FOR.map((item) => (
                   <li key={item}>
-                    <span className="inline-block rounded-md border border-thermal/30 bg-thermal/5 px-2.5 py-1 font-mono text-2xs uppercase tracking-widest text-primary-type">
+                    <span className="inline-block rounded-md border border-systems/30 bg-systems/5 px-2.5 py-1 font-mono text-2xs uppercase tracking-widest text-systems-type">
                       {item}
                     </span>
                   </li>
@@ -151,36 +166,42 @@ export default function AboutPage() {
             </motion.section>
 
             <motion.section {...rise(0.1)} aria-labelledby="timeline" className="mt-12">
-              <h2 id="timeline" className="label-mono">
+              <h2 id="timeline" className="label-mono text-interface-type">
                 Timeline
               </h2>
               <ol className="mt-5 flex flex-col">
-                {TIMELINE.map((entry) => (
+                {TIMELINE.map((entry) => {
+                  const tone = accent(entry.tone as VisualAccent);
+                  return (
                   <li
                     key={entry.title}
                     className="grid gap-1 border-t border-border py-5 sm:grid-cols-[10.5rem_1fr] sm:gap-6"
                   >
-                    <span className="readout text-2xs text-muted-foreground">{entry.period}</span>
+                    <span className={`readout text-2xs ${tone.value}`}>{entry.period}</span>
                     <span>
-                      <span className="block text-base font-semibold text-foreground">{entry.title}</span>
+                      <span className="flex items-start gap-2">
+                        <span aria-hidden="true" className={`mt-2 h-1.5 w-1.5 shrink-0 rounded-full ${tone.mark}`} />
+                        <span className="block text-base font-semibold text-foreground">{entry.title}</span>
+                      </span>
                       <span className="mt-1 block text-sm leading-relaxed text-muted-foreground">
                         {entry.detail}
                       </span>
                     </span>
                   </li>
-                ))}
+                  );
+                })}
               </ol>
             </motion.section>
 
             <motion.section {...rise(0.12)} aria-labelledby="certs" className="mt-12">
-              <h2 id="certs" className="label-mono">
+              <h2 id="certs" className="label-mono text-award-type">
                 Certifications
               </h2>
               <ul className="mt-5 grid gap-4 sm:grid-cols-2">
                 {CERTIFICATIONS.map((cert) => (
-                  <li key={cert.title} className="rounded-lg border border-border bg-card p-4">
+                  <li key={cert.title} className="rounded-lg border border-award/25 bg-award/5 p-4">
                     <div className="flex items-baseline justify-between gap-3">
-                      <span className="readout text-2xs text-primary-type">{cert.year}</span>
+                      <span className="readout text-2xs text-award-type">{cert.year}</span>
                       <span className="label-mono">{cert.issuer}</span>
                     </div>
                     <p className="mt-2 text-sm font-medium leading-snug text-foreground">{cert.title}</p>
@@ -189,7 +210,7 @@ export default function AboutPage() {
                         href={cert.credentialUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="mt-3 inline-flex items-center gap-1.5 font-mono text-2xs uppercase tracking-widest text-primary-type underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                        className="mt-3 inline-flex items-center gap-1.5 font-mono text-2xs uppercase tracking-widest text-award-type underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       >
                         Verify
                         <ExternalLink size={11} aria-hidden="true" />
@@ -201,13 +222,15 @@ export default function AboutPage() {
             </motion.section>
 
             <motion.section {...rise(0.14)} aria-labelledby="skills" className="mt-12">
-              <h2 id="skills" className="label-mono">
+              <h2 id="skills" className="label-mono text-neural-type">
                 Skills
               </h2>
               <dl className="mt-5 flex flex-col">
-                {SKILL_GROUPS.map((group) => (
-                  <div key={group.title} className="border-t border-border py-5">
-                    <dt className="text-sm font-semibold text-foreground">{group.title}</dt>
+                {SKILL_GROUPS.map((group) => {
+                  const tone = accent(group.accent);
+                  return (
+                  <div key={group.title} className={`border-t py-5 ${tone.panel}`}>
+                    <dt className={`text-sm font-semibold ${tone.value}`}>{group.title}</dt>
                     <dd className="mt-2.5">
                       <ul className="flex flex-col gap-2">
                         {group.items.map((item) => (
@@ -217,7 +240,7 @@ export default function AboutPage() {
                           >
                             <span
                               aria-hidden="true"
-                              className="mt-2 h-1 w-1 shrink-0 rounded-full bg-border"
+                              className={`mt-2 h-1 w-1 shrink-0 rounded-full ${tone.mark}`}
                             />
                             <span>{item}</span>
                           </li>
@@ -225,7 +248,8 @@ export default function AboutPage() {
                       </ul>
                     </dd>
                   </div>
-                ))}
+                  );
+                })}
               </dl>
             </motion.section>
 
@@ -239,10 +263,10 @@ export default function AboutPage() {
                 technical work to people who don&apos;t share your vocabulary than any course did.
               </p>
               <div className="mt-4 flex flex-wrap gap-1.5">
-                <Tag>Table tennis</Tag>
-                <Tag>Games</Tag>
-                <Tag>New tooling</Tag>
-                <Tag>Community events</Tag>
+                <Tag tone="systems">Table tennis</Tag>
+                <Tag tone="neural">Games</Tag>
+                <Tag tone="interface">New tooling</Tag>
+                <Tag tone="award">Community events</Tag>
               </div>
             </motion.section>
           </div>

@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { Printer } from "lucide-react";
 import JsonLd from "@/components/JsonLd";
-import { MonoLabel, QuietAction, TextAction } from "@/components/kit/Primitives";
+import { AccentText, MonoLabel, QuietAction, TextAction } from "@/components/kit/Primitives";
 import {
   AWARDS,
   COURSEWORK,
@@ -21,6 +21,8 @@ import { routeMeta } from "@/data/routeMeta";
 import { personSchema } from "@/lib/seo";
 import { SITE, absoluteUrl } from "@/lib/site";
 import printStyles from "@/styles/print.css?raw";
+import { accent, type VisualAccent } from "@/lib/accent";
+import { getDomain } from "@/data/taxonomy";
 
 /**
  * The CV, rendered from src/data rather than typed out again — so it cannot say
@@ -33,10 +35,23 @@ import printStyles from "@/styles/print.css?raw";
  */
 
 /** Section shell: a hairline, a mono header, then content. Mirrors the LaTeX source. */
-function CvSection({ id, title, children }: { id: string; title: string; children: ReactNode }) {
+function CvSection({
+  id,
+  title,
+  children,
+  tone = "none",
+}: {
+  id: string;
+  title: string;
+  children: ReactNode;
+  tone?: VisualAccent;
+}) {
+  const toneClasses = accent(tone);
+
   return (
-    <section aria-labelledby={id} className="cv-section mt-11 border-t border-border pt-5">
-      <h2 id={id} className="label-mono text-xs text-foreground">
+    <section aria-labelledby={id} className={`cv-section mt-11 border-t pt-5 ${toneClasses.panel}`}>
+      <h2 id={id} className={`label-mono flex items-center gap-2 text-xs ${toneClasses.value}`}>
+        <span aria-hidden="true" className={`h-1.5 w-1.5 rounded-full ${toneClasses.mark}`} />
         {title}
       </h2>
       <div className="mt-4">{children}</div>
@@ -45,20 +60,32 @@ function CvSection({ id, title, children }: { id: string; title: string; childre
 }
 
 /** Entry head: what it was on the left, when it was on the right. */
-function EntryHead({ title, meta }: { title: ReactNode; meta: string }) {
+function EntryHead({
+  title,
+  meta,
+  tone = "none",
+}: {
+  title: ReactNode;
+  meta: string;
+  tone?: VisualAccent;
+}) {
+  const toneClasses = accent(tone);
+
   return (
     <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-0.5">
-      <h3 className="text-lg text-foreground">{title}</h3>
-      <p className="readout text-2xs text-muted-foreground">{meta}</p>
+      <h3 className={`text-lg ${toneClasses.value}`}>{title}</h3>
+      <p className={`readout text-2xs ${toneClasses.label}`}>{meta}</p>
     </div>
   );
 }
 
 /** Hairline tick instead of a bullet glyph — and it survives the print rules. */
-function Bullet({ children }: { children: ReactNode }) {
+function Bullet({ children, tone = "none" }: { children: ReactNode; tone?: VisualAccent }) {
+  const toneClasses = accent(tone);
+
   return (
     <li className="flex gap-2.5 text-sm leading-relaxed text-foreground">
-      <span aria-hidden="true" className="mt-[0.7em] h-0 w-2 shrink-0 border-t border-border" />
+      <span aria-hidden="true" className={`mt-[0.7em] h-0 w-2 shrink-0 border-t ${toneClasses.panel}`} />
       <span>{children}</span>
     </li>
   );
@@ -87,20 +114,33 @@ export default function CvPage() {
               Print or save as PDF
               <Printer size={13} aria-hidden="true" />
             </button>
-            <QuietAction href={CV_PDF_PATH}>Download the PDF</QuietAction>
+            <QuietAction href={CV_PDF_PATH} tone="interface" download="umer-farooq-cv.pdf">
+              Download the PDF
+            </QuietAction>
           </div>
           <p className="no-print mt-3 text-xs text-muted-foreground">
             The PDF is printed from this page, so the two can&apos;t drift apart. If the download is
             missing, use the print button — it produces the same document.
           </p>
 
-          <div className="cv-masthead cv-entry mt-10 border-t border-border pt-8">
-            <h1 className="text-4xl text-foreground">{SITE.name}</h1>
+          <div className="cv-masthead cv-entry mt-10 border-t border-interface/30 pt-8">
+            <div aria-hidden="true" className="mb-6 grid h-1 grid-cols-5">
+              <span className="bg-thermal" />
+              <span className="bg-cryo" />
+              <span className="bg-neural" />
+              <span className="bg-systems" />
+              <span className="bg-interface" />
+            </div>
+            <h1 className="text-4xl text-foreground">
+              Umer <AccentText tone="interface">Farooq</AccentText>
+            </h1>
             <p className="mt-2 font-mono text-xs uppercase tracking-widest text-primary-type">
               {SITE.role}
             </p>
             <dl className="mt-5 flex flex-wrap gap-x-5 gap-y-1.5">
-              {CV_CONTACT.map((item) => (
+              {CV_CONTACT.map((item, index) => {
+                const contactTone = accent((["systems", "neural", "cryo", "interface", "neural"] as VisualAccent[])[index] ?? "interface");
+                return (
                 <div key={item.label} className="flex items-baseline gap-1.5">
                   <dt className="sr-only">{item.label}</dt>
                   <dd className="text-sm text-muted-foreground">
@@ -109,7 +149,7 @@ export default function CvPage() {
                         href={item.href}
                         target={item.href.startsWith("http") ? "_blank" : undefined}
                         rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                        className="underline decoration-border underline-offset-2 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                        className={`underline decoration-border underline-offset-2 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${contactTone.value}`}
                       >
                         {item.text}
                       </a>
@@ -118,27 +158,28 @@ export default function CvPage() {
                     )}
                   </dd>
                 </div>
-              ))}
+                );
+              })}
             </dl>
           </div>
 
-          <CvSection id="cv-summary" title="Summary">
+          <CvSection id="cv-summary" title="Summary" tone="neural">
             <p className="max-w-prose text-sm leading-relaxed text-foreground">
               {PROFESSIONAL_SUMMARY}
             </p>
           </CvSection>
 
-          <CvSection id="cv-experience" title="Experience">
+          <CvSection id="cv-experience" title="Experience" tone="interface">
             <ul className="flex flex-col gap-7">
               {EXPERIENCE.map((job) => (
                 <li key={`${job.role}-${job.period}`} className="cv-entry">
-                  <EntryHead title={job.role} meta={job.period} />
+                  <EntryHead title={job.role} meta={job.period} tone="interface" />
                   <p className="mt-0.5 text-sm text-muted-foreground">
                     {job.organisation} · {job.location}
                   </p>
                   <ul className="mt-2.5 flex flex-col gap-1.5">
                     {job.points.map((point) => (
-                      <Bullet key={point}>{point}</Bullet>
+                      <Bullet key={point} tone="interface">{point}</Bullet>
                     ))}
                   </ul>
                   {job.technologies && (
@@ -151,17 +192,17 @@ export default function CvPage() {
             </ul>
           </CvSection>
 
-          <CvSection id="cv-education" title="Education">
+          <CvSection id="cv-education" title="Education" tone="systems">
             <div className="cv-entry">
-              <EntryHead title={EDUCATION.degree} meta={EDUCATION.period} />
+              <EntryHead title={EDUCATION.degree} meta={EDUCATION.period} tone="systems" />
               <p className="mt-0.5 text-sm text-muted-foreground">{EDUCATION.institution}</p>
               <ul className="mt-2.5 flex flex-col gap-1.5">
                 {CV_EDUCATION_HIGHLIGHTS.map((highlight) => (
-                  <Bullet key={highlight}>{highlight}</Bullet>
+                  <Bullet key={highlight} tone="systems">{highlight}</Bullet>
                 ))}
               </ul>
               <div className="mt-3.5">
-                <MonoLabel>Coursework</MonoLabel>
+                <MonoLabel className="text-systems-type">Coursework</MonoLabel>
                 <p className="mt-1.5 font-mono text-2xs leading-relaxed text-muted-foreground">
                   {COURSEWORK.join(" · ")}
                 </p>
@@ -169,15 +210,19 @@ export default function CvPage() {
             </div>
           </CvSection>
 
-          <CvSection id="cv-projects" title={`Selected projects · ${projects.length}`}>
+          <CvSection id="cv-projects" title={`Selected projects · ${projects.length}`} tone="interface">
             <ul className="flex flex-col gap-6">
-              {projects.map((project) => (
-                <li key={project.slug} className="cv-entry">
+              {projects.map((project) => {
+                const projectToneName = getDomain(project.domains[0]).accent;
+                const projectTone = accent(projectToneName);
+                return (
+                <li key={project.slug} className={`cv-entry border-l-2 pl-4 ${projectTone.panel}`}>
                   <EntryHead
+                    tone={projectToneName}
                     title={
                       <Link
                         to={`/projects/${project.slug}`}
-                        className="transition-colors hover:text-primary-type focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                        className="transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       >
                         {project.title}
                       </Link>
@@ -188,14 +233,14 @@ export default function CvPage() {
                     {project.tagline ?? project.subtitle}
                   </p>
                   {project.award && (
-                    <p className="mt-1 text-sm text-muted-foreground">{project.award}</p>
+                    <p className="mt-1 text-sm text-award-type">{project.award}</p>
                   )}
                   {project.metrics && (
                     <dl className="mt-2 flex flex-wrap gap-x-5 gap-y-1">
                       {project.metrics.map((metric) => (
                         <div key={metric.label} className="flex items-baseline gap-1.5">
                           <dt className="label-mono">{metric.label}</dt>
-                          <dd className="readout text-xs text-foreground">
+                          <dd className={`readout text-xs ${projectTone.value}`}>
                             {metric.value}
                             {metric.baseline ? ` from ${metric.baseline}` : ""}
                           </dd>
@@ -207,7 +252,8 @@ export default function CvPage() {
                     {project.technologies.slice(0, 7).join(" · ")}
                   </p>
                 </li>
-              ))}
+                );
+              })}
             </ul>
             <div className="mt-6 border-t border-border pt-4">
               <p className="text-sm text-muted-foreground">
@@ -215,16 +261,18 @@ export default function CvPage() {
                 applications, and games — are listed in full on the work page.
               </p>
               <div className="mt-2.5">
-                <TextAction to="/projects">All {PROJECTS.length} projects</TextAction>
+                <TextAction to="/projects" tone="interface">All {PROJECTS.length} projects</TextAction>
               </div>
             </div>
           </CvSection>
 
-          <CvSection id="cv-skills" title="Skills">
+          <CvSection id="cv-skills" title="Skills" tone="neural">
             <dl className="cv-columns grid gap-5 sm:grid-cols-2">
-              {SKILL_GROUPS.map((group) => (
-                <div key={group.title} className="cv-entry border-t border-border pt-3">
-                  <dt className="label-mono">{group.title}</dt>
+              {SKILL_GROUPS.map((group) => {
+                const tone = accent(group.accent);
+                return (
+                <div key={group.title} className={`cv-entry border-t pt-3 ${tone.panel}`}>
+                  <dt className={`label-mono ${tone.label}`}>{group.title}</dt>
                   <dd className="mt-1.5">
                     <ul className="flex flex-col gap-1 text-sm leading-relaxed text-muted-foreground">
                       {group.items.map((item) => (
@@ -233,15 +281,16 @@ export default function CvPage() {
                     </ul>
                   </dd>
                 </div>
-              ))}
+                );
+              })}
             </dl>
           </CvSection>
 
-          <CvSection id="cv-certifications" title="Certifications">
+          <CvSection id="cv-certifications" title="Certifications" tone="award">
             <ul className="flex flex-col gap-3">
               {CERTIFICATIONS.map((cert) => (
                 <li key={cert.title} className="cv-entry flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
-                  <span className="readout text-2xs text-muted-foreground">{cert.year}</span>
+                  <span className="readout text-2xs text-award-type">{cert.year}</span>
                   <span className="text-sm text-foreground">{cert.title}</span>
                   <span className="text-sm text-muted-foreground">{cert.issuer}</span>
                   {cert.credentialUrl && (
@@ -249,7 +298,7 @@ export default function CvPage() {
                       href={cert.credentialUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="font-mono text-2xs uppercase tracking-widest text-primary-type transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      className="font-mono text-2xs uppercase tracking-widest text-award-type transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     >
                       Credential
                     </a>
@@ -259,24 +308,24 @@ export default function CvPage() {
             </ul>
           </CvSection>
 
-          <CvSection id="cv-awards" title="Awards">
+          <CvSection id="cv-awards" title="Awards" tone="award">
             <ul className="flex flex-col gap-3">
               {AWARDS.map((award) => (
                 <li key={award.title} className="cv-entry flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
-                  <span className="readout text-2xs text-muted-foreground">{award.year}</span>
-                  <span className="text-sm text-foreground">{award.title}</span>
+                  <span className="readout text-2xs text-award-type">{award.year}</span>
+                  <span className="text-sm text-award-type">{award.title}</span>
                   <span className="text-sm text-muted-foreground">{award.detail}</span>
                 </li>
               ))}
             </ul>
           </CvSection>
 
-          <CvSection id="cv-languages" title="Languages">
+          <CvSection id="cv-languages" title="Languages" tone="cryo">
             <dl className="flex flex-wrap gap-x-6 gap-y-1.5">
               {LANGUAGES.map((entry) => (
                 <div key={entry.language} className="flex items-baseline gap-2">
                   <dt className="text-sm text-foreground">{entry.language}</dt>
-                  <dd className="label-mono">{entry.proficiency}</dd>
+                  <dd className="label-mono text-cryo-type">{entry.proficiency}</dd>
                 </div>
               ))}
             </dl>

@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
 import SpeedupBench from "@/components/bench/SpeedupBench";
-import { PrimaryAction, QuietAction } from "@/components/kit/Primitives";
+import { AccentText, PrimaryAction, QuietAction } from "@/components/kit/Primitives";
 import { useIslamabadClock } from "@/lib/clock";
 import { useMotionPolicy } from "@/lib/motion-policy";
 
@@ -26,7 +26,7 @@ export default function BenchChapter() {
           <div>
             <motion.div {...rise(0)} className="flex flex-wrap items-center gap-x-3 gap-y-1">
               <span className="flex items-center gap-1.5">
-                <span className="h-1.5 w-1.5 rounded-full bg-thermal" aria-hidden="true" />
+                <span className="h-1.5 w-1.5 rounded-full bg-systems" aria-hidden="true" />
                 <span className="label-mono">Open to work</span>
               </span>
               <span aria-hidden="true" className="h-px w-4 bg-border" />
@@ -39,7 +39,8 @@ export default function BenchChapter() {
               {...rise(0.08)}
               className="mt-6 text-display text-foreground [font-variation-settings:'wdth'_118] [text-wrap:balance]"
             >
-              I make slow systems fast, and hard systems runnable.
+              I make slow systems <AccentText tone="thermal">fast</AccentText>, and hard systems{" "}
+              <AccentText tone="cryo">runnable</AccentText>.
             </motion.h1>
 
             <motion.p {...rise(0.16)} className="mt-6 max-w-xl text-lg text-muted-foreground">

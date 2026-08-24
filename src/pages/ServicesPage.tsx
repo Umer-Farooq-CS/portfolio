@@ -4,7 +4,7 @@ import { motion } from "motion/react";
 import { ArrowRight, Check } from "lucide-react";
 import { INTENTS } from "@/data/intents";
 import { accent } from "@/lib/accent";
-import { ChapterHeader, MonoLabel } from "@/components/kit/Primitives";
+import { AccentText, ChapterHeader, MonoLabel } from "@/components/kit/Primitives";
 import { useDocumentMeta } from "@/lib/meta";
 import { routeMeta } from "@/data/routeMeta";
 import { useMotionPolicy } from "@/lib/motion-policy";
@@ -25,9 +25,14 @@ export default function ServicesPage() {
       <div className="container">
         <ChapterHeader
           eyebrow="Services"
-          title="Start from the problem, not the toolchain"
+          title={
+            <>
+              Start from the <AccentText tone="systems">problem</AccentText>, not the toolchain
+            </>
+          }
           lede="Six things people usually need. Open one to see what it involves, what you get back, and roughly how I'd approach it."
           as="h1"
+          tone="systems"
         />
 
         <ul className="mt-14 border-t border-border">
@@ -52,11 +57,11 @@ export default function ServicesPage() {
                     aria-controls={`${intent.id}-panel`}
                     className="group flex w-full items-baseline gap-4 py-6 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   >
-                    <span className="readout shrink-0 text-2xs text-muted-foreground">
+                    <span className={`readout shrink-0 text-2xs ${tone.value}`}>
                       {String(index + 1).padStart(2, "0")}
                     </span>
                     <span className="flex-1">
-                      <span className="block text-xl text-foreground group-hover:text-primary-type sm:text-2xl">
+                      <span className={`block text-xl sm:text-2xl ${tone.value}`}>
                         {intent.title}
                       </span>
                       <span className={`mt-1.5 block font-mono text-2xs uppercase tracking-widest ${tone.label}`}>
@@ -65,8 +70,8 @@ export default function ServicesPage() {
                     </span>
                     <span
                       aria-hidden="true"
-                      className={`shrink-0 font-mono text-lg text-muted-foreground transition-transform ${
-                        isOpen ? "rotate-45" : ""
+                      className={`shrink-0 font-mono text-lg transition-transform ${
+                        isOpen ? `rotate-45 ${tone.value}` : "text-muted-foreground"
                       }`}
                     >
                       +
@@ -75,9 +80,9 @@ export default function ServicesPage() {
                 </h2>
 
                 {isOpen && (
-                  <div id={`${intent.id}-panel`} className="grid gap-8 pb-9 lg:grid-cols-2 lg:gap-14">
+                  <div id={`${intent.id}-panel`} className={`grid gap-8 border-l-2 pb-9 pl-5 lg:grid-cols-2 lg:gap-14 ${tone.panel}`}>
                     <div>
-                      <MonoLabel>What I do</MonoLabel>
+                      <MonoLabel className={tone.label}>What I do</MonoLabel>
                       <p className="mt-3 text-base leading-relaxed text-muted-foreground">
                         {intent.response}
                       </p>
@@ -90,11 +95,11 @@ export default function ServicesPage() {
                       </Link>
                     </div>
                     <div>
-                      <MonoLabel>What you get</MonoLabel>
+                      <MonoLabel className={tone.label}>What you get</MonoLabel>
                       <ul className="mt-3 flex flex-col gap-2.5">
                         {intent.deliverables.map((item) => (
                           <li key={item} className="flex gap-2.5 text-sm leading-relaxed text-muted-foreground">
-                            <Check size={13} className="mt-1 shrink-0 text-primary-type" aria-hidden="true" />
+                            <Check size={13} className={`mt-1 shrink-0 ${tone.value}`} aria-hidden="true" />
                             <span>{item}</span>
                           </li>
                         ))}

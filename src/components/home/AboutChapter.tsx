@@ -2,7 +2,7 @@ import { motion } from "motion/react";
 import { portrait } from "@/assets/optimized/manifest";
 import Picture from "@/components/Picture";
 import { EDUCATION } from "@/data/profile";
-import { ChapterHeader, MonoLabel, TextAction } from "@/components/kit/Primitives";
+import { AccentText, ChapterHeader, MonoLabel, TextAction } from "@/components/kit/Primitives";
 import { useMotionPolicy } from "@/lib/motion-policy";
 
 /**
@@ -19,9 +19,14 @@ export default function AboutChapter() {
     <section id="about" className="scroll-mt-20 border-t border-border py-20 lg:py-28">
       <div className="container">
         <ChapterHeader
-          index={3}
+          index={4}
           eyebrow="Who's behind this"
-          title="A systems person, in Islamabad"
+          title={
+            <>
+              A <AccentText tone="systems">systems person</AccentText>, in Islamabad
+            </>
+          }
+          tone="systems"
         />
 
         <motion.div
@@ -32,7 +37,7 @@ export default function AboutChapter() {
           className="mt-12 grid gap-10 lg:grid-cols-[minmax(0,14rem)_minmax(0,34rem)] lg:gap-16"
         >
           <div className="max-w-[14rem]">
-            <div className="overflow-hidden rounded-lg border border-border">
+            <div className="overflow-hidden rounded-lg border border-systems/25">
               <Picture
                 image={portrait}
                 alt="Portrait of Umer Farooq"
@@ -42,15 +47,15 @@ export default function AboutChapter() {
             </div>
             <dl className="mt-5 flex flex-col gap-3">
               <div>
-                <dt className="label-mono">Studying</dt>
+                <dt className="label-mono text-systems-type">Studying</dt>
                 <dd className="mt-1 text-xs leading-relaxed text-foreground">
                   {EDUCATION.degree}
                   <span className="block text-muted-foreground">FAST-NUCES, Islamabad</span>
                 </dd>
               </div>
               <div>
-                <dt className="label-mono">Until</dt>
-                <dd className="readout mt-1 text-xs text-foreground">Jun 2026</dd>
+                <dt className="label-mono text-interface-type">Until</dt>
+                <dd className="readout mt-1 text-xs text-interface-type">Jun 2026</dd>
               </div>
             </dl>
           </div>
@@ -71,7 +76,7 @@ export default function AboutChapter() {
 
             <div className="mt-10 grid gap-8 border-t border-border pt-8 sm:grid-cols-2">
               <div>
-                <MonoLabel>In compute</MonoLabel>
+                <MonoLabel className="text-primary-type">In compute</MonoLabel>
                 <p className="mt-2.5 text-sm leading-relaxed text-muted-foreground">
                   Parallel and GPU work, quantum circuit simulation, multi-agent AI with real
                   validation, and the platforms that wrap them. Currently on an open quantum
@@ -79,7 +84,7 @@ export default function AboutChapter() {
                 </p>
               </div>
               <div>
-                <MonoLabel>Off compute</MonoLabel>
+                <MonoLabel className="text-neural-type">Off compute</MonoLabel>
                 <p className="mt-2.5 text-sm leading-relaxed text-muted-foreground">
                   Table tennis, games, and taking apart whatever tool shipped this week to see how it
                   was built. Ran outreach for NaSCon&apos;25, which taught me more about explaining
@@ -89,7 +94,7 @@ export default function AboutChapter() {
             </div>
 
             <div className="mt-9">
-              <TextAction to="/about">Full background, timeline, and skills</TextAction>
+              <TextAction to="/about" tone="systems">Full background, timeline, and skills</TextAction>
             </div>
           </div>
         </motion.div>

@@ -4,29 +4,38 @@ import { SITE_LINKS } from "@/data/siteLinks";
 import { useIslamabadClock } from "@/lib/clock";
 import { MonoLabel } from "@/components/kit/Primitives";
 import { NOTES_ARE_PUBLIC } from "@/data/notes";
+import { accent, type VisualAccent } from "@/lib/accent";
 
-const SOCIAL = [
-  { label: "GitHub", href: SITE_LINKS.github, icon: Github },
-  { label: "LinkedIn", href: SITE_LINKS.linkedin, icon: Linkedin },
-  { label: "Email", href: SITE_LINKS.email, icon: Mail },
-  { label: "Phone", href: SITE_LINKS.phone, icon: Phone },
+const SOCIAL: { label: string; href: string; icon: typeof Github; tone: VisualAccent }[] = [
+  { label: "GitHub", href: SITE_LINKS.github, icon: Github, tone: "interface" },
+  { label: "LinkedIn", href: SITE_LINKS.linkedin, icon: Linkedin, tone: "neural" },
+  { label: "Email", href: SITE_LINKS.email, icon: Mail, tone: "systems" },
+  { label: "Phone", href: SITE_LINKS.phone, icon: Phone, tone: "cryo" },
 ];
 
-const PAGES = [
-  { label: "Work", to: "/projects" },
-  { label: "Services", to: "/services" },
-  { label: "About", to: "/about" },
-  { label: "Lab", to: "/lab" },
-  { label: "CV", to: "/cv" },
-  { label: "Uses", to: "/uses" },
-  ...(NOTES_ARE_PUBLIC ? [{ label: "Notes", to: "/notes" }] : []),
+const PAGES: { label: string; to: string; tone: VisualAccent }[] = [
+  { label: "Work", to: "/projects", tone: "interface" },
+  { label: "Services", to: "/services", tone: "systems" },
+  { label: "About", to: "/about", tone: "systems" },
+  { label: "Lab", to: "/lab", tone: "neural" },
+  { label: "CV", to: "/cv", tone: "cryo" },
+  { label: "Uses", to: "/uses", tone: "thermal" },
+  ...(NOTES_ARE_PUBLIC ? [{ label: "Notes", to: "/notes", tone: "neural" as const }] : []),
 ];
 
 export default function SiteFooter() {
   const clock = useIslamabadClock();
 
   return (
-    <footer className="mt-24 border-t border-border">
+    <footer className="mt-24 border-t border-border bg-surface-alt/25">
+      <div aria-hidden="true" className="grid h-1 grid-cols-6">
+        <span className="bg-thermal" />
+        <span className="bg-cryo" />
+        <span className="bg-neural" />
+        <span className="bg-systems" />
+        <span className="bg-interface" />
+        <span className="bg-award" />
+      </div>
       <div className="container grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-4">
         <div>
           <div className="flex items-center gap-2.5">
@@ -39,40 +48,45 @@ export default function SiteFooter() {
             <span className="font-display text-sm font-semibold text-foreground">Umer Farooq</span>
           </div>
           <p className="mt-3 max-w-[26ch] text-xs leading-relaxed text-muted-foreground">
-            High-performance and GPU computing, quantum simulation, and AI systems that hold up under
-            validation.
+            High-performance and <span className="text-primary-type">GPU computing</span>,{" "}
+            <span className="text-cryo-type">quantum simulation</span>, and{" "}
+            <span className="text-neural-type">AI systems</span> that hold up under validation.
           </p>
         </div>
 
         <div>
-          <MonoLabel>Pages</MonoLabel>
+          <MonoLabel className="text-interface-type">Pages</MonoLabel>
           <ul className="mt-3 flex flex-col gap-2">
-            {PAGES.map((page) => (
-              <li key={page.to}>
-                <Link
-                  to={page.to}
-                  className="text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                >
-                  {page.label}
-                </Link>
-              </li>
-            ))}
+            {PAGES.map((page) => {
+              const tone = accent(page.tone);
+              return (
+                <li key={page.to}>
+                  <Link
+                    to={page.to}
+                    className="group inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  >
+                    <span aria-hidden="true" className={`h-1.5 w-1.5 rounded-full ${tone.mark}`} />
+                    <span className={tone.hoverText}>{page.label}</span>
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </div>
 
         <div>
-          <MonoLabel>Elsewhere</MonoLabel>
+          <MonoLabel className="text-neural-type">Elsewhere</MonoLabel>
           <ul className="mt-3 flex flex-col gap-2">
-            {SOCIAL.map(({ label, href, icon: Icon }) => (
+            {SOCIAL.map(({ label, href, icon: Icon, tone: toneName }) => (
               <li key={label}>
                 <a
                   href={href}
                   target={href.startsWith("http") ? "_blank" : undefined}
                   rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-                  className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="group inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
-                  <Icon size={13} aria-hidden="true" />
-                  {label}
+                  <Icon size={13} className={accent(toneName).value} aria-hidden="true" />
+                  <span className={accent(toneName).hoverText}>{label}</span>
                 </a>
               </li>
             ))}
@@ -80,25 +94,25 @@ export default function SiteFooter() {
         </div>
 
         <div>
-          <MonoLabel>Status</MonoLabel>
+          <MonoLabel className="text-systems-type">Status</MonoLabel>
           <dl className="mt-3 flex flex-col gap-2 text-sm">
             <div className="flex items-baseline gap-2">
               <dt className="sr-only">Local time</dt>
-              <dd className="readout text-foreground">
+              <dd className="readout text-systems-type">
                 {clock.hh}:{clock.mm} {clock.label}
               </dd>
             </div>
             <div className="flex items-baseline gap-2">
               <dt className="sr-only">Location</dt>
-              <dd className="text-muted-foreground">{SITE_LINKS.location}</dd>
+              <dd className="text-interface-type">{SITE_LINKS.location}</dd>
             </div>
             <div className="flex items-center gap-1.5">
               <span
-                className={`h-1.5 w-1.5 rounded-full ${clock.awake ? "bg-thermal" : "bg-graphite"}`}
+                className={`h-1.5 w-1.5 rounded-full ${clock.awake ? "bg-systems" : "bg-graphite"}`}
                 aria-hidden="true"
               />
               <dt className="sr-only">Availability</dt>
-              <dd className="label-mono">Open to work</dd>
+              <dd className="label-mono text-systems-type">Open to work</dd>
             </div>
           </dl>
         </div>
@@ -114,7 +128,7 @@ export default function SiteFooter() {
             href={`${SITE_LINKS.github}/portfolio`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-primary-type underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="text-interface-type underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             GitHub
           </a>

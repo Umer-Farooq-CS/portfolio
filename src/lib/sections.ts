@@ -1,3 +1,5 @@
+import type { VisualAccent } from "@/lib/accent";
+
 /**
  * The section index shown in the rail, per route.
  *
@@ -8,14 +10,16 @@
 export interface SectionEntry {
   id: string;
   label: string;
+  tone: VisualAccent;
 }
 
 export const HOME_SECTIONS: SectionEntry[] = [
-  { id: "bench", label: "Bench" },
-  { id: "work", label: "Work" },
-  { id: "proof", label: "Proof" },
-  { id: "about", label: "About" },
-  { id: "talk", label: "Talk" },
+  { id: "bench", label: "Bench", tone: "thermal" },
+  { id: "work", label: "Work", tone: "interface" },
+  { id: "proof", label: "Proof", tone: "systems" },
+  { id: "activity", label: "Live", tone: "cryo" },
+  { id: "about", label: "About", tone: "systems" },
+  { id: "talk", label: "Talk", tone: "neural" },
 ];
 
 export const ROUTE_SECTIONS: Record<string, SectionEntry[]> = {

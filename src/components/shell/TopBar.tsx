@@ -5,16 +5,17 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { useTheme } from "@/lib/theme";
 import { useMotionPolicy } from "@/lib/motion-policy";
 import { NOTES_ARE_PUBLIC } from "@/data/notes";
+import { accent, type VisualAccent } from "@/lib/accent";
 
-const NAV = [
-  { label: "Work", to: "/projects" },
-  { label: "Services", to: "/services" },
-  { label: "About", to: "/about" },
-  { label: "Lab", to: "/lab" },
-  { label: "CV", to: "/cv" },
+const NAV: { label: string; to: string; tone: VisualAccent }[] = [
+  { label: "Work", to: "/projects", tone: "interface" },
+  { label: "Services", to: "/services", tone: "systems" },
+  { label: "About", to: "/about", tone: "systems" },
+  { label: "Lab", to: "/lab", tone: "neural" },
+  { label: "CV", to: "/cv", tone: "cryo" },
   // Hidden until the first non-draft note lands, so the nav never points at an
   // empty page. No further edit needed when one does.
-  ...(NOTES_ARE_PUBLIC ? [{ label: "Notes", to: "/notes" }] : []),
+  ...(NOTES_ARE_PUBLIC ? [{ label: "Notes", to: "/notes", tone: "neural" as const }] : []),
 ];
 
 function isActive(to: string, pathname: string): boolean {
@@ -71,20 +72,24 @@ export default function TopBar() {
         </Link>
 
         <nav aria-label="Main" className="hidden items-center gap-1 md:flex">
-          {NAV.map((item) => (
-            <Link
-              key={item.to}
-              to={item.to}
-              aria-current={isActive(item.to, pathname) ? "page" : undefined}
-              className={`rounded-md px-3 py-1.5 font-mono text-2xs uppercase tracking-widest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
-                isActive(item.to, pathname)
-                  ? "text-primary-type"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {item.label}
-            </Link>
-          ))}
+          {NAV.map((item) => {
+            const active = isActive(item.to, pathname);
+            const tone = accent(item.tone);
+            return (
+              <Link
+                key={item.to}
+                to={item.to}
+                aria-current={active ? "page" : undefined}
+                className={`rounded-md border px-3 py-1.5 font-mono text-2xs uppercase tracking-widest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                  active
+                    ? tone.chip
+                    : "border-transparent text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="flex items-center gap-1">
@@ -121,16 +126,23 @@ export default function TopBar() {
               <Dialog.Content className="fixed inset-x-0 top-0 z-50 border-b border-border bg-background p-6 data-[state=open]:animate-in data-[state=open]:slide-in-from-top-4">
                 <Dialog.Title className="label-mono">Menu</Dialog.Title>
                 <nav aria-label="Mobile" className="mt-4 flex flex-col">
-                  {[{ label: "Home", to: "/" }, ...NAV].map((item) => (
-                    <Link
-                      key={item.to}
-                      to={item.to}
-                      onClick={() => setMenuOpen(false)}
-                      className="border-b border-border py-3.5 font-display text-xl text-foreground last:border-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
+                  {[{ label: "Home", to: "/", tone: "thermal" as const }, ...NAV].map((item) => {
+                    const tone = accent(item.tone);
+                    const active = isActive(item.to, pathname);
+                    return (
+                      <Link
+                        key={item.to}
+                        to={item.to}
+                        onClick={() => setMenuOpen(false)}
+                        aria-current={active ? "page" : undefined}
+                        className={`border-b border-border py-3.5 font-display text-xl last:border-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                          active ? tone.value : "text-foreground"
+                        }`}
+                      >
+                        {item.label}
+                      </Link>
+                    );
+                  })}
                 </nav>
                 <Link
                   to="/#talk"

@@ -14,7 +14,7 @@ import {
   type HeatmapStep,
   type MonthTotal,
 } from "@/hooks/useLiveData";
-import { ChapterHeader, Metric, MonoLabel } from "@/components/kit/Primitives";
+import { AccentText, ChapterHeader, Metric, MonoLabel } from "@/components/kit/Primitives";
 import { useMotionPolicy } from "@/lib/motion-policy";
 
 /**
@@ -53,10 +53,10 @@ const GUTTER_TOP = 14;
 /** Sunday is row 0; only alternate rows are labelled, or the axis becomes noise. */
 const WEEKDAY_LABELS: Record<number, string> = { 1: "Mon", 3: "Wed", 5: "Fri" };
 
-/** arXiv categories map onto the two accents; anything else stays unaccented. */
+/** arXiv categories use the same semantic legend as the rest of the site. */
 function categoryClass(category: string): string {
-  if (category.startsWith("quant-ph")) return "text-accent-type";
-  if (category.startsWith("cs.DC")) return "text-primary-type";
+  if (category.startsWith("quant-ph")) return "text-cryo-type";
+  if (category.startsWith("cs.DC")) return "text-systems-type";
   return "text-muted-foreground";
 }
 
@@ -103,27 +103,40 @@ export default function LiveActivity({ index }: { index?: number }) {
   if (!hasReadouts && grid.weeks.length === 0 && reading.papers.length === 0) return null;
 
   return (
-    <section
-      id="activity"
-      className="scroll-mt-20 border-t border-border py-20 lg:py-28"
-    >
+    <section className="border-t border-border py-20 lg:py-28">
       <div className="container">
         <ChapterHeader
           index={index}
           eyebrow="Activity"
-          title="Current, not written down"
+          title={
+            <>
+              <AccentText tone="systems">Current</AccentText>, not written down
+            </>
+          }
           lede="Everything in this section is read from GitHub and arXiv — once when the site is built, and again in your browser when you open it. The numbers are whatever they are today."
+          tone="systems"
         />
 
         {hasReadouts && (
           <dl className="mt-12 grid grid-cols-2 gap-x-8 gap-y-10 border-t border-border pt-10 lg:grid-cols-4">
-            <Metric value={String(profile.data.publicRepos)} label="Public repos" note="forks excluded" />
-            <Metric value={String(profile.data.totalStars)} label="Stars" note="across all repos" />
-            <Metric value={String(profile.data.followers)} label="Followers" />
+            <Metric
+              value={String(profile.data.publicRepos)}
+              label="Public repos"
+              note="forks excluded"
+              tone="interface"
+            />
+            <Metric
+              value={String(profile.data.totalStars)}
+              label="Stars"
+              note="across all repos"
+              tone="award"
+            />
+            <Metric value={String(profile.data.followers)} label="Followers" tone="neural" />
             <Metric
               value={String(contributions.data.total)}
               label="Contributions"
               note={`${grid.activeDays} active days`}
+              tone="systems"
             />
           </dl>
         )}
@@ -243,7 +256,7 @@ export default function LiveActivity({ index }: { index?: number }) {
 
           {activity.languages.length > 0 && (
             <div className="lg:border-l lg:border-border lg:pl-10">
-              <MonoLabel>Language distribution</MonoLabel>
+              <MonoLabel className="text-interface-type">Language distribution</MonoLabel>
               <p className="mt-2 text-sm text-muted-foreground">
                 Repositories by the primary language GitHub detects. One series, so one colour.
               </p>
@@ -255,7 +268,7 @@ export default function LiveActivity({ index }: { index?: number }) {
                       key={language.name}
                       className="grid grid-cols-[7rem_1fr_1.5rem] items-center gap-3"
                     >
-                      <span className="truncate font-mono text-2xs text-muted-foreground">
+                      <span className="truncate font-mono text-2xs text-interface-type">
                         {language.name}
                       </span>
                       <span className="h-1.5 w-full bg-border/60" aria-hidden="true">
@@ -264,10 +277,10 @@ export default function LiveActivity({ index }: { index?: number }) {
                           whileInView={{ width: barWidth }}
                           viewport={{ once: true }}
                           transition={{ duration: duration(0.7), ease: [0.16, 1, 0.3, 1] }}
-                          className="block h-full bg-thermal"
+                          className="block h-full bg-interface"
                         />
                       </span>
-                      <span className="readout text-xs text-muted-foreground">{language.repos}</span>
+                      <span className="readout text-xs text-interface-type">{language.repos}</span>
                     </li>
                   );
                 })}
@@ -277,10 +290,10 @@ export default function LiveActivity({ index }: { index?: number }) {
         </div>
 
         {activity.repos.length > 0 && (
-          <div className="mt-16 border-t border-border pt-10">
+          <div className="mt-16 border-t border-interface/25 pt-10">
             <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-              <MonoLabel>Recent pushes</MonoLabel>
-              <span className="readout text-2xs text-muted-foreground">
+              <MonoLabel className="text-interface-type">Recent pushes</MonoLabel>
+              <span className="readout text-2xs text-interface-type">
                 {activity.repos.length} of {profile.data.publicRepos} public repos
               </span>
             </div>
@@ -294,7 +307,7 @@ export default function LiveActivity({ index }: { index?: number }) {
                         href={repo.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group inline-flex items-baseline gap-1.5 font-mono text-sm text-foreground transition-colors hover:text-primary-type focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                        className="group inline-flex items-baseline gap-1.5 font-mono text-sm text-interface-type transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       >
                         {repo.name}
                         <ExternalLink size={11} aria-hidden="true" />
@@ -307,14 +320,14 @@ export default function LiveActivity({ index }: { index?: number }) {
                     </div>
                     <div className="flex flex-wrap items-baseline gap-x-5 gap-y-1 sm:justify-end">
                       {repo.language && (
-                        <span className="font-mono text-2xs text-muted-foreground">
+                        <span className="font-mono text-2xs text-cryo-type">
                           {repo.language}
                         </span>
                       )}
-                      <span className="readout text-2xs text-muted-foreground">
+                      <span className="readout text-2xs text-award-type">
                         {repo.stars} <span className="label-mono">{repo.stars === 1 ? "star" : "stars"}</span>
                       </span>
-                      <span className="readout text-2xs text-muted-foreground">
+                      <span className="readout text-2xs text-systems-type">
                         <span className="label-mono">pushed</span>{" "}
                         <time dateTime={repo.pushedAt}>{relativeTime(repo.pushedAt, now)}</time>
                       </span>
@@ -327,9 +340,9 @@ export default function LiveActivity({ index }: { index?: number }) {
         )}
 
         {reading.papers.length > 0 && (
-          <div className="mt-16 border-t border-border pt-10">
+          <div className="mt-16 border-t border-cryo/25 pt-10">
             <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-              <MonoLabel>Reading — arXiv quant-ph and cs.DC</MonoLabel>
+              <MonoLabel className="text-cryo-type">Reading — arXiv quant-ph and cs.DC</MonoLabel>
               <span className="readout text-2xs text-muted-foreground">
                 {freshness(reading.fetchedAt, now)}
               </span>
@@ -356,7 +369,7 @@ export default function LiveActivity({ index }: { index?: number }) {
                     href={paper.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group mt-1.5 inline-flex items-baseline gap-1.5 text-sm font-medium leading-snug text-foreground transition-colors hover:text-primary-type focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    className={`group mt-1.5 inline-flex items-baseline gap-1.5 text-sm font-medium leading-snug transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${categoryClass(paper.category)}`}
                   >
                     {paper.title}
                     <ExternalLink size={11} className="shrink-0" aria-hidden="true" />

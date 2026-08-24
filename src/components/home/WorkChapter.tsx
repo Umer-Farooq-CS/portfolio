@@ -23,6 +23,7 @@ export default function WorkChapter() {
           eyebrow="Selected work"
           title="Two projects that show the range"
           lede="A platform that had to be fast and correct across three quantum frameworks, and an AI pipeline that had to stop being confidently wrong."
+          tone="interface"
         />
 
         <div className="mt-14 flex flex-col">
@@ -36,7 +37,7 @@ export default function WorkChapter() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-80px" }}
                 transition={{ duration: duration(0.6), delay: enabled ? index * 0.08 : 0 }}
-                className="group border-t border-border py-10 first:border-t-0 first:pt-0"
+                className={`group border-t py-10 first:border-t-0 first:pt-0 ${tone.panel}`}
               >
                 <div className="grid gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-14">
                   <div>
@@ -54,12 +55,12 @@ export default function WorkChapter() {
                     <h3 className="mt-4 text-2xl text-foreground">
                       <Link
                         to={`/projects/${project.slug}`}
-                        className="inline-flex items-baseline gap-2 hover:text-primary-type focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                        className={`inline-flex items-baseline gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${tone.value}`}
                       >
                         {project.title}
                         <ArrowUpRight
                           size={16}
-                          className="shrink-0 text-muted-foreground transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                          className={`shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 ${tone.value}`}
                           aria-hidden="true"
                         />
                       </Link>
@@ -76,7 +77,7 @@ export default function WorkChapter() {
                     )}
 
                     {project.award && (
-                      <p className="mt-5 inline-flex items-start gap-2 text-xs text-primary-type">
+                      <p className="mt-5 inline-flex items-start gap-2 text-xs text-award-type">
                         <Trophy size={13} className="mt-0.5 shrink-0" aria-hidden="true" />
                         {project.award}
                       </p>
@@ -84,16 +85,16 @@ export default function WorkChapter() {
 
                     <div className="mt-6 flex flex-wrap gap-1.5">
                       {project.technologies.slice(0, 7).map((tech) => (
-                        <Tag key={tech}>{tech}</Tag>
+                        <Tag key={tech} tone={domain.accent}>{tech}</Tag>
                       ))}
                     </div>
 
                     <div className="mt-7">
-                      <TextAction to={`/projects/${project.slug}`}>Read the write-up</TextAction>
+                      <TextAction to={`/projects/${project.slug}`} tone={domain.accent}>Read the write-up</TextAction>
                     </div>
                   </div>
 
-                  <div className="lg:border-l lg:border-border lg:pl-8">
+                  <div className={`lg:border-l lg:pl-8 ${tone.panel}`}>
                     {project.metrics && project.metrics.length > 0 ? (
                       <dl className="grid grid-cols-2 gap-6">
                         {project.metrics.map((metric) => (
@@ -103,19 +104,20 @@ export default function WorkChapter() {
                             label={metric.label}
                             baseline={metric.baseline}
                             note={metric.note}
+                            tone={domain.accent}
                           />
                         ))}
                       </dl>
                     ) : (
                       project.strategy && (
                         <div>
-                          <p className="label-mono">Approach</p>
+                          <p className={`label-mono ${tone.label}`}>Approach</p>
                           <ul className="mt-3 flex flex-col gap-2.5">
                             {project.strategy.slice(0, 4).map((step) => (
                               <li key={step} className="flex gap-2.5 text-sm text-muted-foreground">
                                 <span
                                   aria-hidden="true"
-                                  className="mt-2 h-1 w-1 shrink-0 rounded-full bg-thermal"
+                                  className={`mt-2 h-1 w-1 shrink-0 rounded-full ${tone.mark}`}
                                 />
                                 <span>{step}</span>
                               </li>
@@ -132,7 +134,7 @@ export default function WorkChapter() {
         </div>
 
         <div className="mt-12 border-t border-border pt-8">
-          <TextAction to="/projects">All 30 projects</TextAction>
+          <TextAction to="/projects" tone="interface">All 30 projects</TextAction>
         </div>
       </div>
     </section>

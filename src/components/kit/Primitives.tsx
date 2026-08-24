@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { sectionIndex } from "@/lib/sections";
+import { accent, type VisualAccent } from "@/lib/accent";
 
 /**
  * The small pieces the pages are assembled from. They exist so the type roles and
@@ -39,19 +40,23 @@ export function Metric({
   label,
   baseline,
   note,
+  tone = "none",
   className,
 }: {
   value: string;
   label: string;
   baseline?: string;
   note?: string;
+  tone?: VisualAccent;
   className?: string;
 }) {
+  const toneClasses = accent(tone);
+
   return (
     <div className={cn("flex flex-col", className)}>
       <dt className="label-mono order-2 mt-2">{label}</dt>
       <dd className="order-1">
-        <span className="readout block text-2xl leading-none text-foreground sm:text-3xl">
+        <span className={cn("readout block text-2xl leading-none sm:text-3xl", toneClasses.value)}>
           {value}
         </span>
       </dd>
@@ -69,9 +74,22 @@ export function Metric({
 }
 
 /** Technology tag. Always mono: it names a tool, which is data, not prose. */
-export function Tag({ children }: { children: ReactNode }) {
+export function Tag({
+  children,
+  tone = "none",
+}: {
+  children: ReactNode;
+  tone?: VisualAccent;
+}) {
+  const toneClasses = accent(tone);
+
   return (
-    <span className="rounded-sm border border-border bg-muted/60 px-1.5 py-0.5 font-mono text-2xs text-muted-foreground">
+    <span
+      className={cn(
+        "rounded-sm border px-1.5 py-0.5 font-mono text-2xs",
+        tone === "none" ? "border-border bg-muted/60 text-muted-foreground" : toneClasses.chip,
+      )}
+    >
       {children}
     </span>
   );
@@ -86,6 +104,7 @@ export function ChapterHeader({
   eyebrow,
   title,
   lede,
+  tone = "thermal",
   className,
   as: Heading = "h2",
 }: {
@@ -93,23 +112,39 @@ export function ChapterHeader({
   eyebrow: string;
   title: ReactNode;
   lede?: ReactNode;
+  tone?: VisualAccent;
   className?: string;
   /** "h1" when this is the page's own title; "h2" for a chapter within a page. */
   as?: "h1" | "h2";
 }) {
+  const toneClasses = accent(tone);
+
   return (
     <div className={cn("max-w-2xl", className)}>
       <div className="flex items-center gap-2.5">
         {index !== undefined && (
-          <span className="readout text-2xs text-primary-type">{sectionIndex(index)}</span>
+          <span className={cn("readout text-2xs", toneClasses.value)}>{sectionIndex(index)}</span>
         )}
-        <span aria-hidden="true" className="h-px w-6 bg-border" />
-        <MonoLabel>{eyebrow}</MonoLabel>
+        <span aria-hidden="true" className={cn("h-px w-6", toneClasses.mark)} />
+        <MonoLabel className={toneClasses.label}>{eyebrow}</MonoLabel>
       </div>
       <Heading className="mt-4 text-3xl text-foreground">{title}</Heading>
       {lede && <p className="mt-4 text-base text-muted-foreground">{lede}</p>}
     </div>
   );
+}
+
+/** Short, semantic emphasis inside a heading or readout. */
+export function AccentText({
+  tone,
+  children,
+  className,
+}: {
+  tone: VisualAccent;
+  children: ReactNode;
+  className?: string;
+}) {
+  return <span className={cn(accent(tone).value, className)}>{children}</span>;
 }
 
 /** The one primary action per view. */
@@ -149,13 +184,22 @@ export function QuietAction({
   to,
   href,
   children,
+  tone = "none",
+  download,
 }: {
   to?: string;
   href?: string;
   children: ReactNode;
+  tone?: VisualAccent;
+  download?: boolean | string;
 }) {
-  const className =
-    "group inline-flex items-center gap-2 rounded-md border border-border px-5 py-2.5 font-mono text-2xs uppercase tracking-widest text-foreground transition-colors hover:border-foreground/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
+  const toneClasses = accent(tone);
+  const className = cn(
+    "group inline-flex items-center gap-2 rounded-md border px-5 py-2.5 font-mono text-2xs uppercase tracking-widest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+    tone === "none"
+      ? "border-border text-foreground hover:border-foreground/40"
+      : `${toneClasses.panel} ${toneClasses.value}`,
+  );
   const content = (
     <>
       {children}
@@ -164,7 +208,7 @@ export function QuietAction({
   );
   if (href) {
     return (
-      <a href={href} className={className}>
+      <a href={href} className={className} download={download}>
         {content}
       </a>
     );
@@ -177,11 +221,24 @@ export function QuietAction({
 }
 
 /** Inline text link that reads as a next step rather than a button. */
-export function TextAction({ to, children }: { to: string; children: ReactNode }) {
+export function TextAction({
+  to,
+  children,
+  tone = "thermal",
+}: {
+  to: string;
+  children: ReactNode;
+  tone?: VisualAccent;
+}) {
+  const toneClasses = accent(tone);
+
   return (
     <Link
       to={to}
-      className="group inline-flex items-center gap-1.5 font-mono text-2xs uppercase tracking-widest text-primary-type transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      className={cn(
+        "group inline-flex items-center gap-1.5 font-mono text-2xs uppercase tracking-widest transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        toneClasses.value,
+      )}
     >
       {children}
       <ArrowRight size={12} className="transition-transform group-hover:translate-x-0.5" aria-hidden="true" />

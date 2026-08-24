@@ -5,7 +5,7 @@ import { PROJECTS } from "@/data/projects";
 import { DOMAINS } from "@/data/taxonomy";
 import { getProjectsInDomain } from "@/data/projects";
 import { accent } from "@/lib/accent";
-import { ChapterHeader, Metric, MonoLabel } from "@/components/kit/Primitives";
+import { AccentText, ChapterHeader, Metric, MonoLabel } from "@/components/kit/Primitives";
 import { useMotionPolicy } from "@/lib/motion-policy";
 
 /**
@@ -17,11 +17,28 @@ import { useMotionPolicy } from "@/lib/motion-policy";
  * builds. The old site's "50+" understated it.
  */
 const HEADLINE_METRICS = [
-  { value: "6×", label: "Faster inference", baseline: "FP32", note: "FP16 Tensor Cores, MNIST" },
-  { value: "92%", label: "Circuit generation", baseline: "52%", note: "vs single-agent baseline" },
-  { value: "20+", label: "Qubits simulated", note: "hybrid MPI + OpenMP + CUDA" },
-  { value: "3rd", label: "Huawei ICT finals", note: "national, UniQ team" },
-];
+  {
+    value: "6×",
+    label: "Faster inference",
+    baseline: "FP32",
+    note: "FP16 Tensor Cores, MNIST",
+    tone: "thermal",
+  },
+  {
+    value: "92%",
+    label: "Circuit generation",
+    baseline: "52%",
+    note: "vs single-agent baseline",
+    tone: "neural",
+  },
+  {
+    value: "20+",
+    label: "Qubits simulated",
+    note: "hybrid MPI + OpenMP + CUDA",
+    tone: "cryo",
+  },
+  { value: "3rd", label: "Huawei ICT finals", note: "national, UniQ team", tone: "award" },
+] as const;
 
 export default function ProofChapter() {
   const { enabled, duration } = useMotionPolicy();
@@ -37,8 +54,13 @@ export default function ProofChapter() {
         <ChapterHeader
           index={2}
           eyebrow="Evidence"
-          title="Numbers, and where they came from"
+          title={
+            <>
+              <AccentText tone="systems">Numbers</AccentText>, and where they came from
+            </>
+          }
           lede="Every claim above has a project behind it. These are the results, with the baselines they improved on."
+          tone="systems"
         />
 
         <motion.dl
@@ -77,34 +99,30 @@ export default function ProofChapter() {
                         whileInView={{ width }}
                         viewport={{ once: true }}
                         transition={{ duration: duration(0.7), ease: [0.16, 1, 0.3, 1] }}
-                        className={`block h-full ${
-                          domain.accent === "thermal"
-                            ? "bg-thermal"
-                            : domain.accent === "cryo"
-                              ? "bg-cryo"
-                              : "bg-graphite"
-                        }`}
+                        className={`block h-full ${tone.mark}`}
                       />
                     </span>
-                    <span className="readout text-xs text-muted-foreground">{domain.count}</span>
+                    <span className={`readout text-xs ${tone.value}`}>{domain.count}</span>
                   </li>
                 );
               })}
             </ul>
 
             <div className="mt-10 border-t border-border pt-8">
-              <MonoLabel>Core skills</MonoLabel>
+              <MonoLabel className="text-neural-type">Core skills</MonoLabel>
               <dl className="mt-5 grid gap-x-10 gap-y-6 sm:grid-cols-2">
-                {SKILL_GROUPS.map((group) => (
-                  <div key={group.title}>
-                    <dt className="text-sm font-semibold text-foreground">{group.title}</dt>
+                {SKILL_GROUPS.map((group) => {
+                  const tone = accent(group.accent);
+                  return (
+                  <div key={group.title} className={`border-l-2 pl-3 ${tone.panel}`}>
+                    <dt className={`text-sm font-semibold ${tone.value}`}>{group.title}</dt>
                     <dd className="mt-2">
                       <ul className="flex flex-col gap-1.5">
                         {group.items.map((item) => (
                           <li key={item} className="flex gap-2 text-xs leading-relaxed text-muted-foreground">
                             <span
                               aria-hidden="true"
-                              className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-border"
+                              className={`mt-1.5 h-1 w-1 shrink-0 rounded-full ${tone.mark}`}
                             />
                             <span>{item}</span>
                           </li>
@@ -112,18 +130,19 @@ export default function ProofChapter() {
                       </ul>
                     </dd>
                   </div>
-                ))}
+                  );
+                })}
               </dl>
             </div>
           </div>
 
           <div className="lg:border-l lg:border-border lg:pl-10">
-            <MonoLabel>Certifications</MonoLabel>
+            <MonoLabel className="text-award-type">Certifications</MonoLabel>
             <ul className="mt-5 flex flex-col gap-5">
               {CERTIFICATIONS.map((cert) => (
                 <li key={cert.title} className="border-b border-border pb-5 last:border-0 last:pb-0">
                   <div className="flex items-baseline justify-between gap-3">
-                    <span className="readout text-2xs text-primary-type">{cert.year}</span>
+                    <span className="readout text-2xs text-award-type">{cert.year}</span>
                     <span className="label-mono">{cert.issuer}</span>
                   </div>
                   <p className="mt-2 text-sm font-medium leading-snug text-foreground">{cert.title}</p>
@@ -132,7 +151,7 @@ export default function ProofChapter() {
                       href={cert.credentialUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="mt-2 inline-flex items-center gap-1.5 font-mono text-2xs uppercase tracking-widest text-primary-type hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      className="mt-2 inline-flex items-center gap-1.5 font-mono text-2xs uppercase tracking-widest text-award-type hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     >
                       Verify
                       <ExternalLink size={11} aria-hidden="true" />

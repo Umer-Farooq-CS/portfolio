@@ -16,7 +16,8 @@ const LiveActivity = lazy(() => import("@/components/proof/LiveActivity"));
 /**
  * The homepage reads as five chapters, and no two share a shape: a full-bleed
  * instrument, full-width log entries, a dense measurement band, a narrow column,
- * then a panel. The old page repeated one centered card-grid section five times.
+ * then a panel. Live activity is indexed separately because it is a full chapter,
+ * not a small appendix to the proof band above it.
  */
 export default function Index() {
   useDocumentMeta({ ...routeMeta("/"), path: "/" });
@@ -27,9 +28,11 @@ export default function Index() {
       <BenchChapter />
       <WorkChapter />
       <ProofChapter />
-      <Suspense fallback={<div className="border-t border-border" />}>
-        <LiveActivity />
-      </Suspense>
+      <div id="activity" className="scroll-mt-20">
+        <Suspense fallback={<div className="border-t border-border" />}>
+          <LiveActivity index={3} />
+        </Suspense>
+      </div>
       <AboutChapter />
       <TalkChapter />
     </>

@@ -30,12 +30,12 @@ export default class ErrorBoundary extends Component<Props, State> {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background px-6 text-foreground">
         <div className="max-w-md">
-          <p className="label-mono">Something broke</p>
-          <h1 className="mt-3 text-2xl">This page failed to render</h1>
+          <p className="label-mono text-destructive">Something broke</p>
+          <h1 className="mt-3 text-2xl text-destructive">This page failed to render</h1>
           <p className="mt-3 text-sm text-muted-foreground">
             The error has been logged to the console. Reloading usually clears it.
           </p>
-          <pre className="readout mt-4 max-h-32 overflow-auto rounded-md border border-border bg-card p-3 text-2xs text-muted-foreground">
+          <pre className="readout mt-4 max-h-32 overflow-auto rounded-md border border-destructive/25 bg-destructive/5 p-3 text-2xs text-destructive">
             {error.message}
           </pre>
           <div className="mt-6 flex flex-wrap gap-3">
@@ -47,8 +47,8 @@ export default class ErrorBoundary extends Component<Props, State> {
               Reload the page
             </button>
             <a
-              href="/"
-              className="rounded-md border border-border px-5 py-2.5 font-mono text-2xs uppercase tracking-widest hover:bg-card"
+              href={import.meta.env.BASE_URL}
+              className="rounded-md border border-interface/30 px-5 py-2.5 font-mono text-2xs uppercase tracking-widest text-interface-type hover:bg-interface/5"
             >
               Go home
             </a>

@@ -1,7 +1,7 @@
 import { Suspense, lazy } from "react";
 import SpeedupBench from "@/components/bench/SpeedupBench";
 import CircuitSandbox from "@/components/lab/CircuitSandbox";
-import { ChapterHeader, MonoLabel } from "@/components/kit/Primitives";
+import { AccentText, ChapterHeader, MonoLabel } from "@/components/kit/Primitives";
 import { useDocumentMeta } from "@/lib/meta";
 import { routeMeta } from "@/data/routeMeta";
 
@@ -19,17 +19,22 @@ export default function LabPage() {
       <div className="container">
         <ChapterHeader
           eyebrow="Lab"
-          title="Things you can run, not just read about"
+          title={
+            <>
+              Things you can <AccentText tone="neural">run</AccentText>, not just read about
+            </>
+          }
           lede="Two of the claims on this site are executable. Both of these run in your browser: the benchmark uses your cores, and the simulator is exact rather than sampled."
           as="h1"
+          tone="neural"
         />
 
-        <section aria-labelledby="lab-bench" className="mt-16 border-t border-border pt-10">
+        <section aria-labelledby="lab-bench" className="mt-16 border-t border-thermal/30 pt-10">
           <div className="flex flex-wrap items-baseline justify-between gap-3">
-            <h2 id="lab-bench" className="text-2xl text-foreground">
+            <h2 id="lab-bench" className="text-2xl text-primary-type">
               Parallel speedup
             </h2>
-            <MonoLabel>Web Workers · Mandelbrot escape-time</MonoLabel>
+            <MonoLabel className="text-primary-type">Web Workers · Mandelbrot escape-time</MonoLabel>
           </div>
           <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,28rem)] lg:gap-14">
             <div className="text-sm leading-relaxed text-muted-foreground">
@@ -68,12 +73,12 @@ export default function LabPage() {
           </div>
         </section>
 
-        <section aria-labelledby="lab-circuit" className="mt-20 border-t border-border pt-10">
+        <section aria-labelledby="lab-circuit" className="mt-20 border-t border-cryo/30 pt-10">
           <div className="flex flex-wrap items-baseline justify-between gap-3">
-            <h2 id="lab-circuit" className="text-2xl text-foreground">
+            <h2 id="lab-circuit" className="text-2xl text-cryo-type">
               Circuit sandbox
             </h2>
-            <MonoLabel>3 qubits · exact statevector</MonoLabel>
+            <MonoLabel className="text-cryo-type">3 qubits · exact statevector</MonoLabel>
           </div>
           <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground">
             A miniature of QCanvas, the platform that took third at the Huawei ICT national finals.
@@ -86,12 +91,12 @@ export default function LabPage() {
           </div>
         </section>
 
-        <section aria-labelledby="lab-pipeline" className="mt-20 border-t border-border pt-10">
+        <section aria-labelledby="lab-pipeline" className="mt-20 border-t border-neural/30 pt-10">
           <div className="flex flex-wrap items-baseline justify-between gap-3">
-            <h2 id="lab-pipeline" className="text-2xl text-foreground">
+            <h2 id="lab-pipeline" className="text-2xl text-neural-type">
               Validation loop
             </h2>
-            <MonoLabel>Multi-agent pipeline · anime.js</MonoLabel>
+            <MonoLabel className="text-neural-type">Multi-agent pipeline · anime.js</MonoLabel>
           </div>
           <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground">
             The Cirq-RAG pipeline, drawn as it runs. The interesting edge is the one going

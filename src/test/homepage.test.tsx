@@ -6,6 +6,7 @@ import { MotionPolicyProvider } from "@/lib/motion-policy";
 import Index from "@/pages/Index";
 import { getFeaturedProjects } from "@/data/projects";
 import { SITE_LINKS } from "@/data/siteLinks";
+import { HOME_SECTIONS } from "@/lib/sections";
 
 function renderHome() {
   return render(
@@ -22,8 +23,8 @@ function renderHome() {
 describe("homepage", () => {
   it("renders every section without crashing", () => {
     renderHome();
-    for (const id of ["bench", "work", "proof", "about", "talk"]) {
-      expect(document.getElementById(id), `#${id} is missing`).not.toBeNull();
+    for (const section of HOME_SECTIONS) {
+      expect(document.getElementById(section.id), `#${section.id} is missing`).not.toBeNull();
     }
   });
 

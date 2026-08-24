@@ -4,8 +4,8 @@ import { motion } from "motion/react";
 import { ArrowUpRight, Search, Trophy, X } from "lucide-react";
 import { PROJECTS, getTechnologyFacets } from "@/data/projects";
 import { DOMAINS, getDomain, type Domain } from "@/data/taxonomy";
-import { accent } from "@/lib/accent";
-import { ChapterHeader, MonoLabel, Tag } from "@/components/kit/Primitives";
+import { accent, type VisualAccent } from "@/lib/accent";
+import { AccentText, ChapterHeader, MonoLabel, Tag } from "@/components/kit/Primitives";
 import { useDocumentMeta } from "@/lib/meta";
 import { routeMeta } from "@/data/routeMeta";
 import { useMotionPolicy } from "@/lib/motion-policy";
@@ -81,9 +81,14 @@ export default function ProjectsPage() {
       <div className="container">
         <ChapterHeader
           eyebrow="Work"
-          title="Thirty projects, filtered how you like"
+          title={
+            <>
+              <AccentText tone="interface">Thirty projects</AccentText>, filtered how you like
+            </>
+          }
           lede="HPC and GPU acceleration, quantum simulation, AI systems, compilers, distributed systems, and full-stack builds. Most have a repository."
           as="h1"
+          tone="interface"
         />
 
         {/* Controls */}
@@ -102,10 +107,10 @@ export default function ProjectsPage() {
                   onChange={(event) => setQuery(event.target.value)}
                   placeholder="Search titles, tech, descriptions…"
                   aria-label="Search projects"
-                  className="w-full rounded-md border border-border bg-card py-2 pl-9 pr-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-thermal focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="w-full rounded-md border border-border bg-card py-2 pl-9 pr-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-interface focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 />
               </div>
-              <p className="readout shrink-0 text-2xs text-muted-foreground">
+              <p className="readout shrink-0 text-2xs text-interface-type">
                 {filtered.length} of {PROJECTS.length}
               </p>
               {hasFilters && (
@@ -124,16 +129,17 @@ export default function ProjectsPage() {
               <MonoLabel>Domain</MonoLabel>
               <div className="mt-2 flex flex-wrap gap-1.5">
                 <FacetButton active={domain === "all"} onClick={() => setDomain("all")}>
-                  All <span className="readout ml-1 text-muted-foreground">{PROJECTS.length}</span>
+                  All <span className="readout ml-1">{PROJECTS.length}</span>
                 </FacetButton>
                 {DOMAINS.map((entry) => (
                   <FacetButton
                     key={entry.id}
                     active={domain === entry.id}
                     onClick={() => setDomain(domain === entry.id ? "all" : entry.id)}
+                    tone={entry.accent}
                   >
                     {entry.label}
-                    <span className="readout ml-1 text-muted-foreground">{domainCounts.get(entry.id)}</span>
+                    <span className="readout ml-1">{domainCounts.get(entry.id)}</span>
                   </FacetButton>
                 ))}
               </div>
@@ -149,7 +155,7 @@ export default function ProjectsPage() {
                     onClick={() => setTech(tech === facet.tech ? null : facet.tech)}
                   >
                     {facet.tech}
-                    <span className="readout ml-1 text-muted-foreground">{facet.count}</span>
+                    <span className="readout ml-1">{facet.count}</span>
                   </FacetButton>
                 ))}
               </div>
@@ -167,7 +173,7 @@ export default function ProjectsPage() {
             <button
               type="button"
               onClick={clearAll}
-              className="mt-5 rounded-md border border-border px-4 py-2 font-mono text-2xs uppercase tracking-widest text-foreground transition-colors hover:border-thermal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="mt-5 rounded-md border border-interface/30 px-4 py-2 font-mono text-2xs uppercase tracking-widest text-interface-type transition-colors hover:border-interface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               Clear filters
             </button>
@@ -186,7 +192,7 @@ export default function ProjectsPage() {
                     >
                       {meta.label}
                     </h2>
-                    <span className="readout text-2xs text-muted-foreground">{projects.length}</span>
+                    <span className={`readout text-2xs ${tone.value}`}>{projects.length}</span>
                     <p className="ml-auto hidden max-w-md text-right text-xs text-muted-foreground sm:block">
                       {meta.blurb}
                     </p>
@@ -206,15 +212,15 @@ export default function ProjectsPage() {
                       >
                         <Link
                           to={`/projects/${project.slug}`}
-                          className="group flex h-full flex-col rounded-md border border-border bg-card p-5 transition-colors hover:border-thermal/40 hover:bg-surface-alt focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                          className={`group flex h-full flex-col rounded-md border border-border bg-card p-5 transition-colors hover:bg-surface-alt focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${tone.panel}`}
                         >
                           <div className="flex items-start justify-between gap-2">
-                            <h3 className="text-base font-semibold leading-snug text-foreground group-hover:text-primary-type">
+                            <h3 className={`text-base font-semibold leading-snug ${tone.value}`}>
                               {project.title}
                             </h3>
                             <ArrowUpRight
                               size={14}
-                              className="mt-1 shrink-0 text-muted-foreground transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                              className={`mt-1 shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 ${tone.value}`}
                               aria-hidden="true"
                             />
                           </div>
@@ -222,7 +228,7 @@ export default function ProjectsPage() {
                             {project.tagline ?? project.subtitle}
                           </p>
                           {project.award && (
-                            <p className="mt-3 flex items-start gap-1.5 text-2xs text-primary-type">
+                            <p className="mt-3 flex items-start gap-1.5 text-2xs text-award-type">
                               <Trophy size={11} className="mt-0.5 shrink-0" aria-hidden="true" />
                               {project.award}
                             </p>
@@ -230,7 +236,7 @@ export default function ProjectsPage() {
                           <div className="mt-auto pt-4">
                             <div className="flex flex-wrap gap-1">
                               {project.technologies.slice(0, 3).map((item) => (
-                                <Tag key={item}>{item}</Tag>
+                                <Tag key={item} tone={meta.accent}>{item}</Tag>
                               ))}
                               {project.technologies.length > 3 && (
                                 <span className="readout self-center text-2xs text-muted-foreground">
@@ -257,11 +263,15 @@ function FacetButton({
   active,
   onClick,
   children,
+  tone = "interface",
 }: {
   active: boolean;
   onClick: () => void;
   children: React.ReactNode;
+  tone?: VisualAccent;
 }) {
+  const toneClasses = accent(tone);
+
   return (
     <button
       type="button"
@@ -269,7 +279,7 @@ function FacetButton({
       aria-pressed={active}
       className={`rounded-md border px-2.5 py-1 font-mono text-2xs uppercase tracking-widest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
         active
-          ? "border-thermal bg-thermal/10 text-primary-type"
+          ? `${toneClasses.selected} ${toneClasses.value}`
           : "border-border text-muted-foreground hover:text-foreground"
       }`}
     >

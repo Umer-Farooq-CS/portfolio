@@ -1,5 +1,7 @@
 // Profile data derived from master_detailed_cv.tex
 
+import type { DomainAccent } from "./taxonomy";
+
 export const PROFESSIONAL_SUMMARY =
   "Systems-focused computer scientist with deep experience in high-performance computing, parallel and distributed systems, and full‑stack development. I build efficient, scalable systems that span GPU‑accelerated algorithms, quantum simulation, multi‑agent RAG pipelines, custom languages, distributed hash tables, and real-time networked applications.";
 
@@ -39,19 +41,19 @@ export const CERTIFICATIONS: CertificationItem[] = [
     year: "2025",
     title: "Oracle Cloud Infrastructure Certified AI Foundations Associate",
     issuer: "Oracle",
-    credentialUrl:
-      "https://catalog-education.oracle.com/pls/certview/sharebadge?id=BBA28841241A387615C60D761D610210FCC9BC8028300E10D96E95890EEB68B7",
   },
 ];
 
 export interface SkillGroup {
   title: string;
   items: string[];
+  accent: DomainAccent;
 }
 
 export const SKILL_GROUPS: SkillGroup[] = [
   {
     title: "High-Performance Computing & Parallelism",
+    accent: "thermal",
     items: [
       "GPU computing with CUDA, Tensor Cores, mixed-precision training",
       "OpenMP, MPI, and hybrid MPI+OpenMP parallel programming",
@@ -60,6 +62,7 @@ export const SKILL_GROUPS: SkillGroup[] = [
   },
   {
     title: "Machine Learning, Deep Learning & LLM Systems",
+    accent: "neural",
     items: [
       "PyTorch, TensorFlow/Keras for CNNs, RNNs/LSTMs, diffusion and GAN models",
       "Retrieval-Augmented Generation (RAG), semantic search, FAISS, evaluation with NDCG/MAP",
@@ -68,6 +71,7 @@ export const SKILL_GROUPS: SkillGroup[] = [
   },
   {
     title: "Quantum Computing & Simulation",
+    accent: "cryo",
     items: [
       "Qiskit, Cirq, PennyLane, and OpenQASM 3.0",
       "Quantum circuit simulation, tensor networks, and hybrid classical–quantum workflows",
@@ -75,6 +79,7 @@ export const SKILL_GROUPS: SkillGroup[] = [
   },
   {
     title: "Systems, Distributed & Networking",
+    accent: "systems",
     items: [
       "Modern C/C++ for systems programming and algorithmic optimization",
       "Distributed hash tables, IPFS-style storage, P2P and client–server architectures",
@@ -83,6 +88,7 @@ export const SKILL_GROUPS: SkillGroup[] = [
   },
   {
     title: "Full-Stack Development & Platforms",
+    accent: "interface",
     items: [
       "React, Next.js, Node.js/Express, FastAPI, RESTful API design",
       ".NET, JavaFX, desktop applications with PostgreSQL/MySQL backends",
