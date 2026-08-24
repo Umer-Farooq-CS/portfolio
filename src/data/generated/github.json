@@ -1,0 +1,149 @@
+{
+  "fetchedAt": "2026-08-24T10:14:08.879Z",
+  "login": "Umer-Farooq-CS",
+  "name": "Umer Farooq",
+  "url": "https://github.com/Umer-Farooq-CS",
+  "publicRepos": 24,
+  "followers": 14,
+  "totalStars": 8,
+  "languages": [
+    {
+      "name": "Python",
+      "repos": 6
+    },
+    {
+      "name": "Jupyter Notebook",
+      "repos": 5
+    },
+    {
+      "name": "C",
+      "repos": 3
+    },
+    {
+      "name": "Java",
+      "repos": 2
+    },
+    {
+      "name": "Cuda",
+      "repos": 1
+    },
+    {
+      "name": "JavaScript",
+      "repos": 1
+    },
+    {
+      "name": "Julia",
+      "repos": 1
+    },
+    {
+      "name": "Mermaid",
+      "repos": 1
+    }
+  ],
+  "repos": [
+    {
+      "name": "hpc-reference-architecture",
+      "description": "Reference architecture documentation",
+      "url": "https://github.com/Umer-Farooq-CS/hpc-reference-architecture",
+      "stars": 0,
+      "language": "Mermaid",
+      "pushedAt": "2026-07-31T12:38:32.000Z",
+      "topics": []
+    },
+    {
+      "name": "QCanvas",
+      "description": "This project envisions a unified, modular quantum‐simulation platform that brings together the strengths of multiple existing simulators into a single, extensible framework..",
+      "url": "https://github.com/Umer-Farooq-CS/QCanvas",
+      "stars": 2,
+      "language": "Jupyter Notebook",
+      "pushedAt": "2026-07-17T16:16:06.000Z",
+      "topics": [
+        "cirq",
+        "code-conversion",
+        "fastapi",
+        "logging",
+        "nextjs",
+        "openqasm-3"
+      ]
+    },
+    {
+      "name": "Q-Tensor",
+      "description": "This project focuses on simulating quantum circuits using tensor networks and implementing parallel algorithms to enhance performance. The simulation leverages the concept of Matrix Product States (MPS) and employs OpenMP for parallel execution.",
+      "url": "https://github.com/Umer-Farooq-CS/Q-Tensor",
+      "stars": 1,
+      "language": "Julia",
+      "pushedAt": "2026-06-30T19:38:40.000Z",
+      "topics": []
+    },
+    {
+      "name": "Cirq-RAG-Code-Assistant",
+      "description": "A production-ready, research-oriented system combining Retrieval-Augmented Generation, Multi-Agent orchestration, and agentic reinforcement learning to generate, optimize, translate, and validate quantum computing code.",
+      "url": "https://github.com/Umer-Farooq-CS/Cirq-RAG-Code-Assistant",
+      "stars": 0,
+      "language": "Jupyter Notebook",
+      "pushedAt": "2026-06-15T11:53:18.000Z",
+      "topics": []
+    },
+    {
+      "name": "AgentScript-Studio",
+      "description": "An end-to-end pipeline for ingesting scripts and transforming them into structured data and actionable insights using LLM-powered agents.",
+      "url": "https://github.com/Umer-Farooq-CS/AgentScript-Studio",
+      "stars": 1,
+      "language": "Python",
+      "pushedAt": "2026-04-09T11:22:28.000Z",
+      "topics": []
+    },
+    {
+      "name": "Braket-RAG-Code-Assistant",
+      "description": "A production-ready, research-oriented system combining Retrieval-Augmented Generation, Multi-Agent orchestration, and agentic reinforcement learning to generate, optimize, translate, and validate quantum computing code.",
+      "url": "https://github.com/Umer-Farooq-CS/Braket-RAG-Code-Assistant",
+      "stars": 0,
+      "language": "Jupyter Notebook",
+      "pushedAt": "2026-03-16T20:12:28.000Z",
+      "topics": []
+    },
+    {
+      "name": "semantic-search-research-assistant",
+      "description": "Semantic search module for an AI Research Assistant using Streamlit, LangChain, HuggingFace embeddings, and FAISS/Chroma vector stores.",
+      "url": "https://github.com/Umer-Farooq-CS/semantic-search-research-assistant",
+      "stars": 0,
+      "language": "Python",
+      "pushedAt": "2026-03-13T17:13:48.000Z",
+      "topics": []
+    },
+    {
+      "name": "UniQ",
+      "description": "This project envisions a unified, modular quantum‐simulation platform that brings together the strengths of multiple existing simulators into a single, extensible framework.",
+      "url": "https://github.com/Umer-Farooq-CS/UniQ",
+      "stars": 0,
+      "language": "Jupyter Notebook",
+      "pushedAt": "2026-03-10T08:50:39.000Z",
+      "topics": []
+    },
+    {
+      "name": "portfolio",
+      "description": "Personal portfolio – AI & HPC projects, experience, and contact.",
+      "url": "https://github.com/Umer-Farooq-CS/portfolio",
+      "stars": 0,
+      "language": "TypeScript",
+      "pushedAt": "2026-03-09T15:58:52.000Z",
+      "topics": []
+    },
+    {
+      "name": "Waste-Object-Detection-Segmentation",
+      "description": "Deep Learning project for waste object detection and segmentation using YOLOv8 and U-Net on the TACO dataset. Implements object detection with YOLOv8 for bounding boxes and custom U-Net for pixel-wise segmentation. Includes EDA, data augmentation pipeline, and comparative analysis. Built with PyTorch for CS4045 course project.",
+      "url": "https://github.com/Umer-Farooq-CS/Waste-Object-Detection-Segmentation",
+      "stars": 0,
+      "language": "",
+      "pushedAt": "2025-11-17T22:06:41.000Z",
+      "topics": [
+        "coco-format",
+        "computer-vision",
+        "deep-learning",
+        "image-segmentation",
+        "object-detection",
+        "pytorch"
+      ]
+    }
+  ]
+}

@@ -1,11 +1,17 @@
 // Project portfolio data derived from master_detailed_cv.tex
-import cirqRagDiagram from "@/assets/Cirq-RAG-Agent.png";
+import { cirqRagDiagram } from "@/assets/optimized/manifest";
+import type { ResponsiveImage } from "@/assets/optimized/manifest";
+import { DOMAIN_IDS, type Domain } from "./taxonomy";
+import type { Metric } from "./schema";
 
 export interface ProjectItem {
   slug: string;
   title: string;
   subtitle: string;
+  /** Specific human-facing label shown on the project page. */
   category: string;
+  /** Closed-taxonomy domains, most relevant first. Drives grouping and filters. */
+  domains: Domain[];
   period?: string;
   githubUrl?: string;
   externalUrl?: string;
@@ -13,8 +19,16 @@ export interface ProjectItem {
   description: string[];
   technologies: string[];
   featured?: boolean; // shown on homepage
-  image?: string; // optional diagram or hero image
+  image?: ResponsiveImage; // optional diagram or hero image
   architectureHighlights?: string[]; // optional key architecture bullets
+  /** Structured results, so numbers can render as data instead of prose. */
+  metrics?: Metric[];
+  /** Punchier one-liner for cards, where the full subtitle is too long. */
+  tagline?: string;
+  /** The problem this project set out to solve. */
+  objective?: string;
+  /** How it was approached — the moves that mattered. */
+  strategy?: string[];
 }
 
 export const PROJECTS: ProjectItem[] = [
@@ -24,6 +38,7 @@ export const PROJECTS: ProjectItem[] = [
     title: "QCanvas",
     subtitle: "Unified Quantum Simulator Platform",
     category: "High-Performance Computing & Quantum",
+    domains: ["quantum", "hpc", "web"],
     period: "Mar 2025 – Present",
     featured: true,
     award: "3rd Prize · Huawei ICT Competition National Finals (UniQ Team)",
@@ -36,6 +51,14 @@ export const PROJECTS: ProjectItem[] = [
       "OpenQASM 3.0 integration for portable circuit exchange; plugin-based system for additional frameworks.",
     ],
     technologies: ["Next.js", "TypeScript", "FastAPI", "Qiskit", "Cirq", "PennyLane", "OpenQASM", "REST/Web APIs"],
+    objective:
+      "Eliminate vendor lock-in by providing a unified platform where users can write and execute quantum circuits across multiple frameworks seamlessly.",
+    strategy: [
+      "Developed an OpenQASM 3.0 Intermediate Representation core for framework-agnostic circuit execution",
+      "Built a Kubernetes-based Job Manager for distributed resource allocation",
+      "Implemented priority scheduling for fair, efficient workload distribution",
+      "Abstraction layer enabling cross-framework portability without code rewrites",
+    ],
     architectureHighlights: [
       "OpenQASM 3.0 intermediate representation core decouples the web UI from backend simulators.",
       "Kubernetes-backed job manager schedules quantum simulations across containerized workers for fair, efficient resource usage.",
@@ -46,6 +69,7 @@ export const PROJECTS: ProjectItem[] = [
     title: "Cirq-RAG Code Assistant",
     subtitle: "Retrieval-Augmented Generation for Cirq Quantum Code Generation",
     category: "Generative AI & RAG",
+    domains: ["ai", "quantum"],
     featured: true,
     description: [
       "Multi-agent RAG system that generates executable quantum circuits from natural-language prompts with tiered educational explanations.",
@@ -56,6 +80,19 @@ export const PROJECTS: ProjectItem[] = [
       "92% success rate vs 52% single-agent baseline; reported latency/quality trade-offs.",
     ],
     technologies: ["Python", "Cirq", "RAG", "FAISS", "Multi-Agent", "Prompt Engineering"],
+    tagline: "Quantum code generation without hallucinations",
+    objective:
+      "Generate, validate, and optimize executable quantum code reliably without AI hallucinations, achieving production-grade accuracy for quantum circuit synthesis.",
+    strategy: [
+      "Implemented a multi-agent workflow: Designer → Validator → Optimizer pipeline",
+      "Achieved 92% quantum circuit generation success rate",
+      "Significant gate-count reductions via AI-driven circuit optimization",
+      "PyTorch + FAISS vector search for accurate code retrieval and generation",
+    ],
+    metrics: [
+      { label: "Circuit generation success", value: "92%", baseline: "52%", note: "vs single-agent baseline" },
+      { label: "Knowledge base entries", value: "140+" },
+    ],
     image: cirqRagDiagram,
     architectureHighlights: [
       "Multi-agent pipeline orchestrates designer, validator, optimizer, and educator agents with explicit hand-off and feedback channels.",
@@ -68,6 +105,7 @@ export const PROJECTS: ProjectItem[] = [
     title: "Parallel Tensor Network Quantum Simulator (Q-Tensor)",
     subtitle: "Hybrid MPI/OpenMP + CUDA Quantum Simulation",
     category: "High-Performance Computing & Quantum",
+    domains: ["hpc", "quantum"],
     period: "Academic/Research",
     githubUrl: "https://github.com/Umer-Farooq-CS/Q-Tensor",
     description: [
@@ -83,6 +121,7 @@ export const PROJECTS: ProjectItem[] = [
     title: "MNIST Classification with GPU Acceleration",
     subtitle: "Deep Learning Optimization",
     category: "High-Performance Computing & GPU",
+    domains: ["hpc", "ai"],
     githubUrl: "https://github.com/Umer-Farooq-CS/MNIST-Classification",
     description: [
       "Neural network for MNIST digit classification across five versions (V1–V5) from serial CPU to highly parallel GPU.",
@@ -97,6 +136,7 @@ export const PROJECTS: ProjectItem[] = [
     title: "GPU-Accelerated Canny Edge Detection",
     subtitle: "Image Processing Optimization",
     category: "High-Performance Computing & GPU",
+    domains: ["hpc"],
     githubUrl: "https://github.com/Umer-Farooq-CS/Canny-Edge-Detector",
     description: [
       "Complete Canny edge detection in CUDA with optimized memory access for high-resolution images.",
@@ -110,6 +150,7 @@ export const PROJECTS: ProjectItem[] = [
     title: "Optimized RNN Character-Level Text Generation",
     subtitle: "Shakespeare Text Generation",
     category: "Deep Learning & NLP",
+    domains: ["ai", "hpc"],
     githubUrl: "https://github.com/Umer-Farooq-CS/RNN-Character-Level-Text-Generation",
     description: [
       "LSTM-based character-level text generator on Shakespeare's works with PyTorch and GPU optimizations.",
@@ -123,6 +164,7 @@ export const PROJECTS: ProjectItem[] = [
     title: "Parallel Graph & Text Analysis",
     subtitle: "Multi-threading with pthreads",
     category: "High-Performance Computing",
+    domains: ["hpc", "systems"],
     description: [
       "Multithreaded graph analysis and large-text word frequency analysis using POSIX threads.",
       "Parallel graph algorithms (node/edge counting, connectivity); chunk-based text processing with thread-safe structures.",
@@ -136,6 +178,7 @@ export const PROJECTS: ProjectItem[] = [
     title: "PixelRNN Implementation",
     subtitle: "CIFAR-10 Image Generation",
     category: "Generative AI",
+    domains: ["ai"],
     githubUrl: "https://github.com/Umer-Farooq-CS/PixelRNN-Implementation-CIFAR10",
     description: [
       "Pixel Recurrent Neural Networks (PixelRNN) per van den Oord et al.: PixelCNN, Row LSTM, Diagonal BiLSTM.",
@@ -149,6 +192,7 @@ export const PROJECTS: ProjectItem[] = [
     title: "CNN CIFAR-10 Classification with Hyperparameter Optimization",
     subtitle: "Systematic Model Tuning",
     category: "Deep Learning",
+    domains: ["ai"],
     githubUrl: "https://github.com/Umer-Farooq-CS/CNN-CIFAR10-Classification-GPU-Optimized",
     description: [
       "88.82% accuracy on CIFAR-10 through systematic tuning (81 combinations: learning rate, batch size, filters, depth).",
@@ -162,6 +206,7 @@ export const PROJECTS: ProjectItem[] = [
     title: "CIFAR-10 Model Suite (ANN vs CNN vs Hybrid)",
     subtitle: "Config-Driven Training Pipeline",
     category: "Deep Learning",
+    domains: ["ai"],
     description: [
       "Compared ANN, CNN, and Hybrid CNN+ANN for CIFAR-10; YAML config per model; modular codebase.",
       "Early stopping, LR scheduling, checkpointing, TensorBoard, reproducibility; GPU mixed-precision and data pipelines.",
@@ -173,6 +218,7 @@ export const PROJECTS: ProjectItem[] = [
     title: "Waste Object Detection & Segmentation (TACO)",
     subtitle: "YOLOv8-n + U-Net",
     category: "Computer Vision",
+    domains: ["ai"],
     description: [
       "YOLOv8-n for waste detection and custom U-Net for semantic segmentation on TACO dataset.",
       "5 most frequent classes; 2.2× mAP@50 improvement for YOLO; U-Net IoU/Dice evaluation.",
@@ -184,6 +230,7 @@ export const PROJECTS: ProjectItem[] = [
     title: "Financial Sentiment Analysis & Topic Modeling",
     subtitle: "FinBERT vs Local LLM vs RAG",
     category: "NLP",
+    domains: ["ai"],
     description: [
       "Sentiment on Financial PhraseBank (3-class). Compared FinBERT, local Mistral (Ollama), RAG-augmented LLM.",
       "Best: FinBERT 94.73% accuracy; local LLM 86.42%; RAG 54.65% (retrieval/context analyzed). LDA topic modeling (15 topics).",
@@ -195,6 +242,7 @@ export const PROJECTS: ProjectItem[] = [
     title: "Multimodal RAG for PDF Question Answering",
     subtitle: "Text + Images",
     category: "Generative AI",
+    domains: ["ai"],
     description: [
       "End-to-end multimodal RAG for PDFs (text, tables, images): OCR, semantic retrieval, grounded generation.",
       "EasyOCR, Sentence-BERT + CLIP embeddings, FAISS, Ollama; Streamlit chat UI.",
@@ -206,6 +254,7 @@ export const PROJECTS: ProjectItem[] = [
     title: "Semantic Product Search & Neural Ranking",
     subtitle: "Learning-to-Rank",
     category: "Information Retrieval",
+    domains: ["ai"],
     description: [
       "Semantic product search with TF-IDF, Word2Vec, BERT-style embeddings; neural ranking model.",
       "Precision@1: 0.85; NDCG@5: 0.79; F1@10: 0.68; Streamlit UI.",
@@ -217,6 +266,7 @@ export const PROJECTS: ProjectItem[] = [
     title: "English-to-Urdu Machine Translation (mBART-large-50)",
     subtitle: "Fine-Tuning + Web Interface",
     category: "NLP",
+    domains: ["ai"],
     description: [
       "Fine-tuned mBART-large-50 for En→Urdu on multi-domain corpus (33,020 samples); BLEU 0.302.",
       "Mixed precision, gradient accumulation, pre-tokenization; training reduced to ~1.5–3 hours. Flask interface.",
@@ -228,6 +278,7 @@ export const PROJECTS: ProjectItem[] = [
     title: "Diffusion Transformers (DiT) with REG/REPA",
     subtitle: "CIFAR-10 Image Generation",
     category: "Generative AI",
+    domains: ["ai"],
     description: [
       "DiT (ViT backbone) with REG/REPA vs U-Net diffusion; FID evaluation; DiT+REG FID 18.7, ~30% faster training.",
     ],
@@ -238,6 +289,7 @@ export const PROJECTS: ProjectItem[] = [
     title: "CycleGAN Face↔Sketch Translation",
     subtitle: "Unpaired Image-to-Image",
     category: "Generative AI",
+    domains: ["ai"],
     description: [
       "Full CycleGAN for face photos ↔ sketches; Person Face Sketches dataset; cycle-consistency and identity losses; Flask demo.",
     ],
@@ -249,6 +301,7 @@ export const PROJECTS: ProjectItem[] = [
     title: "California Housing Regression Study",
     subtitle: "Linear Regression vs SGD, CV Protocol",
     category: "Machine Learning",
+    domains: ["ai"],
     description: [
       "Five-phase protocol: EDA, single-feature, polynomial multi-feature, train/test, 5-fold CV. Closed-form vs SGDRegressor; MSE, RMSE, MAE, R².",
     ],
@@ -260,6 +313,7 @@ export const PROJECTS: ProjectItem[] = [
     title: "Compiler for Custom Language (IU)",
     subtitle: "Educational Language Implementation",
     category: "Compiler Design",
+    domains: ["systems"],
     description: [
       "Full compiler: hajimeru/gulegule delimiters, int/float/string/boolean, custom I/O and control flow.",
       "Lexer, parser, semantic analyzer, code generator; symbol table, error reporting, optimization passes.",
@@ -271,6 +325,7 @@ export const PROJECTS: ProjectItem[] = [
     title: "LL(1) Parser Toolkit",
     subtitle: "Parsing Theory",
     category: "Compiler Design",
+    domains: ["systems"],
     githubUrl: "https://github.com/Umer-Farooq-CS/LL1-Parser-Plus",
     description: [
       "FIRST/FOLLOW, LL(1) table construction, predictive parser; grammar validation, left recursion elimination, left factoring; step-by-step demo.",
@@ -283,6 +338,7 @@ export const PROJECTS: ProjectItem[] = [
     title: "Ring DHT with IPFS Integration",
     subtitle: "Distributed Hash Table",
     category: "Distributed Systems",
+    domains: ["systems"],
     description: [
       "DHT with Chord-like ring (160-bit SHA-1); finger table O(log N) routing; IPFS integration; B-Tree local storage; console UI for nodes and file ops; replication and fault tolerance.",
     ],
@@ -293,6 +349,7 @@ export const PROJECTS: ProjectItem[] = [
     title: "Doodle Dash",
     subtitle: "Multiplayer Drawing & Guessing Game",
     category: "Distributed Systems & Networking",
+    domains: ["systems", "web"],
     description: [
       "Real-time multiplayer game: TCP sockets, multi-threaded server (pthreads), game rooms, stroke sync, turn-based roles, scoring; SFML canvas, custom protocol, delta encoding.",
     ],
@@ -304,6 +361,7 @@ export const PROJECTS: ProjectItem[] = [
     title: "ASCO Services API",
     subtitle: ".NET 8 Web API",
     category: "Full-Stack / Backend",
+    domains: ["web"],
     description: [
       ".NET 8 Web API: users, organizations, JWT auth, RBAC, clean architecture (repository, service layer, DTOs), BCrypt, Entity Framework Core + PostgreSQL, Swagger.",
     ],
@@ -314,6 +372,7 @@ export const PROJECTS: ProjectItem[] = [
     title: "Harmoniq",
     subtitle: "Audio Library Explorer",
     category: "Full-Stack",
+    domains: ["web"],
     githubUrl: "https://github.com/Umer-Farooq-CS/Harmoniq",
     description: [
       "Full-stack audio platform: Express REST API, playlist management, auth, range-request streaming; React UI, waveform visualization, infinite scroll; PostgreSQL schema, full-text search.",
@@ -325,6 +384,7 @@ export const PROJECTS: ProjectItem[] = [
     title: "DJ Web Application",
     subtitle: "Real-Time Music Streaming",
     category: "Full-Stack",
+    domains: ["web"],
     description: [
       "MERN stack: React (Vite), Web Audio visualization, drag-drop playlists, mixing controls; Express, WebSockets, MongoDB/GridFS; real-time sync and chat.",
     ],
@@ -336,6 +396,7 @@ export const PROJECTS: ProjectItem[] = [
     title: "Student Management System",
     subtitle: "JavaFX Enterprise Application",
     category: "Desktop Applications",
+    domains: ["apps"],
     description: [
       "JavaFX: CRUD, courses, attendance, fees, reports; PostgreSQL, JDBC, BCrypt auth, RBAC; client-server TCP, multi-threaded server, custom protocol.",
     ],
@@ -346,6 +407,7 @@ export const PROJECTS: ProjectItem[] = [
     title: "Torrent Management System",
     subtitle: "JavaFX & P2P Networking",
     category: "Desktop Applications",
+    domains: ["apps", "systems"],
     description: [
       "Torrent client: file parsing, queue, multi-threaded download, upload/seeding, resume; P2P protocol, piece selection; JavaFX UI, speed/peer list, file tree.",
     ],
@@ -356,6 +418,7 @@ export const PROJECTS: ProjectItem[] = [
     title: ".NET Desktop Applications",
     subtitle: "Enterprise Applications",
     category: "Desktop Applications",
+    domains: ["apps"],
     description: [
       "Multiple .NET (C#, Windows Forms, WPF) apps; MVC/MVVM, PostgreSQL, ADO.NET/EF; 100+ concurrent users.",
     ],
@@ -367,6 +430,7 @@ export const PROJECTS: ProjectItem[] = [
     title: "Pac-Man with Multi-threaded Ghost AI",
     subtitle: "C++ & SFML",
     category: "Game Development",
+    domains: ["apps"],
     description: [
       "Pac-Man clone: multi-threaded ghost AI (pthreads), A* pathfinding, Blinky/Pinky/Inky/Clyde behaviors; SFML graphics, HUD, 60+ FPS.",
     ],
@@ -377,6 +441,7 @@ export const PROJECTS: ProjectItem[] = [
     title: "2D Game Suite",
     subtitle: "Snake, Tetris, RPG Prototype",
     category: "Game Development",
+    domains: ["apps"],
     description: [
       "Snake, Tetris, RPG prototype in C++/SFML/SDL2; OOP, MVC; 30%+ performance improvements, custom physics, collision, rendering optimizations.",
     ],
@@ -384,24 +449,8 @@ export const PROJECTS: ProjectItem[] = [
   },
 ];
 
-export const PROJECT_CATEGORIES = [
-  "High-Performance Computing & Quantum",
-  "High-Performance Computing & GPU",
-  "Generative AI & RAG",
-  "Generative AI",
-  "Deep Learning",
-  "Computer Vision",
-  "NLP",
-  "Information Retrieval",
-  "Machine Learning",
-  "Compiler Design",
-  "Distributed Systems",
-  "Distributed Systems & Networking",
-  "Full-Stack",
-  "Full-Stack / Backend",
-  "Desktop Applications",
-  "Game Development",
-] as const;
+/** Derived, not hand-maintained — a new category label can never be left out. */
+export const PROJECT_CATEGORIES: string[] = [...new Set(PROJECTS.map((p) => p.category))].sort();
 
 export function getProjectBySlug(slug: string): ProjectItem | undefined {
   return PROJECTS.find((p) => p.slug === slug);
@@ -418,4 +467,47 @@ export function getProjectsByCategory(): Record<string, ProjectItem[]> {
     byCat[p.category].push(p);
   }
   return byCat;
+}
+
+/**
+ * Groups every project under its primary domain, in taxonomy order. Iterating the
+ * taxonomy (not a separate ordering array) is what guarantees full coverage.
+ */
+export function getProjectsByDomain(): { domain: Domain; projects: ProjectItem[] }[] {
+  return DOMAIN_IDS.map((domain) => ({
+    domain,
+    projects: PROJECTS.filter((p) => p.domains[0] === domain),
+  })).filter((group) => group.projects.length > 0);
+}
+
+/** All projects that touch a domain, primary or not — used by the filter facets. */
+export function getProjectsInDomain(domain: Domain): ProjectItem[] {
+  return PROJECTS.filter((p) => p.domains.includes(domain));
+}
+
+/** Every technology tag with its usage count, most-used first. Powers tag facets. */
+export function getTechnologyFacets(): { tech: string; count: number }[] {
+  const counts = new Map<string, number>();
+  for (const project of PROJECTS) {
+    for (const tech of project.technologies) {
+      counts.set(tech, (counts.get(tech) ?? 0) + 1);
+    }
+  }
+  return [...counts.entries()]
+    .map(([tech, count]) => ({ tech, count }))
+    .sort((a, b) => b.count - a.count || a.tech.localeCompare(b.tech));
+}
+
+/** Previous/next in display order, for project-page navigation. Wraps around. */
+export function getAdjacentProjects(slug: string): {
+  prev: ProjectItem | undefined;
+  next: ProjectItem | undefined;
+} {
+  const ordered = getProjectsByDomain().flatMap((group) => group.projects);
+  const index = ordered.findIndex((p) => p.slug === slug);
+  if (index === -1) return { prev: undefined, next: undefined };
+  return {
+    prev: ordered[(index - 1 + ordered.length) % ordered.length],
+    next: ordered[(index + 1) % ordered.length],
+  };
 }

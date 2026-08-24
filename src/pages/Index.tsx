@@ -1,39 +1,37 @@
-import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import HeroSection from "@/components/portfolio/HeroSection";
-import AboutSection from "@/components/portfolio/AboutSection";
-import ServicesSection from "@/components/portfolio/ServicesSection";
-import ProjectsSection from "@/components/portfolio/ProjectsSection";
-import ContactSection from "@/components/portfolio/ContactSection";
+import { Suspense, lazy } from "react";
+import JsonLd from "@/components/JsonLd";
+import { useDocumentMeta } from "@/lib/meta";
+import { personSchema } from "@/lib/seo";
+import { SITE } from "@/lib/site";
+import BenchChapter from "@/components/home/BenchChapter";
+import WorkChapter from "@/components/home/WorkChapter";
+import ProofChapter from "@/components/home/ProofChapter";
+import AboutChapter from "@/components/home/AboutChapter";
+import TalkChapter from "@/components/home/TalkChapter";
 
-const Index = () => {
-  const location = useLocation();
+// Below the fold, and its data module imports zod — so it loads on demand rather
+// than in the homepage's first-load chunk.
+const LiveActivity = lazy(() => import("@/components/proof/LiveActivity"));
 
-  // When navigating to home with no hash, scroll to top
-  useEffect(() => {
-    const hash = location.hash?.slice(1) ?? "";
-    if (hash === "") {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      return;
-    }
-    const scrollToHash = () => {
-      const el = document.getElementById(hash);
-      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-    };
-    requestAnimationFrame(scrollToHash);
-    const t = setTimeout(scrollToHash, 100);
-    return () => clearTimeout(t);
-  }, [location.pathname, location.hash]);
+/**
+ * The homepage reads as five chapters, and no two share a shape: a full-bleed
+ * instrument, full-width log entries, a dense measurement band, a narrow column,
+ * then a panel. The old page repeated one centered card-grid section five times.
+ */
+export default function Index() {
+  useDocumentMeta({ title: SITE.name, path: "/" });
 
   return (
-  <>
-    <HeroSection />
-    <AboutSection />
-    <ServicesSection />
-    <ProjectsSection />
-    <ContactSection />
-  </>
+    <>
+      <JsonLd id="person" data={personSchema()} />
+      <BenchChapter />
+      <WorkChapter />
+      <ProofChapter />
+      <Suspense fallback={<div className="border-t border-border" />}>
+        <LiveActivity />
+      </Suspense>
+      <AboutChapter />
+      <TalkChapter />
+    </>
   );
-};
-
-export default Index;
+}

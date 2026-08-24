@@ -1,0 +1,120 @@
+/* ---------------------------------------------------------------------------
+   Print rules for the CV route.
+
+   CvPage imports this with `?raw` and renders it as a <style> element, so the
+   rules exist only while /cv is mounted. Importing it as a stylesheet would
+   leave it live for the rest of the session and quietly reformat every other
+   page's print output.
+
+   Paper has no theme, no hover, and no scroll: black on white, hairlines for
+   structure, and nothing that costs ink without carrying information.
+   --------------------------------------------------------------------------- */
+
+/* The paper-only footer is redundant on screen — the URL is in the address bar. */
+.print-only {
+  display: none;
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 14mm;
+  }
+
+  /* Site chrome carries no information once the page is a sheet of paper. */
+  header,
+  footer,
+  aside,
+  [data-sonner-toaster],
+  .no-print {
+    display: none !important;
+  }
+
+  /* Every size on the site is in rem, so one root value sets the whole document. */
+  html,
+  body {
+    background: #fff !important;
+    color: #000 !important;
+    font-size: 11pt;
+  }
+
+  /* The shell reserves a gutter for the rail, which is now hidden. */
+  main {
+    padding: 0 !important;
+  }
+
+  .cv-page {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  .cv-page .container {
+    max-width: none !important;
+    padding-inline: 0 !important;
+  }
+
+  .cv-sheet {
+    max-width: none !important;
+  }
+
+  /* On screen a rule separates the name from the action row; in print the action
+     row is gone, so the rule would just be a line across the top of page one. */
+  .cv-masthead {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    border-top: 0 !important;
+  }
+
+  .cv-masthead h1 {
+    font-size: 24pt !important;
+  }
+
+  /* Ink is the constraint: no fills, no shadows, no accent colour. Hairlines
+     stay, because on paper they are the only structure left. */
+  .cv-sheet,
+  .cv-sheet * {
+    color: #000 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border-color: #a9adb2 !important;
+  }
+
+  .cv-sheet a {
+    color: #000 !important;
+    text-decoration: none !important;
+  }
+
+  /* Single column, always — a two-column CV reflows badly across a page break. */
+  .cv-columns {
+    display: block !important;
+  }
+
+  .cv-columns .cv-entry + .cv-entry {
+    margin-top: 8pt;
+  }
+
+  /* An entry split across two sheets is an entry the reader has to reassemble.
+     Only entries get this — a whole section is often taller than a page, and
+     asking the browser to keep one together just pushes it down and leaves the
+     previous page half empty. */
+  .cv-entry {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .cv-section {
+    margin-top: 16pt !important;
+    padding-top: 8pt !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+}

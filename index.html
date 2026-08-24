@@ -4,20 +4,60 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
-    <title>Umer Farooq | Portfolio</title>
-    <meta name="description" content="Umer Farooq – AI &amp; HPC Infrastructure Engineer. Portfolio: projects, experience, and contact." />
+    <link rel="manifest" href="./site.webmanifest" />
+    <meta name="theme-color" content="#0b0d10" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#e9eaec" media="(prefers-color-scheme: light)" />
+
+    <title>Umer Farooq — HPC, quantum simulation, and AI systems engineer</title>
+    <meta
+      name="description"
+      content="Umer Farooq builds high-performance and GPU-accelerated systems, quantum circuit simulation platforms, and AI pipelines that hold up under validation."
+    />
     <meta name="author" content="Umer Farooq" />
 
-    <meta property="og:title" content="Umer Farooq | Portfolio" />
-    <meta property="og:description" content="Umer Farooq – AI &amp; HPC Infrastructure Engineer. Portfolio: projects, experience, and contact." />
+    <meta property="og:title" content="Umer Farooq — HPC, quantum simulation, and AI systems engineer" />
+    <meta
+      property="og:description"
+      content="Umer Farooq builds high-performance and GPU-accelerated systems, quantum circuit simulation platforms, and AI pipelines that hold up under validation."
+    />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="/og-portfolio.png" />
-    <meta property="og:image:alt" content="Portrait of Umer Farooq with HPC and quantum visual theme" />
+    <meta property="og:url" content="https://umer-farooq-cs.github.io/portfolio/" />
+    <meta property="og:image" content="https://umer-farooq-cs.github.io/portfolio/og-portfolio.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Umer Farooq — HPC, quantum simulation, and AI systems engineer" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Umer Farooq | Portfolio" />
-    <meta name="twitter:description" content="Umer Farooq – AI &amp; HPC Infrastructure Engineer. Portfolio: projects, experience, and contact." />
-    <meta name="twitter:image" content="/og-portfolio.png" />
+    <meta name="twitter:title" content="Umer Farooq — HPC, quantum simulation, and AI systems engineer" />
+    <meta
+      name="twitter:description"
+      content="Umer Farooq builds high-performance and GPU-accelerated systems, quantum circuit simulation platforms, and AI pipelines that hold up under validation."
+    />
+    <meta name="twitter:image" content="https://umer-farooq-cs.github.io/portfolio/og-portfolio.png" />
+
+    <script>
+      // Applies the stored theme before first paint so there is no flash of the
+      // wrong theme on load. Mirrors the logic in src/lib/theme.tsx.
+      (function () {
+        try {
+          var stored = localStorage.getItem("uf-theme");
+          // Dark only when it was chosen, or when the visitor opted into following
+          // the OS. Must match readStoredChoice() in src/lib/theme.tsx exactly, or
+          // the first paint disagrees with the app and the theme flashes.
+          var dark =
+            stored === "dark" ||
+            (stored === "system" &&
+              window.matchMedia &&
+              window.matchMedia("(prefers-color-scheme: dark)").matches);
+          var root = document.documentElement;
+          root.classList.toggle("dark", dark);
+          root.dataset.theme = dark ? "dark" : "light";
+          root.style.colorScheme = dark ? "dark" : "light";
+        } catch (e) {
+          /* storage blocked — the app applies the theme on mount */
+        }
+      })();
+    </script>
   </head>
 
   <body>

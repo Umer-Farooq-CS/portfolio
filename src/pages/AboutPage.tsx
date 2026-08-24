@@ -1,280 +1,256 @@
-import { motion } from "framer-motion";
-import { Award, GraduationCap, Code2, Globe2, CheckCircle2, Github, Linkedin, Mail } from "lucide-react";
+import { motion } from "motion/react";
+import { ExternalLink, Github, Linkedin, Mail } from "lucide-react";
+import { portrait } from "@/assets/optimized/manifest";
+import Picture from "@/components/Picture";
+import JsonLd from "@/components/JsonLd";
+import { CERTIFICATIONS, EDUCATION, PROFESSIONAL_SUMMARY, SKILL_GROUPS } from "@/data/profile";
 import { SITE_LINKS } from "@/data/siteLinks";
-import { PROFESSIONAL_SUMMARY, EDUCATION, CERTIFICATIONS, SKILL_GROUPS } from "@/data/profile";
-import meImage from "@/assets/me.jpg";
+import { ChapterHeader, Tag } from "@/components/kit/Primitives";
+import { useDocumentMeta } from "@/lib/meta";
+import { personSchema } from "@/lib/seo";
+import { useMotionPolicy } from "@/lib/motion-policy";
+
+/** A typed timeline: order carries information here, so it is numbered and dated. */
+const TIMELINE = [
+  {
+    period: "Aug 2022 – Jun 2026",
+    title: "BS Computer Science, FAST-NUCES",
+    detail: "Islamabad. Dean's List, Spring 2023. Coursework centred on HPC, systems, and applied AI.",
+  },
+  {
+    period: "Aug 2023 – Aug 2024",
+    title: "Freelance developer, Fiverr",
+    detail:
+      "Level 2 seller — the top tier. 100+ projects completed at 98% client satisfaction and 80% repeat custom, including 30+ full-stack MERN and .NET applications.",
+  },
+  {
+    period: "2024",
+    title: "Huawei ICT Competition, national finals",
+    detail: "Third place with QCanvas, as part of the UniQ team.",
+  },
+  {
+    period: "Feb – May 2025",
+    title: "NaSCon'25, PR and marketing",
+    detail: "Core team. Partner outreach and campaigns for a national tech event.",
+  },
+  {
+    period: "2025",
+    title: "Oracle AI certifications",
+    detail: "Generative AI Professional, and AI Foundations Associate.",
+  },
+  {
+    period: "Sep 2025 – present",
+    title: "Software engineer, Open Quantum Workbench",
+    detail: "FAST-NUCES. Full-stack work on an open quantum simulation and numerical computing workbench.",
+  },
+];
+
+const LOOKING_FOR = ["HPC and GPU internships", "Research collaborations", "Infrastructure and platform roles"];
+
+const QUICK_LINKS = [
+  { label: "GitHub", href: SITE_LINKS.github, icon: Github },
+  { label: "LinkedIn", href: SITE_LINKS.linkedin, icon: Linkedin },
+  { label: "Email", href: SITE_LINKS.email, icon: Mail },
+];
 
 export default function AboutPage() {
+  const { enabled, duration } = useMotionPolicy();
+
+  useDocumentMeta({
+    title: "About",
+    path: "/about",
+    description:
+      "Umer Farooq — a systems-focused computer scientist in Islamabad working across high-performance computing, quantum simulation, and applied AI.",
+  });
+
+  const rise = (delay: number) => ({
+    initial: enabled ? { opacity: 0, y: 14 } : { opacity: 0 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, margin: "-60px" },
+    transition: { duration: duration(0.5), delay: enabled ? delay : 0 },
+  });
+
   return (
-    <div className="pt-24 lg:pt-28 pb-16">
-      <div className="container px-4 sm:px-6 lg:px-8 max-w-5xl">
-        {/* Header with large portrait */}
-        <motion.header
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="mb-10 flex flex-col lg:flex-row items-start gap-8"
-        >
-          <div className="w-full max-w-xs mx-auto lg:mx-0">
-            <div className="relative aspect-[4/5] rounded-3xl overflow-hidden border border-border shadow-elevated">
-              <img
-                src={meImage}
+    <div className="pb-20 pt-28 lg:pt-36">
+      <JsonLd id="person-about" data={personSchema()} />
+      <div className="container">
+        <ChapterHeader
+          eyebrow="About"
+          title="Umer Farooq"
+          lede="Systems-focused computer scientist. High-performance and parallel computing, quantum simulation, and full-stack development — with a preference for problems where success is a measurable number."
+        />
+
+        <div className="mt-14 grid gap-12 lg:grid-cols-[minmax(0,18rem)_minmax(0,1fr)] lg:gap-16">
+          {/* Left: the spec sheet. */}
+          <motion.div {...rise(0)}>
+            <div className="overflow-hidden rounded-lg border border-border">
+              <Picture
+                image={portrait}
                 alt="Portrait of Umer Farooq"
-                className="w-full h-full object-cover"
+                sizes="(min-width: 1024px) 288px, 70vw"
+                priority
+                className="aspect-[4/5] w-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent" />
             </div>
-          </div>
 
-          <div className="flex-1">
-            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/20 bg-primary/5 text-primary text-xs font-semibold uppercase tracking-widest">
-              <Globe2 size={13} />
-              About
-            </span>
-            <h1 className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight">
-              Umer <span className="text-gradient">Farooq</span>
-            </h1>
-            <p className="mt-2 text-sm font-medium text-muted-foreground">
-              AI & HPC Infrastructure Engineer · Islamabad, Pakistan
-            </p>
-
-            {/* Quick contacts */}
-            <div className="mt-4 flex flex-wrap gap-3">
-              <a
-                href={SITE_LINKS.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-card text-xs font-medium text-muted-foreground hover:border-primary hover:text-primary transition-colors"
-              >
-                <Github size={14} />
-                GitHub
-              </a>
-              <a
-                href={SITE_LINKS.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-card text-xs font-medium text-muted-foreground hover:border-primary hover:text-primary transition-colors"
-              >
-                <Linkedin size={14} />
-                LinkedIn
-              </a>
-              <a
-                href={SITE_LINKS.email}
-                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-card text-xs font-medium text-muted-foreground hover:border-primary hover:text-primary transition-colors"
-              >
-                <Mail size={14} />
-                Email
-              </a>
-            </div>
-          </div>
-        </motion.header>
-
-        {/* Summary + looking for + education + certifications */}
-        <div className="grid lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] gap-10 mb-12">
-          {/* Summary + what I'm looking for + education */}
-          <motion.section
-            initial={{ opacity: 0, x: -16 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.4, delay: 0.05 }}
-            className="space-y-6"
-          >
-            <div className="card-surface border border-border rounded-2xl p-6 shadow-card">
-              <div className="flex items-start gap-3 mb-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-accent flex items-center justify-center flex-shrink-0">
-                  <Code2 size={20} className="text-primary-foreground" />
-                </div>
-                <div>
-                  <h2 className="text-sm font-semibold uppercase tracking-widest text-primary">
-                    Professional Summary
-                  </h2>
-                  <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
-                    {PROFESSIONAL_SUMMARY}
-                  </p>
-                </div>
+            <dl className="mt-6 flex flex-col gap-4 border-t border-border pt-5">
+              <div>
+                <dt className="label-mono">Based in</dt>
+                <dd className="mt-1 text-sm text-foreground">{SITE_LINKS.location}</dd>
               </div>
-            </div>
+              <div>
+                <dt className="label-mono">Studying</dt>
+                <dd className="mt-1 text-sm text-foreground">
+                  {EDUCATION.degree}
+                  <span className="mt-0.5 block text-xs text-muted-foreground">
+                    {EDUCATION.institution}
+                  </span>
+                </dd>
+              </div>
+              <div>
+                <dt className="label-mono">Graduating</dt>
+                <dd className="readout mt-1 text-sm text-foreground">Jun 2026</dd>
+              </div>
+            </dl>
 
-            {/* What I'm looking for now */}
-            <div className="card-surface border border-primary/40 rounded-2xl p-6 shadow-card bg-primary/5">
-              <h2 className="text-sm font-semibold uppercase tracking-widest text-primary mb-3">
-                What I'm Looking For Now
+            <div className="mt-6 flex flex-wrap gap-2 border-t border-border pt-5">
+              {QUICK_LINKS.map(({ label, href, icon: Icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target={href.startsWith("http") ? "_blank" : undefined}
+                  rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+                  className="inline-flex items-center gap-1.5 rounded-md border border-border px-2.5 py-1.5 font-mono text-2xs uppercase tracking-widest text-muted-foreground transition-colors hover:border-thermal hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  <Icon size={12} aria-hidden="true" />
+                  {label}
+                </a>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Right: the prose and the record. */}
+          <div>
+            <motion.section {...rise(0.05)} aria-labelledby="summary">
+              <h2 id="summary" className="label-mono">
+                Summary
               </h2>
-              <p className="text-sm text-muted-foreground leading-relaxed mb-3">
-                I'm currently open to opportunities where I can apply high-performance computing, quantum simulation, and
-                AI systems to real-world problems.
-              </p>
-              <ul className="flex flex-wrap gap-2 text-xs">
-                <li className="px-3 py-1 rounded-full bg-background border border-primary/30 text-primary font-semibold">
-                  HPC / GPU internships
-                </li>
-                <li className="px-3 py-1 rounded-full bg-background border border-primary/30 text-primary font-semibold">
-                  Research collaborations
-                </li>
-                <li className="px-3 py-1 rounded-full bg-background border border-primary/30 text-primary font-semibold">
-                  Infra & platform roles
-                </li>
-              </ul>
-            </div>
+              <p className="mt-4 text-lg leading-relaxed text-foreground">{PROFESSIONAL_SUMMARY}</p>
+            </motion.section>
 
-            <div className="card-surface border border-border rounded-2xl p-6 shadow-card">
-              <div className="flex items-start gap-3 mb-3">
-                <div className="w-9 h-9 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center flex-shrink-0">
-                  <GraduationCap size={18} className="text-primary" />
-                </div>
-                <div>
-                  <h2 className="text-sm font-semibold uppercase tracking-widest text-primary">
-                    Education
-                  </h2>
-                  <p className="mt-2 text-sm font-semibold text-foreground">{EDUCATION.degree}</p>
-                  <p className="text-xs text-muted-foreground">{EDUCATION.institution}</p>
-                  <p className="mt-1 text-xs text-muted-foreground">{EDUCATION.period}</p>
-                </div>
-              </div>
-              <ul className="mt-3 space-y-1.5">
-                {EDUCATION.highlights.map((item) => (
-                  <li key={item} className="flex items-start gap-2 text-xs text-muted-foreground">
-                    <CheckCircle2 size={12} className="text-primary mt-0.5 flex-shrink-0" />
-                    {item}
+            <motion.section {...rise(0.08)} aria-labelledby="looking" className="mt-12">
+              <h2 id="looking" className="label-mono">
+                Looking for
+              </h2>
+              <ul className="mt-4 flex flex-wrap gap-2">
+                {LOOKING_FOR.map((item) => (
+                  <li key={item}>
+                    <span className="inline-block rounded-md border border-thermal/30 bg-thermal/5 px-2.5 py-1 font-mono text-2xs uppercase tracking-widest text-primary-type">
+                      {item}
+                    </span>
                   </li>
                 ))}
               </ul>
-            </div>
-          </motion.section>
+            </motion.section>
 
-          {/* Certifications */}
-          <motion.section
-            initial={{ opacity: 0, x: 16 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.4, delay: 0.1 }}
-            className="space-y-4"
-          >
-            <div className="flex items-center gap-2 mb-1">
-              <Award size={18} className="text-primary" />
-              <h2 className="text-sm font-semibold uppercase tracking-widest text-primary">
-                Professional Certifications
+            <motion.section {...rise(0.1)} aria-labelledby="timeline" className="mt-12">
+              <h2 id="timeline" className="label-mono">
+                Timeline
               </h2>
-            </div>
-            <div className="space-y-3">
-              {CERTIFICATIONS.map((cert) => (
-                <div
-                  key={cert.title}
-                  className="card-surface border border-border rounded-xl p-4 flex flex-col gap-1.5"
-                >
-                  <div className="flex items-center justify-between gap-3">
-                    <p className="text-xs font-semibold text-primary">{cert.year}</p>
-                    <p className="text-[11px] text-muted-foreground">{cert.issuer}</p>
-                  </div>
-                  <p className="text-sm font-semibold text-foreground leading-snug">
-                    {cert.title}
-                  </p>
-                  {cert.credentialUrl && (
-                    <a
-                      href={cert.credentialUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-1 text-xs text-primary hover:underline"
-                    >
-                      View credential
-                    </a>
-                  )}
-                </div>
-              ))}
-            </div>
-          </motion.section>
-        </div>
+              <ol className="mt-5 flex flex-col">
+                {TIMELINE.map((entry) => (
+                  <li
+                    key={entry.title}
+                    className="grid gap-1 border-t border-border py-5 sm:grid-cols-[10.5rem_1fr] sm:gap-6"
+                  >
+                    <span className="readout text-2xs text-muted-foreground">{entry.period}</span>
+                    <span>
+                      <span className="block text-base font-semibold text-foreground">{entry.title}</span>
+                      <span className="mt-1 block text-sm leading-relaxed text-muted-foreground">
+                        {entry.detail}
+                      </span>
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            </motion.section>
 
-        {/* Skills + timeline */}
-        <div className="grid lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] gap-10">
-          {/* Skills */}
-          <motion.section
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.15 }}
-          >
-            <h2 className="text-sm font-semibold uppercase tracking-widest text-primary mb-4">
-              Core Technical Skills
-            </h2>
-            <div className="grid md:grid-cols-2 gap-4">
-              {SKILL_GROUPS.map((group) => (
-                <div
-                  key={group.title}
-                  className="card-surface border border-border rounded-2xl p-5 flex flex-col gap-2"
-                >
-                  <p className="text-xs font-semibold text-foreground uppercase tracking-wide">
-                    {group.title}
-                  </p>
-                  <ul className="space-y-1.5">
-                    {group.items.map((item) => (
-                      <li
-                        key={item}
-                        className="flex items-start gap-2 text-xs text-muted-foreground leading-relaxed"
+            <motion.section {...rise(0.12)} aria-labelledby="certs" className="mt-12">
+              <h2 id="certs" className="label-mono">
+                Certifications
+              </h2>
+              <ul className="mt-5 grid gap-4 sm:grid-cols-2">
+                {CERTIFICATIONS.map((cert) => (
+                  <li key={cert.title} className="rounded-lg border border-border bg-card p-4">
+                    <div className="flex items-baseline justify-between gap-3">
+                      <span className="readout text-2xs text-primary-type">{cert.year}</span>
+                      <span className="label-mono">{cert.issuer}</span>
+                    </div>
+                    <p className="mt-2 text-sm font-medium leading-snug text-foreground">{cert.title}</p>
+                    {cert.credentialUrl && (
+                      <a
+                        href={cert.credentialUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-3 inline-flex items-center gap-1.5 font-mono text-2xs uppercase tracking-widest text-primary-type underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       >
-                        <span className="mt-1 w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          </motion.section>
+                        Verify
+                        <ExternalLink size={11} aria-hidden="true" />
+                      </a>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </motion.section>
 
-          {/* Timeline + fun detail */}
-          <motion.section
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.2 }}
-            className="space-y-4"
-          >
-            <h2 className="text-sm font-semibold uppercase tracking-widest text-primary">
-              Timeline
-            </h2>
-            <ol className="relative border-l border-border/70 pl-4 space-y-4 text-xs text-muted-foreground">
-              <li className="relative pl-4">
-                <div className="absolute -left-1.5 top-1 w-2.5 h-2.5 rounded-full bg-primary" />
-                <p className="font-semibold text-foreground">Aug 2022 – Jun 2026 · FAST-NUCES, Islamabad</p>
-                <p>Bachelor of Science in Computer Science; focus on HPC, systems, and applied AI.</p>
-              </li>
-              <li className="relative pl-4">
-                <div className="absolute -left-1.5 top-1 w-2.5 h-2.5 rounded-full bg-primary" />
-                <p className="font-semibold text-foreground">Aug 2023 – Aug 2024 · Freelance Developer · Fiverr</p>
-                <p>Level 2 Seller delivering 50+ full‑stack, desktop, and game projects.</p>
-              </li>
-              <li className="relative pl-4">
-                <div className="absolute -left-1.5 top-1 w-2.5 h-2.5 rounded-full bg-primary" />
-                <p className="font-semibold text-foreground">2024 · Huawei ICT Competition (UniQ Team)</p>
-                <p>National finals · 3rd prize with the QCanvas quantum platform.</p>
-              </li>
-              <li className="relative pl-4">
-                <div className="absolute -left-1.5 top-1 w-2.5 h-2.5 rounded-full bg-primary" />
-                <p className="font-semibold text-foreground">Feb 2025 – May 2025 · NaSCon&apos;25 PR &amp; Marketing</p>
-                <p>Core team &amp; outreach, coordinating partners and campaigns for a national tech event.</p>
-              </li>
-              <li className="relative pl-4">
-                <div className="absolute -left-1.5 top-1 w-2.5 h-2.5 rounded-full bg-primary" />
-                <p className="font-semibold text-foreground">2025 · Oracle AI Certifications</p>
-                <p>Oracle Generative AI Professional &amp; AI Foundations Associate.</p>
-              </li>
-              <li className="relative pl-4">
-                <div className="absolute -left-1.5 top-1 w-2.5 h-2.5 rounded-full bg-primary" />
-                <p className="font-semibold text-foreground">
-                  Sep 2025 – Present · Software Engineer, Open Quantum Workbench · FAST-NUCES
-                </p>
-                <p>Full‑stack development for an open quantum simulation and numerical computing workbench.</p>
-              </li>
-            </ol>
+            <motion.section {...rise(0.14)} aria-labelledby="skills" className="mt-12">
+              <h2 id="skills" className="label-mono">
+                Skills
+              </h2>
+              <dl className="mt-5 flex flex-col">
+                {SKILL_GROUPS.map((group) => (
+                  <div key={group.title} className="border-t border-border py-5">
+                    <dt className="text-sm font-semibold text-foreground">{group.title}</dt>
+                    <dd className="mt-2.5">
+                      <ul className="flex flex-col gap-2">
+                        {group.items.map((item) => (
+                          <li
+                            key={item}
+                            className="flex gap-2.5 text-sm leading-relaxed text-muted-foreground"
+                          >
+                            <span
+                              aria-hidden="true"
+                              className="mt-2 h-1 w-1 shrink-0 rounded-full bg-border"
+                            />
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </motion.section>
 
-            <div className="card-surface border border-border rounded-2xl p-4">
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                Outside of work, I have a deep passion for gaming and table tennis, and I&apos;m constantly exploring and
-                experimenting with new technologies—reading, testing, and building with whatever exciting tools and
-                platforms I discover.
+            <motion.section {...rise(0.16)} aria-labelledby="off" className="mt-12 border-t border-border pt-8">
+              <h2 id="off" className="label-mono">
+                Off compute
+              </h2>
+              <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground">
+                Table tennis, games, and taking apart whatever tool shipped this week to see how it
+                was built. Running outreach for NaSCon&apos;25 taught me more about explaining
+                technical work to people who don&apos;t share your vocabulary than any course did.
               </p>
-            </div>
-          </motion.section>
+              <div className="mt-4 flex flex-wrap gap-1.5">
+                <Tag>Table tennis</Tag>
+                <Tag>Games</Tag>
+                <Tag>New tooling</Tag>
+                <Tag>Community events</Tag>
+              </div>
+            </motion.section>
+          </div>
         </div>
       </div>
     </div>
   );
 }
-

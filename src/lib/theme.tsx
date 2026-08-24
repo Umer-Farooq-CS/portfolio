@@ -1,0 +1,108 @@
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
+
+export type ThemeChoice = "light" | "dark" | "system";
+export type ResolvedTheme = "light" | "dark";
+
+export const THEME_STORAGE_KEY = "uf-theme";
+
+interface ThemeContextValue {
+  /** What the visitor picked, including "system". */
+  choice: ThemeChoice;
+  /** What is actually on screen right now. */
+  resolved: ResolvedTheme;
+  setChoice: (choice: ThemeChoice) => void;
+  /** Flips to the opposite of what's on screen, as an explicit choice. */
+  toggle: () => void;
+}
+
+const ThemeContext = createContext<ThemeContextValue | null>(null);
+
+/**
+ * Light is the default, deliberately — the design was built light-first, and a
+ * visitor arriving with a dark OS should still see the site as designed. The
+ * system preference is honoured only if someone explicitly picks "system"; a dark
+ * OS alone does not override the design's default.
+ */
+function readStoredChoice(): ThemeChoice {
+  try {
+    const stored = localStorage.getItem(THEME_STORAGE_KEY);
+    if (stored === "light" || stored === "dark" || stored === "system") return stored;
+  } catch {
+    // Private mode or blocked storage — fall through to the default.
+  }
+  return "light";
+}
+
+function systemTheme(): ResolvedTheme {
+  if (typeof window === "undefined" || !window.matchMedia) return "light";
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
+function resolve(choice: ThemeChoice): ResolvedTheme {
+  return choice === "system" ? systemTheme() : choice;
+}
+
+export function ThemeProvider({ children }: { children: ReactNode }) {
+  const [choice, setChoiceState] = useState<ThemeChoice>(readStoredChoice);
+  const [resolved, setResolved] = useState<ResolvedTheme>(() => resolve(readStoredChoice()));
+
+  // Keep the document in sync with the resolved theme.
+  useEffect(() => {
+    const next = resolve(choice);
+    setResolved(next);
+    const root = document.documentElement;
+    root.classList.toggle("dark", next === "dark");
+    root.dataset.theme = next;
+    root.style.colorScheme = next;
+  }, [choice]);
+
+  // Follow the OS while the choice is "system".
+  useEffect(() => {
+    if (choice !== "system" || !window.matchMedia) return;
+    const query = window.matchMedia("(prefers-color-scheme: dark)");
+    const onChange = () => {
+      const next = systemTheme();
+      setResolved(next);
+      document.documentElement.classList.toggle("dark", next === "dark");
+      document.documentElement.dataset.theme = next;
+      document.documentElement.style.colorScheme = next;
+    };
+    query.addEventListener("change", onChange);
+    return () => query.removeEventListener("change", onChange);
+  }, [choice]);
+
+  const setChoice = useCallback((next: ThemeChoice) => {
+    setChoiceState(next);
+    try {
+      if (next === "system") localStorage.removeItem(THEME_STORAGE_KEY);
+      else localStorage.setItem(THEME_STORAGE_KEY, next);
+    } catch {
+      // Storage unavailable — the choice still applies for this session.
+    }
+  }, []);
+
+  const toggle = useCallback(() => {
+    setChoice(resolve(readStoredChoice()) === "dark" ? "light" : "dark");
+  }, [setChoice]);
+
+  const value = useMemo(
+    () => ({ choice, resolved, setChoice, toggle }),
+    [choice, resolved, setChoice, toggle],
+  );
+
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
+}
+
+export function useTheme(): ThemeContextValue {
+  const context = useContext(ThemeContext);
+  if (!context) throw new Error("useTheme must be used inside <ThemeProvider>");
+  return context;
+}

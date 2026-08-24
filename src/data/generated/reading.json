@@ -1,0 +1,71 @@
+{
+  "fetchedAt": "2026-08-24T10:14:09.825Z",
+  "query": "cat:quant-ph OR cat:cs.DC",
+  "papers": [
+    {
+      "id": "2608.21361v1",
+      "title": "Classical versus non-classical photon states for detecting vacuum non-linearity",
+      "summary": "Quantum electrodynamics (QED) predicts that the vacuum should behave as a non-linear medium. For many schemes aimed at verifying this fundamental prediction, the signal consists of one or more photons in a certain mode…",
+      "authors": [
+        "N. Ahmadiniaz",
+        "C. Kohlfürst",
+        "R. Shaisultanov",
+        "R. Schützhold"
+      ],
+      "published": "2026-08-21T17:59:54.000Z",
+      "link": "https://arxiv.org/abs/2608.21361v1",
+      "category": "quant-ph"
+    },
+    {
+      "id": "2608.21342v1",
+      "title": "Slepian Bounds on the Success Probability of Virtual Distillation",
+      "summary": "Virtual distillation is a powerful near-term error-mitigation primitive, but it is also a spectral filter: it amplifies the dominant eigenvector component already present in the noisy density matrix. We show that, for a…",
+      "authors": [
+        "Masayuki Ohzeki",
+        "Sasuke Kimata",
+        "Xinwei Lee",
+        "Hoong Chuin Lau"
+      ],
+      "published": "2026-08-21T17:47:47.000Z",
+      "link": "https://arxiv.org/abs/2608.21342v1",
+      "category": "quant-ph"
+    },
+    {
+      "id": "2608.21336v1",
+      "title": "Dissipative framework for subsystem dynamics of noninteracting quantum chains",
+      "summary": "When only local observables of a many-body quantum system are of interest, it is desirable to formulate a reduced description within the Hilbert space of the corresponding subsystem, with the remaining degrees of…",
+      "authors": [
+        "Michele Coppola",
+        "Zala Lenarčič"
+      ],
+      "published": "2026-08-21T17:42:02.000Z",
+      "link": "https://arxiv.org/abs/2608.21336v1",
+      "category": "quant-ph"
+    },
+    {
+      "id": "2608.21329v1",
+      "title": "Quantum annealing through a first-order phase transition: field theory approach",
+      "summary": "Unlike second-order phase transitions, a first-order transition has a stage, in which a system is trapped in a metastable state. The decay of this state leads to abundant excitations over the ground state. We present a…",
+      "authors": [
+        "Diego Andrés Rivera Orona",
+        "Predrag Punoševac",
+        "Nikolai A. Sinitsyn"
+      ],
+      "published": "2026-08-21T17:36:42.000Z",
+      "link": "https://arxiv.org/abs/2608.21329v1",
+      "category": "quant-ph"
+    },
+    {
+      "id": "2608.21321v1",
+      "title": "Hypothesis testing between quantum ensembles",
+      "summary": "Quantum state ensembles are important in quantum information processing. For example, quantum $t$-designs model highly entangled states in complex systems, while projected ensembles appear in generative quantum machine…",
+      "authors": [
+        "Jian Yao",
+        "Quntao Zhuang"
+      ],
+      "published": "2026-08-21T17:29:43.000Z",
+      "link": "https://arxiv.org/abs/2608.21321v1",
+      "category": "quant-ph"
+    }
+  ]
+}

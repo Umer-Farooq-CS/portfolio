@@ -1,0 +1,14 @@
+{
+  "name": "Umer Farooq — HPC, quantum simulation, and AI systems engineer",
+  "short_name": "Umer Farooq",
+  "description": "Portfolio: high-performance and GPU computing, quantum simulation platforms, and AI pipelines.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0b0d10",
+  "theme_color": "#0b0d10",
+  "icons": [
+    { "src": "./favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "./favicon.ico", "sizes": "48x48", "type": "image/x-icon" }
+  ]
+}
