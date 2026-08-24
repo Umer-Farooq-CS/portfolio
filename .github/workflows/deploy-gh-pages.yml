@@ -82,6 +82,11 @@ jobs:
           VITE_BASE_PATH: ${{ vars.VITE_BASE_PATH }}
         run: npm run build:gh-pages
 
+      # build:gh-pages already runs check-build.mjs, but assert it explicitly so a
+      # future change to that script chain cannot silently drop the gate.
+      - name: Check the build is deployable
+        run: npm run check:build
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

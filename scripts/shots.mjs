@@ -17,7 +17,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const dist = resolve(root, "dist");
 const outDir = resolve(root, ".shots");
 
-const BASE = (process.env.VITE_BASE_PATH ?? "/portfolio/").replace(/\/+$/, "");
+const BASE = ((process.env.VITE_BASE_PATH || "").trim() || "/portfolio/").replace(/\/+$/, "");
 const ROUTES = ["/", "/about", "/services", "/projects", "/projects/qcanvas", "/projects/cirq-rag", "/lab", "/cv", "/uses", "/notes", "/thanks", "/nope"];
 const VIEWPORTS = [
   { name: "desktop", width: 1440, height: 900 },

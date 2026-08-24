@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "node scripts/gen-sitemap.mjs && vite build",
-    "build:gh-pages": "npm run build && node -e \"require('fs').copyFileSync('dist/index.html', 'dist/404.html')\"",
+    "build:gh-pages": "npm run build && node -e \"require('fs').copyFileSync('dist/index.html', 'dist/404.html')\" && npm run check:build",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint .",
@@ -20,7 +20,8 @@
     "data": "node scripts/fetch-data.mjs",
     "cv": "node scripts/gen-cv-pdf.mjs",
     "shots": "node scripts/shots.mjs",
-    "a11y": "node scripts/shots.mjs --a11y-only"
+    "a11y": "node scripts/shots.mjs --a11y-only",
+    "check:build": "node scripts/check-build.mjs"
   },
   "dependencies": {
     "@fontsource-variable/archivo": "^5.3.0",

@@ -15,7 +15,18 @@ import path from "node:path";
  * Project site (github.io/portfolio/): "/portfolio/" — the default.
  * User site (username.github.io) or custom domain: set VITE_BASE_PATH=/
  */
-const BASE_PATH = process.env.VITE_BASE_PATH ?? "/portfolio/";
+// GitHub Actions substitutes an unset `vars.VITE_BASE_PATH` as an EMPTY STRING,
+// and `??` only falls back on null/undefined — so an empty value slipped through
+// and Vite normalised it back to a relative base, which is exactly what breaks
+// deep links. Blank must be treated as absent, hence `||`, and the result is
+// normalised so a value like "portfolio" or "/portfolio" still works.
+function resolveBasePath(raw) {
+  const value = (raw ?? "").trim();
+  if (!value) return "/portfolio/";
+  return `/${value.replace(/^\/+|\/+$/g, "")}/`.replace("//", "/");
+}
+
+const BASE_PATH = resolveBasePath(process.env.VITE_BASE_PATH);
 
 // https://vitejs.dev/config/
 export default defineConfig({

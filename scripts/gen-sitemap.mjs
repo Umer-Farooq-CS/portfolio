@@ -6,7 +6,9 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const SITE_URL = (process.env.VITE_SITE_URL ?? "https://umer-farooq-cs.github.io/portfolio").replace(/\/+$/, "");
+// Blank, not just missing: CI passes an unset repository variable as "".
+const SITE_URL = ((process.env.VITE_SITE_URL || "").trim() ||
+  "https://umer-farooq-cs.github.io/portfolio").replace(/\/+$/, "");
 
 const STATIC_ROUTES = [
   { path: "/", priority: "1.0", changefreq: "monthly" },

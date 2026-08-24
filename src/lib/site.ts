@@ -8,7 +8,11 @@ export const SITE = {
   description:
     "Umer Farooq builds high-performance and GPU-accelerated systems, quantum circuit simulation platforms, and AI pipelines that hold up under validation.",
   /** Deploy target. Override with VITE_SITE_URL for a custom domain. */
-  url: (import.meta.env.VITE_SITE_URL as string | undefined) ?? "https://umer-farooq-cs.github.io/portfolio",
+  // `||`, not `??`: CI passes an unset repository variable as an empty string,
+  // which would otherwise make every canonical URL and JSON-LD id relative.
+  url:
+    ((import.meta.env.VITE_SITE_URL as string | undefined) || "").trim() ||
+    "https://umer-farooq-cs.github.io/portfolio",
   locale: "en",
   location: "Islamabad, Pakistan",
   /** Islamabad is UTC+5 year-round — no DST, so no time API is needed. */

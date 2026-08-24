@@ -21,7 +21,7 @@ import { fileURLToPath } from "node:url";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const dist = resolve(root, "dist");
 const out = resolve(root, "public/umer-farooq-cv.pdf");
-const BASE = (process.env.VITE_BASE_PATH ?? "/portfolio/").replace(/\/+$/, "");
+const BASE = ((process.env.VITE_BASE_PATH || "").trim() || "/portfolio/").replace(/\/+$/, "");
 const PORT = 4179;
 
 const MIME = {
