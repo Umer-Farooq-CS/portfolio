@@ -6,6 +6,7 @@ import { INTENTS } from "@/data/intents";
 import { accent } from "@/lib/accent";
 import { ChapterHeader, MonoLabel } from "@/components/kit/Primitives";
 import { useDocumentMeta } from "@/lib/meta";
+import { routeMeta } from "@/data/routeMeta";
 import { useMotionPolicy } from "@/lib/motion-policy";
 
 /**
@@ -17,12 +18,7 @@ export default function ServicesPage() {
   const [open, setOpen] = useState<string | null>(INTENTS[0].id);
   const { enabled, duration } = useMotionPolicy();
 
-  useDocumentMeta({
-    title: "Services",
-    path: "/services",
-    description:
-      "GPU and parallel performance work, quantum simulation platforms, reliable AI pipelines, full-stack builds, and architecture review.",
-  });
+  useDocumentMeta({ ...routeMeta("/services"), path: "/services" });
 
   return (
     <div className="pb-20 pt-28 lg:pt-36">

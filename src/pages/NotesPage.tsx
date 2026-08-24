@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ChapterHeader, MonoLabel, Panel, PrimaryAction, QuietAction } from "@/components/kit/Primitives";
 import { NOTES_ARE_PUBLIC, getPublishedNotes } from "@/data/notes";
 import { useDocumentMeta } from "@/lib/meta";
+import { routeMeta } from "@/data/routeMeta";
 
 /**
  * The writing section, scaffolded ahead of the writing. The list renders from
@@ -34,10 +35,8 @@ export default function NotesPage() {
   const notes = getPublishedNotes();
 
   useDocumentMeta({
-    title: "Notes",
+    ...routeMeta("/notes"),
     path: "/notes",
-    description:
-      "Notes on parallel performance, quantum simulation, and making AI output verifiable.",
     // Nothing to index yet, and an empty section in search results is worse than none.
     noIndex: !NOTES_ARE_PUBLIC,
   });

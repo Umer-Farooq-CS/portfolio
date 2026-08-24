@@ -29,7 +29,8 @@
     ],
     "useDefineForClassFields": true,
     "noUncheckedIndexedAccess": false,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true
   },
   "include": [
     "src"

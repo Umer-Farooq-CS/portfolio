@@ -1,8 +1,8 @@
 import { Suspense, lazy } from "react";
 import JsonLd from "@/components/JsonLd";
 import { useDocumentMeta } from "@/lib/meta";
+import { routeMeta } from "@/data/routeMeta";
 import { personSchema } from "@/lib/seo";
-import { SITE } from "@/lib/site";
 import BenchChapter from "@/components/home/BenchChapter";
 import WorkChapter from "@/components/home/WorkChapter";
 import ProofChapter from "@/components/home/ProofChapter";
@@ -19,7 +19,7 @@ const LiveActivity = lazy(() => import("@/components/proof/LiveActivity"));
  * then a panel. The old page repeated one centered card-grid section five times.
  */
 export default function Index() {
-  useDocumentMeta({ title: SITE.name, path: "/" });
+  useDocumentMeta({ ...routeMeta("/"), path: "/" });
 
   return (
     <>

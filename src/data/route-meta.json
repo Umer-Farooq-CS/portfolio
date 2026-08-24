@@ -1,0 +1,39 @@
+{
+  "$comment": "Per-route title and description. JSON rather than TS because two consumers need it: the pages at runtime (useDocumentMeta) and scripts/prerender-routes.mjs, which stamps it into the built HTML so crawlers and social scrapers see it without running JavaScript. Node cannot import a TS module, and parsing one is fragile — so this is the one shared source.",
+  "/": {
+    "title": "Umer Farooq",
+    "description": "Umer Farooq builds high-performance and GPU-accelerated systems, quantum circuit simulation platforms, and AI pipelines that hold up under validation."
+  },
+  "/about": {
+    "title": "About",
+    "description": "Umer Farooq — a systems-focused computer scientist in Islamabad working across high-performance computing, quantum simulation, and applied AI."
+  },
+  "/services": {
+    "title": "Services",
+    "description": "GPU and parallel performance work, quantum simulation platforms, reliable AI pipelines, full-stack builds, and architecture review."
+  },
+  "/projects": {
+    "title": "Work",
+    "description": "Thirty projects across HPC and GPU acceleration, quantum simulation, AI and RAG systems, compilers, distributed systems, and full-stack builds."
+  },
+  "/lab": {
+    "title": "Lab",
+    "description": "Runnable demos: a parallel speedup benchmark measured on your own machine, and a quantum circuit sandbox that exports real OpenQASM, Qiskit, and Cirq."
+  },
+  "/cv": {
+    "title": "CV",
+    "description": "Umer Farooq — CV. High-performance and GPU computing, quantum simulation, and AI systems. Education, experience, selected projects, skills, and certifications."
+  },
+  "/uses": {
+    "title": "Uses",
+    "description": "The machine and toolchain behind the work: GPU and profilers, editor and shell, languages, and the services this site runs on."
+  },
+  "/notes": {
+    "title": "Notes",
+    "description": "Notes on parallel performance, quantum simulation, and making AI output verifiable."
+  },
+  "/thanks": {
+    "title": "Message sent",
+    "description": "Your message reached Umer Farooq. Replies usually go out within 24 to 48 hours."
+  }
+}

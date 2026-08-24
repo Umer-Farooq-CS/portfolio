@@ -1,6 +1,7 @@
 import { ChapterHeader } from "@/components/kit/Primitives";
 import { USES_GROUPS } from "@/data/uses";
 import { useDocumentMeta } from "@/lib/meta";
+import { routeMeta } from "@/data/routeMeta";
 
 /**
  * The quietest page on the site: no accent, no chart, no motion. It answers one
@@ -11,12 +12,7 @@ import { useDocumentMeta } from "@/lib/meta";
  * site unverifiable.
  */
 export default function UsesPage() {
-  useDocumentMeta({
-    title: "Uses",
-    path: "/uses",
-    description:
-      "The machine and toolchain behind the work: GPU and profilers, editor and shell, languages, and the services this site runs on.",
-  });
+  useDocumentMeta({ ...routeMeta("/uses"), path: "/uses" });
 
   return (
     <div className="pb-20 pt-28 lg:pt-36">

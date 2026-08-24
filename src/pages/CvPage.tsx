@@ -17,6 +17,7 @@ import {
 import { CERTIFICATIONS, EDUCATION, PROFESSIONAL_SUMMARY, SKILL_GROUPS } from "@/data/profile";
 import { PROJECTS } from "@/data/projects";
 import { useDocumentMeta } from "@/lib/meta";
+import { routeMeta } from "@/data/routeMeta";
 import { personSchema } from "@/lib/seo";
 import { SITE, absoluteUrl } from "@/lib/site";
 import printStyles from "@/styles/print.css?raw";
@@ -67,12 +68,7 @@ export default function CvPage() {
   const projects = getCvProjects();
   const overflow = cvProjectOverflow();
 
-  useDocumentMeta({
-    title: "CV",
-    path: "/cv",
-    description:
-      "Umer Farooq — CV. High-performance and GPU computing, quantum simulation, and AI systems. Education, experience, selected projects, skills, and certifications.",
-  });
+  useDocumentMeta({ ...routeMeta("/cv"), path: "/cv" });
 
   return (
     <div className="cv-page pb-20 pt-28 lg:pt-36">

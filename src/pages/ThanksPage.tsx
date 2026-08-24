@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import { SITE_LINKS } from "@/data/siteLinks";
 import { MonoLabel } from "@/components/kit/Primitives";
 import { useDocumentMeta } from "@/lib/meta";
+import { routeMeta } from "@/data/routeMeta";
 import { useIslamabadClock } from "@/lib/clock";
 import { useMotionPolicy } from "@/lib/motion-policy";
 
@@ -11,7 +12,7 @@ export default function ThanksPage() {
   const clock = useIslamabadClock();
   const { enabled, duration } = useMotionPolicy();
 
-  useDocumentMeta({ title: "Message sent", path: "/thanks", noIndex: true });
+  useDocumentMeta({ ...routeMeta("/thanks"), path: "/thanks", noIndex: true });
 
   return (
     <div className="flex min-h-[70vh] items-center pb-20 pt-28">

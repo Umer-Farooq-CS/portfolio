@@ -7,6 +7,7 @@ import { DOMAINS, getDomain, type Domain } from "@/data/taxonomy";
 import { accent } from "@/lib/accent";
 import { ChapterHeader, MonoLabel, Tag } from "@/components/kit/Primitives";
 import { useDocumentMeta } from "@/lib/meta";
+import { routeMeta } from "@/data/routeMeta";
 import { useMotionPolicy } from "@/lib/motion-policy";
 
 /**
@@ -25,12 +26,7 @@ export default function ProjectsPage() {
 
   const deferredQuery = useDeferredValue(query);
 
-  useDocumentMeta({
-    title: "Work",
-    path: "/projects",
-    description:
-      "Thirty projects across HPC and GPU acceleration, quantum simulation, AI and RAG systems, compilers, distributed systems, and full-stack builds.",
-  });
+  useDocumentMeta({ ...routeMeta("/projects"), path: "/projects" });
 
   const topTech = useMemo(() => getTechnologyFacets().slice(0, 14), []);
 

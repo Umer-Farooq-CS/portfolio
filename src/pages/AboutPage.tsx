@@ -7,6 +7,7 @@ import { CERTIFICATIONS, EDUCATION, PROFESSIONAL_SUMMARY, SKILL_GROUPS } from "@
 import { SITE_LINKS } from "@/data/siteLinks";
 import { ChapterHeader, Tag } from "@/components/kit/Primitives";
 import { useDocumentMeta } from "@/lib/meta";
+import { routeMeta } from "@/data/routeMeta";
 import { personSchema } from "@/lib/seo";
 import { useMotionPolicy } from "@/lib/motion-policy";
 
@@ -56,12 +57,7 @@ const QUICK_LINKS = [
 export default function AboutPage() {
   const { enabled, duration } = useMotionPolicy();
 
-  useDocumentMeta({
-    title: "About",
-    path: "/about",
-    description:
-      "Umer Farooq — a systems-focused computer scientist in Islamabad working across high-performance computing, quantum simulation, and applied AI.",
-  });
+  useDocumentMeta({ ...routeMeta("/about"), path: "/about" });
 
   const rise = (delay: number) => ({
     initial: enabled ? { opacity: 0, y: 14 } : { opacity: 0 },

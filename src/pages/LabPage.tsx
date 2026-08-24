@@ -3,6 +3,7 @@ import SpeedupBench from "@/components/bench/SpeedupBench";
 import CircuitSandbox from "@/components/lab/CircuitSandbox";
 import { ChapterHeader, MonoLabel } from "@/components/kit/Primitives";
 import { useDocumentMeta } from "@/lib/meta";
+import { routeMeta } from "@/data/routeMeta";
 
 const PipelineTrace = lazy(() => import("@/components/lab/PipelineTrace"));
 
@@ -11,12 +12,7 @@ const PipelineTrace = lazy(() => import("@/components/lab/PipelineTrace"));
  * browser — no backend, no API keys, nothing to keep alive.
  */
 export default function LabPage() {
-  useDocumentMeta({
-    title: "Lab",
-    path: "/lab",
-    description:
-      "Runnable demos: a parallel speedup benchmark measured on your own machine, and a quantum circuit sandbox that exports real OpenQASM, Qiskit, and Cirq.",
-  });
+  useDocumentMeta({ ...routeMeta("/lab"), path: "/lab" });
 
   return (
     <div className="pb-20 pt-28 lg:pt-36">
