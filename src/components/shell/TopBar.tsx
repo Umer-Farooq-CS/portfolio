@@ -125,6 +125,9 @@ export default function TopBar() {
               <Dialog.Overlay className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm data-[state=open]:animate-in data-[state=open]:fade-in-0" />
               <Dialog.Content className="fixed inset-x-0 top-0 z-50 border-b border-border bg-background p-6 data-[state=open]:animate-in data-[state=open]:slide-in-from-top-4">
                 <Dialog.Title className="label-mono">Menu</Dialog.Title>
+                <Dialog.Description className="sr-only">
+                  Navigate to the portfolio's main pages or start a conversation.
+                </Dialog.Description>
                 <nav aria-label="Mobile" className="mt-4 flex flex-col">
                   {[{ label: "Home", to: "/", tone: "thermal" as const }, ...NAV].map((item) => {
                     const tone = accent(item.tone);

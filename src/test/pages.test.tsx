@@ -154,6 +154,18 @@ describe("cv data", () => {
 });
 
 describe("/uses", () => {
+  it("describes the mobile navigation dialog for assistive technology", () => {
+    renderAt("/uses");
+    fireEvent.click(screen.getByRole("button", { name: "Open menu" }));
+
+    const dialog = screen.getByRole("dialog", { name: "Menu" });
+    const descriptionId = dialog.getAttribute("aria-describedby");
+    expect(descriptionId).toBeTruthy();
+    expect(document.getElementById(descriptionId ?? "")).toHaveTextContent(
+      "Navigate to the portfolio's main pages or start a conversation.",
+    );
+  });
+
   it("renders every group and every row", () => {
     renderAt("/uses");
     for (const group of USES_GROUPS) {
