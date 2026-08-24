@@ -478,4 +478,53 @@ describe("LiveActivity", () => {
 
     expect(await screen.findByText(/numbers from the last build/i)).toBeInTheDocument();
   });
+
+  it("keeps wide calendar content in a keyboard-scrollable local region", () => {
+    vi.stubGlobal("fetch", vi.fn(async () => new Promise(() => {})));
+    const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+
+    render(
+      createElement(QueryClientProvider, {
+        client,
+        children: createElement(MotionPolicyProvider, { children: createElement(LiveActivity) }),
+      }),
+    );
+
+    const calendar = screen.getByRole("region", { name: /scrollable contribution calendar/i });
+    expect(calendar).toHaveClass("min-w-0", "max-w-full", "overflow-x-auto");
+    expect(calendar).toHaveAttribute("tabindex", "0");
+  });
+
+  it("trims repository and paper streams in compact mode without hiding their sources", () => {
+    vi.stubGlobal("fetch", vi.fn(async () => new Promise(() => {})));
+    const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+
+    render(
+      createElement(QueryClientProvider, {
+        client,
+        children: createElement(MotionPolicyProvider, {
+          children: createElement(LiveActivity, { compact: true }),
+        }),
+      }),
+    );
+
+    for (const repo of GITHUB_SNAPSHOT.repos.slice(0, 3)) {
+      expect(screen.getByText(repo.name)).toBeInTheDocument();
+    }
+    expect(screen.queryByText(GITHUB_SNAPSHOT.repos[3].name)).not.toBeInTheDocument();
+
+    for (const paper of READING_SNAPSHOT.papers.slice(0, 2)) {
+      expect(screen.getByText(paper.title)).toBeInTheDocument();
+    }
+    expect(screen.queryByText(READING_SNAPSHOT.papers[2].title)).not.toBeInTheDocument();
+
+    expect(screen.getByRole("link", { name: /view all repositories/i })).toHaveAttribute(
+      "href",
+      GITHUB_SNAPSHOT.url,
+    );
+    expect(screen.getByRole("link", { name: /browse the full arxiv feed/i })).toHaveAttribute(
+      "href",
+      expect.stringContaining("arxiv.org"),
+    );
+  });
 });

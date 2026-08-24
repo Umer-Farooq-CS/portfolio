@@ -33,7 +33,7 @@ export default function WorkChapter() {
             return (
               <motion.article
                 key={project.slug}
-                initial={enabled ? { opacity: 0, y: 18 } : { opacity: 0 }}
+                initial={enabled ? { opacity: 0, y: 18 } : false}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-80px" }}
                 transition={{ duration: duration(0.6), delay: enabled ? index * 0.08 : 0 }}

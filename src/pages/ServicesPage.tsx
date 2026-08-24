@@ -1,18 +1,34 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "motion/react";
-import { ArrowRight, Check } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Check } from "lucide-react";
 import { INTENTS } from "@/data/intents";
+import { getProjectBySlug, type ProjectItem } from "@/data/projects";
 import { accent } from "@/lib/accent";
 import { AccentText, ChapterHeader, MonoLabel } from "@/components/kit/Primitives";
 import { useDocumentMeta } from "@/lib/meta";
 import { routeMeta } from "@/data/routeMeta";
 import { useMotionPolicy } from "@/lib/motion-policy";
 
+const RELATED_PROJECT_SLUGS: Record<string, string[]> = {
+  "cuda-kernel": ["canny-edge-detector", "mnist-gpu"],
+  parallelize: ["q-tensor", "parallel-graph-text"],
+  "quantum-sim": ["qcanvas", "q-tensor"],
+  rag: ["cirq-rag", "multimodal-rag-pdf"],
+  "full-stack": ["qcanvas", "harmoniq"],
+  review: ["ring-dht-ipfs", "asco-services-api"],
+};
+
+function getRelatedProjects(intentId: string): ProjectItem[] {
+  return (RELATED_PROJECT_SLUGS[intentId] ?? [])
+    .map(getProjectBySlug)
+    .filter((project): project is ProjectItem => project !== undefined);
+}
+
 /**
  * Services, written as the problems people arrive with rather than the
- * capabilities I'd like to list. Each one opens to show what it involves and what
- * comes back, then hands off to a contact form that already knows the subject.
+ * capabilities I'd like to list. Each one opens to show what it involves, what
+ * comes back, and project records that demonstrate the adjacent work.
  */
 export default function ServicesPage() {
   const [open, setOpen] = useState<string | null>(INTENTS[0].id);
@@ -30,7 +46,7 @@ export default function ServicesPage() {
               Start from the <AccentText tone="systems">problem</AccentText>, not the toolchain
             </>
           }
-          lede="Six things people usually need. Open one to see what it involves, what you get back, and roughly how I'd approach it."
+          lede="Six things people usually need. Open one to see the approach, the concrete deliverables, and relevant project evidence before starting a conversation."
           as="h1"
           tone="systems"
         />
@@ -39,10 +55,11 @@ export default function ServicesPage() {
           {INTENTS.map((intent, index) => {
             const tone = accent(intent.accent);
             const isOpen = open === intent.id;
+            const relatedProjects = getRelatedProjects(intent.id);
             return (
               <motion.li
                 key={intent.id}
-                initial={enabled ? { opacity: 0, y: 10 } : { opacity: 0 }}
+                initial={enabled ? { opacity: 0, y: 10 } : false}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-60px" }}
                 transition={{ duration: duration(0.45), delay: enabled ? index * 0.04 : 0 }}
@@ -80,7 +97,7 @@ export default function ServicesPage() {
                 </h2>
 
                 {isOpen && (
-                  <div id={`${intent.id}-panel`} className={`grid gap-8 border-l-2 pb-9 pl-5 lg:grid-cols-2 lg:gap-14 ${tone.panel}`}>
+                  <div id={`${intent.id}-panel`} className={`grid gap-8 border-l-2 pb-9 pl-5 sm:pl-7 lg:grid-cols-2 lg:gap-x-14 lg:gap-y-8 ${tone.panel}`}>
                     <div>
                       <MonoLabel className={tone.label}>What I do</MonoLabel>
                       <p className="mt-3 text-base leading-relaxed text-muted-foreground">
@@ -88,7 +105,7 @@ export default function ServicesPage() {
                       </p>
                       <Link
                         to={`/#talk`}
-                        className="group mt-6 inline-flex items-center gap-2 rounded-md bg-thermal px-4 py-2 font-mono text-2xs uppercase tracking-widest text-on-thermal transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                        className="group mt-6 inline-flex min-h-11 items-center gap-2 rounded-md bg-thermal px-4 py-2 font-mono text-2xs uppercase tracking-widest text-on-thermal transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       >
                         Start this conversation
                         <ArrowRight size={12} className="transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
@@ -105,6 +122,35 @@ export default function ServicesPage() {
                         ))}
                       </ul>
                     </div>
+                    {relatedProjects.length > 0 && (
+                      <div className="border-t border-border pt-6 lg:col-span-2">
+                        <MonoLabel className={tone.label}>Relevant work</MonoLabel>
+                        <ul className="mt-3 grid gap-2 sm:grid-cols-2">
+                          {relatedProjects.map((project) => (
+                            <li key={project.slug}>
+                              <Link
+                                to={`/projects/${project.slug}`}
+                                className={`group flex min-h-11 items-center gap-3 rounded-md border px-3 py-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${tone.panel}`}
+                              >
+                                <span className="min-w-0 flex-1">
+                                  <span className={`block text-sm font-semibold ${tone.value}`}>
+                                    {project.title}
+                                  </span>
+                                  <span className="mt-0.5 block truncate text-xs text-muted-foreground">
+                                    {project.tagline ?? project.subtitle}
+                                  </span>
+                                </span>
+                                <ArrowUpRight
+                                  size={14}
+                                  className={`shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 ${tone.value}`}
+                                  aria-hidden="true"
+                                />
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
                   </div>
                 )}
               </motion.li>

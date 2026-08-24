@@ -1,10 +1,21 @@
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import TopBar from "./TopBar";
 import Rail from "./Rail";
 import ScrollProgress from "./ScrollProgress";
 import SiteFooter from "./SiteFooter";
+import TelemetryBackdrop from "./TelemetryBackdrop";
 import { useMotionPolicy } from "@/lib/motion-policy";
+import { telemetryToneForPath } from "@/lib/telemetry";
+
+function RouteFallback() {
+  return (
+    <div className="flex min-h-[60vh] items-center justify-center" role="status" aria-live="polite">
+      <span className="sr-only">Loading page</span>
+      <span className="h-8 w-8 animate-spin rounded-full border-2 border-border border-t-primary" />
+    </div>
+  );
+}
 
 export default function AppShell() {
   const { pathname, hash } = useLocation();
@@ -50,23 +61,35 @@ export default function AppShell() {
   }, [pathname, hash, enabled]);
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <a
-        href="#main"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-thermal focus:px-4 focus:py-2 focus:font-mono focus:text-2xs focus:uppercase focus:tracking-widest focus:text-on-thermal"
-      >
-        Skip to content
-      </a>
+    <div className="relative isolate min-h-screen overflow-x-clip bg-background text-foreground">
+      <TelemetryBackdrop />
 
-      <ScrollProgress />
-      <TopBar />
-      <Rail />
+      <div className="relative z-10">
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-thermal focus:px-4 focus:py-2 focus:font-mono focus:text-2xs focus:uppercase focus:tracking-widest focus:text-on-thermal"
+        >
+          Skip to content
+        </a>
 
-      <main id="main" className="xl:pl-24">
-        <Outlet />
-      </main>
+        <ScrollProgress />
+        <TopBar />
+        <Rail />
 
-      <SiteFooter />
+        <main id="main" className="xl:pl-24">
+          <div
+            key={pathname}
+            className="route-content-reveal"
+            data-accent={telemetryToneForPath(pathname)}
+          >
+            <Suspense fallback={<RouteFallback />}>
+              <Outlet />
+            </Suspense>
+          </div>
+        </main>
+
+        <SiteFooter />
+      </div>
     </div>
   );
 }

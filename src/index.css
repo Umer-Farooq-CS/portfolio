@@ -138,6 +138,9 @@
 
   --surface: var(--paper);
   --surface-alt: #e1e3e6;
+  --telemetry-field-opacity: 0.045;
+  --telemetry-grid-size: 64px;
+  --telemetry-flow-duration: 42s;
   /* Sequential thermal ramp — the contribution heatmap's only colour source. */
   --chart-scale-01: #f7e9e2;
   --chart-scale-02: #f9d2c1;
@@ -195,11 +198,23 @@
 
   --surface: var(--paper);
   --surface-alt: #15181d;
+  --telemetry-field-opacity: 0.08;
   --chart-scale-01: #2a1a12;
   --chart-scale-02: #48240f;
   --chart-scale-03: #6d3413;
   --chart-scale-04: #a84d19;
   --chart-scale-05: #ff6a33;
+}
+
+@media (width < 640px) {
+  :root {
+    --telemetry-field-opacity: 0.03;
+    --telemetry-grid-size: 80px;
+  }
+
+  .dark {
+    --telemetry-field-opacity: 0.055;
+  }
 }
 
 @theme inline {
@@ -404,6 +419,232 @@
 }
 
 @layer components {
+  .signal-scroll {
+    scrollbar-color: var(--color-border) transparent;
+    scrollbar-width: thin;
+  }
+
+  .signal-scroll::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .signal-scroll::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 999px;
+  }
+
+  /* A route- and chapter-aware field behind the shell. It is fixed rather than
+     tied to page height, so the same sparse marks acquire meaning as their
+     semantic tone changes while the reader moves through the work. */
+  .telemetry-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+    color: var(--color-thermal);
+    opacity: var(--telemetry-field-opacity);
+    transition: color 900ms var(--ease-in-out-quart);
+    contain: strict;
+  }
+
+  .telemetry-backdrop[data-accent="cryo"] {
+    color: var(--color-cryo);
+  }
+
+  .telemetry-backdrop[data-accent="neural"] {
+    color: var(--color-neural);
+  }
+
+  .telemetry-backdrop[data-accent="systems"] {
+    color: var(--color-systems);
+  }
+
+  .telemetry-backdrop[data-accent="interface"] {
+    color: var(--color-interface);
+  }
+
+  .telemetry-backdrop[data-accent="award"] {
+    color: var(--color-award);
+  }
+
+  .telemetry-backdrop[data-accent="none"] {
+    color: var(--color-graphite);
+  }
+
+  .telemetry-backdrop__grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, var(--color-foreground) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--color-foreground) 1px, transparent 1px);
+    background-size: var(--telemetry-grid-size) var(--telemetry-grid-size);
+    opacity: 0.22;
+  }
+
+  .telemetry-backdrop__field {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .telemetry-backdrop__trace,
+  .telemetry-backdrop__reticle {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .telemetry-backdrop__trace--secondary {
+    opacity: 0.72;
+  }
+
+  .telemetry-backdrop__trace--tertiary {
+    opacity: 0.42;
+  }
+
+  .telemetry-backdrop__flow {
+    stroke-width: 3;
+    stroke-dasharray: 5 28;
+    animation: telemetry-flow var(--telemetry-flow-duration) linear infinite;
+  }
+
+  .telemetry-backdrop__flow--reverse {
+    animation-direction: reverse;
+    animation-duration: calc(var(--telemetry-flow-duration) * 1.25);
+  }
+
+  .telemetry-backdrop__nodes {
+    fill: currentColor;
+  }
+
+  .telemetry-backdrop__reticle {
+    opacity: 0.7;
+  }
+
+  @keyframes telemetry-flow {
+    to {
+      stroke-dashoffset: -264;
+    }
+  }
+
+  /* Route content remounts inside this short reveal while global navigation and
+     status instruments stay steady. The one-pixel sweep is a measurement mark,
+     and the complete transition remains below a quarter second. */
+  .route-content-reveal {
+    --route-reveal-color: var(--color-thermal);
+    position: relative;
+    animation: route-content-enter 220ms var(--ease-out-quint) both;
+  }
+
+  .route-content-reveal::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    z-index: 20;
+    height: 1px;
+    pointer-events: none;
+    background-color: var(--route-reveal-color);
+    transform-origin: left;
+    animation: route-measure 220ms var(--ease-in-out-quart) both;
+  }
+
+  .route-content-reveal[data-accent="cryo"] {
+    --route-reveal-color: var(--color-cryo);
+  }
+
+  .route-content-reveal[data-accent="neural"] {
+    --route-reveal-color: var(--color-neural);
+  }
+
+  .route-content-reveal[data-accent="systems"] {
+    --route-reveal-color: var(--color-systems);
+  }
+
+  .route-content-reveal[data-accent="interface"] {
+    --route-reveal-color: var(--color-interface);
+  }
+
+  .route-content-reveal[data-accent="award"] {
+    --route-reveal-color: var(--color-award);
+  }
+
+  .route-content-reveal[data-accent="none"] {
+    --route-reveal-color: var(--color-graphite);
+  }
+
+  @keyframes route-content-enter {
+    from {
+      opacity: 0.72;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes route-measure {
+    0% {
+      opacity: 0.85;
+      transform: scaleX(0);
+    }
+
+    72% {
+      opacity: 0.75;
+      transform: scaleX(1);
+    }
+
+    100% {
+      opacity: 0;
+      transform: scaleX(1);
+    }
+  }
+
+  @media (width < 640px) {
+    .telemetry-backdrop__trace--secondary,
+    .telemetry-backdrop__trace--tertiary,
+    .telemetry-backdrop__reticle,
+    .telemetry-backdrop__nodes circle:nth-child(n + 7) {
+      display: none;
+    }
+
+    .telemetry-backdrop__flow {
+      animation: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .telemetry-backdrop {
+      transition: none;
+    }
+
+    .telemetry-backdrop__flow {
+      animation: none;
+    }
+
+    .route-content-reveal {
+      animation: none;
+    }
+
+    .route-content-reveal::before {
+      display: none;
+      animation: none;
+    }
+  }
+
+  @media print {
+    .telemetry-backdrop,
+    .route-content-reveal::before {
+      display: none;
+    }
+
+    .route-content-reveal {
+      animation: none;
+    }
+  }
+
   /* Page gutter. Tailwind 4 dropped the configurable container, so this is the
      one place the measure is defined. */
   .container {

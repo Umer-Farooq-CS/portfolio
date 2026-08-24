@@ -1,11 +1,9 @@
 import { motion } from "motion/react";
-import { ExternalLink } from "lucide-react";
-import { CERTIFICATIONS, SKILL_GROUPS } from "@/data/profile";
 import { PROJECTS } from "@/data/projects";
 import { DOMAINS } from "@/data/taxonomy";
 import { getProjectsInDomain } from "@/data/projects";
 import { accent } from "@/lib/accent";
-import { AccentText, ChapterHeader, Metric, MonoLabel } from "@/components/kit/Primitives";
+import { AccentText, ChapterHeader, Metric, MonoLabel, TextAction } from "@/components/kit/Primitives";
 import { useMotionPolicy } from "@/lib/motion-policy";
 
 /**
@@ -64,7 +62,7 @@ export default function ProofChapter() {
         />
 
         <motion.dl
-          initial={enabled ? { opacity: 0, y: 16 } : { opacity: 0 }}
+          initial={enabled ? { opacity: 0, y: 16 } : false}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: duration(0.6) }}
@@ -95,11 +93,12 @@ export default function ProofChapter() {
                     </span>
                     <span className="h-1.5 w-full bg-border/60" aria-hidden="true">
                       <motion.span
-                        initial={enabled ? { width: 0 } : { width }}
-                        whileInView={{ width }}
+                        initial={enabled ? { scaleX: 0 } : false}
+                        whileInView={{ scaleX: 1 }}
                         viewport={{ once: true }}
                         transition={{ duration: duration(0.7), ease: [0.16, 1, 0.3, 1] }}
-                        className={`block h-full ${tone.mark}`}
+                        className={`block h-full origin-left ${tone.mark}`}
+                        style={{ width }}
                       />
                     </span>
                     <span className={`readout text-xs ${tone.value}`}>{domain.count}</span>
@@ -108,58 +107,18 @@ export default function ProofChapter() {
               })}
             </ul>
 
-            <div className="mt-10 border-t border-border pt-8">
-              <MonoLabel className="text-neural-type">Core skills</MonoLabel>
-              <dl className="mt-5 grid gap-x-10 gap-y-6 sm:grid-cols-2">
-                {SKILL_GROUPS.map((group) => {
-                  const tone = accent(group.accent);
-                  return (
-                  <div key={group.title} className={`border-l-2 pl-3 ${tone.panel}`}>
-                    <dt className={`text-sm font-semibold ${tone.value}`}>{group.title}</dt>
-                    <dd className="mt-2">
-                      <ul className="flex flex-col gap-1.5">
-                        {group.items.map((item) => (
-                          <li key={item} className="flex gap-2 text-xs leading-relaxed text-muted-foreground">
-                            <span
-                              aria-hidden="true"
-                              className={`mt-1.5 h-1 w-1 shrink-0 rounded-full ${tone.mark}`}
-                            />
-                            <span>{item}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </dd>
-                  </div>
-                  );
-                })}
-              </dl>
-            </div>
           </div>
 
-          <div className="lg:border-l lg:border-border lg:pl-10">
-            <MonoLabel className="text-award-type">Certifications</MonoLabel>
-            <ul className="mt-5 flex flex-col gap-5">
-              {CERTIFICATIONS.map((cert) => (
-                <li key={cert.title} className="border-b border-border pb-5 last:border-0 last:pb-0">
-                  <div className="flex items-baseline justify-between gap-3">
-                    <span className="readout text-2xs text-award-type">{cert.year}</span>
-                    <span className="label-mono">{cert.issuer}</span>
-                  </div>
-                  <p className="mt-2 text-sm font-medium leading-snug text-foreground">{cert.title}</p>
-                  {cert.credentialUrl && (
-                    <a
-                      href={cert.credentialUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-2 inline-flex items-center gap-1.5 font-mono text-2xs uppercase tracking-widest text-award-type hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                    >
-                      Verify
-                      <ExternalLink size={11} aria-hidden="true" />
-                    </a>
-                  )}
-                </li>
-              ))}
-            </ul>
+          <div className="rounded-lg border border-systems/25 bg-systems/5 p-5 lg:self-end">
+            <MonoLabel className="text-systems-type">Evidence paths</MonoLabel>
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+              Inspect the implementation, run the instruments, or open the complete record. The deeper proof stays one click away while this overview remains focused.
+            </p>
+            <div className="mt-6 flex flex-col items-start gap-4 border-t border-systems/20 pt-5">
+              <TextAction to="/projects" tone="interface">Read the project write-ups</TextAction>
+              <TextAction to="/lab" tone="cryo">Run the interactive lab</TextAction>
+              <TextAction to="/cv" tone="systems">Open the complete CV</TextAction>
+            </div>
           </div>
         </div>
       </div>

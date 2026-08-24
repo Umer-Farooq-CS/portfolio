@@ -1,4 +1,5 @@
 import { useId } from "react";
+import { motion } from "motion/react";
 import type { BenchPoint } from "./useBenchmark";
 
 interface SpeedupChartProps {
@@ -138,22 +139,27 @@ export default function SpeedupChart({ points, maxWorkers, animate }: SpeedupCha
       {/* Measured: thermal, solid — this is the data. */}
       <g clipPath={`url(#${clipId})`}>
         {points.length > 1 && (
-          <polyline
+          <motion.polyline
+            key={points.map((point) => point.workers).join("-")}
             points={measured}
             fill="none"
             stroke="var(--color-thermal)"
             strokeWidth="2.5"
             strokeLinecap="round"
             strokeLinejoin="round"
-            style={animate ? { transition: "all 200ms var(--ease-out-quint)" } : undefined}
+            initial={animate ? { pathLength: 0, opacity: 0.45 } : false}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: animate ? 0.55 : 0, ease: [0.16, 1, 0.3, 1] }}
           />
         )}
-        {points.map((point) => (
-          <circle
+        {points.map((point, index) => (
+          <motion.circle
             key={point.workers}
             cx={xFor(point.workers)}
             cy={yFor(point.speedup)}
-            r="3.5"
+            initial={animate ? { r: 0, opacity: 0 } : false}
+            animate={{ r: 3.5, opacity: 1 }}
+            transition={{ duration: animate ? 0.22 : 0, delay: animate ? index * 0.035 : 0 }}
             fill="var(--color-thermal)"
           />
         ))}

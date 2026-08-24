@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
+import { motion } from "motion/react";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { sectionIndex } from "@/lib/sections";
 import { accent, type VisualAccent } from "@/lib/accent";
+import { useMotionPolicy } from "@/lib/motion-policy";
 
 /**
  * The small pieces the pages are assembled from. They exist so the type roles and
@@ -118,6 +120,7 @@ export function ChapterHeader({
   as?: "h1" | "h2";
 }) {
   const toneClasses = accent(tone);
+  const { enabled, duration } = useMotionPolicy();
 
   return (
     <div className={cn("max-w-2xl", className)}>
@@ -125,7 +128,14 @@ export function ChapterHeader({
         {index !== undefined && (
           <span className={cn("readout text-2xs", toneClasses.value)}>{sectionIndex(index)}</span>
         )}
-        <span aria-hidden="true" className={cn("h-px w-6", toneClasses.mark)} />
+        <motion.span
+          aria-hidden="true"
+          initial={enabled ? { scaleX: 0 } : false}
+          whileInView={{ scaleX: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: duration(0.42), ease: [0.16, 1, 0.3, 1] }}
+          className={cn("h-px w-6 origin-left", toneClasses.mark)}
+        />
         <MonoLabel className={toneClasses.label}>{eyebrow}</MonoLabel>
       </div>
       <Heading className="mt-4 text-3xl text-foreground">{title}</Heading>
@@ -158,7 +168,7 @@ export function PrimaryAction({
   children: ReactNode;
 }) {
   const className =
-    "group inline-flex items-center gap-2 rounded-md bg-thermal px-5 py-2.5 font-mono text-2xs uppercase tracking-widest text-on-thermal transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
+    "group inline-flex min-h-11 items-center gap-2 rounded-md bg-thermal px-5 py-2.5 font-mono text-2xs uppercase tracking-widest text-on-thermal transition-[opacity,transform] hover:opacity-90 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
   const content = (
     <>
       {children}
@@ -195,7 +205,7 @@ export function QuietAction({
 }) {
   const toneClasses = accent(tone);
   const className = cn(
-    "group inline-flex items-center gap-2 rounded-md border px-5 py-2.5 font-mono text-2xs uppercase tracking-widest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+    "group inline-flex min-h-11 items-center gap-2 rounded-md border px-5 py-2.5 font-mono text-2xs uppercase tracking-widest transition-[color,border-color,transform] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
     tone === "none"
       ? "border-border text-foreground hover:border-foreground/40"
       : `${toneClasses.panel} ${toneClasses.value}`,

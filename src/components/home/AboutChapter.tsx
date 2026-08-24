@@ -30,31 +30,31 @@ export default function AboutChapter() {
         />
 
         <motion.div
-          initial={enabled ? { opacity: 0, y: 16 } : { opacity: 0 }}
+          initial={enabled ? { opacity: 0, y: 16 } : false}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: duration(0.6) }}
-          className="mt-12 grid gap-10 lg:grid-cols-[minmax(0,14rem)_minmax(0,34rem)] lg:gap-16"
+          className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,14rem)_minmax(0,34rem)] lg:gap-16"
         >
-          <div className="max-w-[14rem]">
+          <div className="grid max-w-xl grid-cols-[7.5rem_minmax(0,1fr)] items-start gap-5 lg:block lg:max-w-[14rem]">
             <div className="overflow-hidden rounded-lg border border-systems/25">
               <Picture
                 image={portrait}
                 alt="Portrait of Umer Farooq"
-                sizes="(min-width: 1024px) 224px, 60vw"
-                className="aspect-[4/5] w-full object-cover"
+                sizes="(min-width: 1024px) 224px, 120px"
+                className="aspect-square w-full object-cover lg:aspect-[4/5]"
               />
             </div>
-            <dl className="mt-5 flex flex-col gap-3">
+            <dl className="flex flex-col gap-3 self-center lg:mt-5">
               <div>
-                <dt className="label-mono text-systems-type">Studying</dt>
+                <dt className="label-mono text-systems-type">Education</dt>
                 <dd className="mt-1 text-xs leading-relaxed text-foreground">
                   {EDUCATION.degree}
                   <span className="block text-muted-foreground">FAST-NUCES, Islamabad</span>
                 </dd>
               </div>
               <div>
-                <dt className="label-mono text-interface-type">Until</dt>
+                <dt className="label-mono text-interface-type">Expected</dt>
                 <dd className="readout mt-1 text-xs text-interface-type">Jun 2026</dd>
               </div>
             </dl>

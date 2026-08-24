@@ -1,8 +1,8 @@
 import { useDeferredValue, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "motion/react";
-import { ArrowUpRight, Search, Trophy, X } from "lucide-react";
-import { PROJECTS, getTechnologyFacets } from "@/data/projects";
+import { ArrowUpRight, ExternalLink, Github, Search, SlidersHorizontal, Trophy, X } from "lucide-react";
+import { PROJECTS, getFeaturedProjects, getTechnologyFacets } from "@/data/projects";
 import { DOMAINS, getDomain, type Domain } from "@/data/taxonomy";
 import { accent, type VisualAccent } from "@/lib/accent";
 import { AccentText, ChapterHeader, MonoLabel, Tag } from "@/components/kit/Primitives";
@@ -11,14 +11,16 @@ import { routeMeta } from "@/data/routeMeta";
 import { useMotionPolicy } from "@/lib/motion-policy";
 
 /**
- * Thirty projects is too many to read as a wall, so this page is a filter first
- * and a list second: search, domain, and technology facets, with live counts.
+ * Thirty projects is too many to read as a wall, so the page opens with a
+ * deliberately curated view and keeps the full archive one explicit choice away.
  *
  * Grouping comes from the closed domain taxonomy, which is what makes it
  * impossible for a project to be missing here — the previous version iterated a
  * hand-written list of category strings and silently dropped two.
  */
 export default function ProjectsPage() {
+  const [view, setView] = useState<"best" | "all">("best");
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [domain, setDomain] = useState<Domain | "all">("all");
   const [tech, setTech] = useState<string | null>(null);
@@ -29,10 +31,12 @@ export default function ProjectsPage() {
   useDocumentMeta({ ...routeMeta("/projects"), path: "/projects" });
 
   const topTech = useMemo(() => getTechnologyFacets().slice(0, 14), []);
+  const featured = useMemo(() => getFeaturedProjects(), []);
 
   const filtered = useMemo(() => {
     const needle = deferredQuery.trim().toLowerCase();
-    return PROJECTS.filter((project) => {
+    const candidates = view === "best" ? featured : PROJECTS;
+    return candidates.filter((project) => {
       if (domain !== "all" && !project.domains.includes(domain)) return false;
       if (tech && !project.technologies.includes(tech)) return false;
       if (!needle) return true;
@@ -48,7 +52,7 @@ export default function ProjectsPage() {
         .toLowerCase();
       return haystack.includes(needle);
     });
-  }, [deferredQuery, domain, tech]);
+  }, [deferredQuery, domain, featured, tech, view]);
 
   // Group the filtered set by primary domain, in taxonomy order.
   const groups = useMemo(() => {
@@ -76,6 +80,8 @@ export default function ProjectsPage() {
     setTech(null);
   };
 
+  const showAllForFiltering = () => setView("all");
+
   return (
     <div className="pb-20 pt-28 lg:pt-36">
       <div className="container">
@@ -83,10 +89,10 @@ export default function ProjectsPage() {
           eyebrow="Work"
           title={
             <>
-              <AccentText tone="interface">Thirty projects</AccentText>, filtered how you like
+              <AccentText tone="interface">Best work first</AccentText>. Every build behind it.
             </>
           }
-          lede="HPC and GPU acceleration, quantum simulation, AI systems, compilers, distributed systems, and full-stack builds. Most have a repository."
+          lede="Start with the two projects that best show the range, then open the full archive to search HPC, quantum, AI, systems, and product work."
           as="h1"
           tone="interface"
         />
@@ -94,6 +100,63 @@ export default function ProjectsPage() {
         {/* Controls */}
         <div className="mt-12 border-y border-border py-5">
           <div className="flex flex-col gap-5">
+            <div>
+              <MonoLabel>View</MonoLabel>
+              <div
+                className="mt-2 grid max-w-md grid-cols-2 gap-1.5"
+                role="group"
+                aria-label="Project view"
+              >
+                <button
+                  type="button"
+                  onClick={() => {
+                    setView("best");
+                    clearAll();
+                  }}
+                  aria-pressed={view === "best"}
+                  className={`min-h-11 rounded-md border px-3 py-2 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                    view === "best"
+                      ? "border-interface bg-interface/10 text-interface-type"
+                      : "border-border text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <span className="block font-mono text-2xs uppercase tracking-widest">Best work</span>
+                  <span className="readout mt-1 block text-2xs">{featured.length} case studies</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setView("all")}
+                  aria-pressed={view === "all"}
+                  className={`min-h-11 rounded-md border px-3 py-2 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                    view === "all"
+                      ? "border-interface bg-interface/10 text-interface-type"
+                      : "border-border text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <span className="block font-mono text-2xs uppercase tracking-widest">All projects</span>
+                  <span className="readout mt-1 block text-2xs">{PROJECTS.length} total</span>
+                </button>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                setView("all");
+                setFiltersOpen((open) => !open);
+              }}
+              aria-expanded={filtersOpen}
+              aria-controls="project-filters"
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-interface/30 px-4 py-2 font-mono text-2xs uppercase tracking-widest text-interface-type focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:hidden"
+            >
+              <SlidersHorizontal size={13} aria-hidden="true" />
+              {filtersOpen ? "Hide archive filters" : "Search and filter archive"}
+            </button>
+
+            <div
+              id="project-filters"
+              className={`${filtersOpen ? "flex" : "hidden"} flex-col gap-5 sm:flex`}
+            >
             <div className="flex flex-wrap items-center gap-3">
               <div className="relative min-w-[14rem] flex-1">
                 <Search
@@ -104,20 +167,23 @@ export default function ProjectsPage() {
                 <input
                   type="search"
                   value={query}
-                  onChange={(event) => setQuery(event.target.value)}
+                  onChange={(event) => {
+                    showAllForFiltering();
+                    setQuery(event.target.value);
+                  }}
                   placeholder="Search titles, tech, descriptions…"
                   aria-label="Search projects"
-                  className="w-full rounded-md border border-border bg-card py-2 pl-9 pr-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-interface focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="min-h-11 w-full rounded-md border border-border bg-card py-2 pl-9 pr-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-interface focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 />
               </div>
               <p className="readout shrink-0 text-2xs text-interface-type">
-                {filtered.length} of {PROJECTS.length}
+                {filtered.length} of {view === "best" ? featured.length : PROJECTS.length}
               </p>
               {hasFilters && (
                 <button
                   type="button"
                   onClick={clearAll}
-                  className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-border px-2.5 py-1.5 font-mono text-2xs uppercase tracking-widest text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-md border border-border px-3 py-2 font-mono text-2xs uppercase tracking-widest text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   <X size={11} aria-hidden="true" />
                   Clear
@@ -128,14 +194,23 @@ export default function ProjectsPage() {
             <div>
               <MonoLabel>Domain</MonoLabel>
               <div className="mt-2 flex flex-wrap gap-1.5">
-                <FacetButton active={domain === "all"} onClick={() => setDomain("all")}>
+                <FacetButton
+                  active={domain === "all"}
+                  onClick={() => {
+                    showAllForFiltering();
+                    setDomain("all");
+                  }}
+                >
                   All <span className="readout ml-1">{PROJECTS.length}</span>
                 </FacetButton>
                 {DOMAINS.map((entry) => (
                   <FacetButton
                     key={entry.id}
                     active={domain === entry.id}
-                    onClick={() => setDomain(domain === entry.id ? "all" : entry.id)}
+                    onClick={() => {
+                      showAllForFiltering();
+                      setDomain(domain === entry.id ? "all" : entry.id);
+                    }}
                     tone={entry.accent}
                   >
                     {entry.label}
@@ -152,13 +227,17 @@ export default function ProjectsPage() {
                   <FacetButton
                     key={facet.tech}
                     active={tech === facet.tech}
-                    onClick={() => setTech(tech === facet.tech ? null : facet.tech)}
+                    onClick={() => {
+                      showAllForFiltering();
+                      setTech(tech === facet.tech ? null : facet.tech);
+                    }}
                   >
                     {facet.tech}
                     <span className="readout ml-1">{facet.count}</span>
                   </FacetButton>
                 ))}
               </div>
+            </div>
             </div>
           </div>
         </div>
@@ -168,12 +247,12 @@ export default function ProjectsPage() {
           <div className="py-20 text-center">
             <p className="text-xl text-foreground">Nothing matches that</p>
             <p className="mt-2 text-sm text-muted-foreground">
-              Try a broader search, or clear the filters to see all {PROJECTS.length}.
+              Try a broader search, or clear the filters to see the current view.
             </p>
             <button
               type="button"
               onClick={clearAll}
-              className="mt-5 rounded-md border border-interface/30 px-4 py-2 font-mono text-2xs uppercase tracking-widest text-interface-type transition-colors hover:border-interface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="mt-5 min-h-11 rounded-md border border-interface/30 px-4 py-2 font-mono text-2xs uppercase tracking-widest text-interface-type transition-colors hover:border-interface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               Clear filters
             </button>
@@ -202,7 +281,7 @@ export default function ProjectsPage() {
                     {projects.map((project, index) => (
                       <motion.li
                         key={project.slug}
-                        initial={enabled ? { opacity: 0 } : { opacity: 0 }}
+                        initial={enabled ? { opacity: 0 } : false}
                         whileInView={{ opacity: 1 }}
                         viewport={{ once: true, margin: "-40px" }}
                         transition={{
@@ -233,6 +312,28 @@ export default function ProjectsPage() {
                               {project.award}
                             </p>
                           )}
+                          <div className="mt-4 flex flex-wrap gap-x-3 gap-y-1 border-t border-border pt-3">
+                            {project.githubUrl && (
+                              <span className={`inline-flex items-center gap-1 font-mono text-2xs uppercase tracking-wider ${tone.label}`}>
+                                <Github size={11} aria-hidden="true" /> Repository
+                              </span>
+                            )}
+                            {project.externalUrl && (
+                              <span className={`inline-flex items-center gap-1 font-mono text-2xs uppercase tracking-wider ${tone.label}`}>
+                                <ExternalLink size={11} aria-hidden="true" /> Live demo
+                              </span>
+                            )}
+                            {project.metrics && project.metrics.length > 0 && (
+                              <span className="font-mono text-2xs uppercase tracking-wider text-systems-type">
+                                Measured result
+                              </span>
+                            )}
+                            {!project.githubUrl && !project.externalUrl && !project.metrics?.length && (
+                              <span className="font-mono text-2xs uppercase tracking-wider text-muted-foreground">
+                                Portfolio write-up
+                              </span>
+                            )}
+                          </div>
                           <div className="mt-auto pt-4">
                             <div className="flex flex-wrap gap-1">
                               {project.technologies.slice(0, 3).map((item) => (
@@ -277,7 +378,7 @@ function FacetButton({
       type="button"
       onClick={onClick}
       aria-pressed={active}
-      className={`rounded-md border px-2.5 py-1 font-mono text-2xs uppercase tracking-widest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+      className={`min-h-11 rounded-md border px-3 py-2 font-mono text-2xs uppercase tracking-widest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
         active
           ? `${toneClasses.selected} ${toneClasses.value}`
           : "border-border text-muted-foreground hover:text-foreground"

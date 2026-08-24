@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef } from "react";
 import { RotateCw } from "lucide-react";
 import { createScope, createTimeline, svg, utils, type Scope } from "animejs";
+import { useInView } from "motion/react";
 import { useMotionPolicy } from "@/lib/motion-policy";
 import { cn } from "@/lib/utils";
 
@@ -105,11 +106,12 @@ export default function PipelineTrace({ className }: { className?: string }) {
   const { enabled: motionEnabled } = useMotionPolicy();
   const svgRef = useRef<SVGSVGElement>(null);
   const scopeRef = useRef<Scope | null>(null);
+  const isInView = useInView(svgRef, { once: true, margin: "-80px" });
 
   // Layout effect, not effect: the timeline hides the diagram before animating it
   // in, and that has to happen before the first paint or the final state flashes.
   useLayoutEffect(() => {
-    if (!motionEnabled) return;
+    if (!motionEnabled || !isInView) return;
 
     scopeRef.current = createScope({ root: svgRef }).add((self) => {
       utils.set(
@@ -191,7 +193,7 @@ export default function PipelineTrace({ className }: { className?: string }) {
       scopeRef.current?.revert();
       scopeRef.current = null;
     };
-  }, [motionEnabled]);
+  }, [isInView, motionEnabled]);
 
   return (
     <figure className={cn("rounded-lg border border-border bg-card p-4 sm:p-5", className)}>
@@ -201,7 +203,7 @@ export default function PipelineTrace({ className }: { className?: string }) {
           <button
             type="button"
             onClick={() => scopeRef.current?.methods.replay?.()}
-            className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-border px-3 py-1.5 font-mono text-2xs uppercase tracking-widest text-foreground transition-colors hover:border-neural hover:text-neural-type focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-md border border-border px-3 py-2 font-mono text-2xs uppercase tracking-widest text-foreground transition-colors hover:border-neural hover:text-neural-type focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:min-h-0 lg:py-1.5"
           >
             <RotateCw size={12} aria-hidden="true" />
             Replay

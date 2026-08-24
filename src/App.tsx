@@ -1,4 +1,4 @@
-import { Suspense, lazy } from "react";
+import { lazy } from "react";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -43,15 +43,6 @@ function getBasename(): string {
   return base.replace(/\/+$/, "") || "/";
 }
 
-function RouteFallback() {
-  return (
-    <div className="flex min-h-[60vh] items-center justify-center" role="status" aria-live="polite">
-      <span className="sr-only">Loading page</span>
-      <span className="h-8 w-8 animate-spin rounded-full border-2 border-border border-t-primary" />
-    </div>
-  );
-}
-
 const App = () => (
   <ErrorBoundary>
     <QueryClientProvider client={queryClient}>
@@ -60,24 +51,22 @@ const App = () => (
           <TooltipProvider>
             <Sonner />
             <BrowserRouter basename={getBasename()}>
-              <Suspense fallback={<RouteFallback />}>
-                <Routes>
-                  <Route element={<AppShell />}>
-                    <Route path="/" element={<Index />} />
-                    <Route path="/about" element={<AboutPage />} />
-                    <Route path="/services" element={<ServicesPage />} />
-                    <Route path="/projects" element={<ProjectsPage />} />
-                    <Route path="/projects/:slug" element={<ProjectDetailPage />} />
-                    <Route path="/lab" element={<LabPage />} />
-                    <Route path="/thanks" element={<ThanksPage />} />
-                    <Route path="/cv" element={<CvPage />} />
-                    <Route path="/uses" element={<UsesPage />} />
-                    <Route path="/notes" element={<NotesPage />} />
-                    {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                    <Route path="*" element={<NotFound />} />
-                  </Route>
-                </Routes>
-              </Suspense>
+              <Routes>
+                <Route element={<AppShell />}>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/about" element={<AboutPage />} />
+                  <Route path="/services" element={<ServicesPage />} />
+                  <Route path="/projects" element={<ProjectsPage />} />
+                  <Route path="/projects/:slug" element={<ProjectDetailPage />} />
+                  <Route path="/lab" element={<LabPage />} />
+                  <Route path="/thanks" element={<ThanksPage />} />
+                  <Route path="/cv" element={<CvPage />} />
+                  <Route path="/uses" element={<UsesPage />} />
+                  <Route path="/notes" element={<NotesPage />} />
+                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                  <Route path="*" element={<NotFound />} />
+                </Route>
+              </Routes>
             </BrowserRouter>
           </TooltipProvider>
         </MotionPolicyProvider>

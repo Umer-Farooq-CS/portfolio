@@ -135,8 +135,8 @@ export default function CircuitSandbox() {
   const maxProb = Math.max(...probs, 0.0001);
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] lg:gap-12">
-      <div>
+    <div className="grid min-w-0 gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] lg:gap-12">
+      <div className="min-w-0">
         <MonoLabel className="text-cryo-type">Gates</MonoLabel>
         <div className="mt-3 flex flex-wrap gap-2" role="radiogroup" aria-label="Gate to place">
           {PALETTE.map((gate) => (
@@ -147,7 +147,7 @@ export default function CircuitSandbox() {
               aria-checked={selected === gate.id}
               title={gate.hint}
               onClick={() => setSelected(gate.id)}
-              className={`rounded-md border px-3 py-1.5 font-mono text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+              className={`min-h-11 min-w-11 rounded-md border px-3 py-2 font-mono text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:min-h-0 lg:min-w-0 lg:py-1.5 ${
                 selected === gate.id
                   ? "border-cryo bg-cryo/10 text-cryo-type"
                   : "border-border text-muted-foreground hover:text-foreground"
@@ -162,7 +162,12 @@ export default function CircuitSandbox() {
         </p>
 
         {/* The circuit. Wires are rows, time runs left to right. */}
-        <div className="mt-6 overflow-x-auto">
+        <div
+          className="mt-6 w-full min-w-0 max-w-full overflow-x-auto overscroll-x-contain rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          role="region"
+          aria-label="Scrollable quantum circuit editor"
+          tabIndex={0}
+        >
           <div className="min-w-[26rem]">
             {Array.from({ length: QUBITS }, (_, qubit) => (
               <div key={qubit} className="flex items-center gap-2 py-1.5">
@@ -185,7 +190,7 @@ export default function CircuitSandbox() {
                               ? `Remove ${cell.id} on qubit ${qubit}, step ${col + 1}`
                               : `Place ${selected} on qubit ${qubit}, step ${col + 1}`
                           }
-                          className={`relative flex h-9 items-center justify-center rounded-sm border font-mono text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                          className={`relative flex h-11 items-center justify-center rounded-sm border font-mono text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:h-9 ${
                             cell
                               ? "border-cryo bg-cryo/5 text-cryo-type"
                               : isCnotTarget
@@ -211,7 +216,7 @@ export default function CircuitSandbox() {
               type="button"
               onClick={() => setGrid(preset.build())}
               title={preset.describe}
-              className="rounded-md border border-border px-2.5 py-1 font-mono text-2xs uppercase tracking-widest text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="min-h-11 rounded-md border border-border px-3 py-2 font-mono text-2xs uppercase tracking-widest text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:min-h-0 lg:px-2.5 lg:py-1"
             >
               {preset.name}
             </button>
@@ -219,7 +224,7 @@ export default function CircuitSandbox() {
           <button
             type="button"
             onClick={() => setGrid(emptyGrid())}
-            className="inline-flex items-center gap-1.5 rounded-md border border-border px-2.5 py-1 font-mono text-2xs uppercase tracking-widest text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="inline-flex min-h-11 items-center gap-1.5 rounded-md border border-border px-3 py-2 font-mono text-2xs uppercase tracking-widest text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:min-h-0 lg:px-2.5 lg:py-1"
           >
             <RotateCcw size={11} aria-hidden="true" />
             Clear
@@ -237,7 +242,7 @@ export default function CircuitSandbox() {
                   role="tab"
                   aria-selected={target === format.id}
                   onClick={() => setTarget(format.id)}
-                  className={`rounded-md px-2.5 py-1 font-mono text-2xs uppercase tracking-widest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                  className={`min-h-11 rounded-md px-3 py-2 font-mono text-2xs uppercase tracking-widest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:min-h-0 lg:px-2.5 lg:py-1 ${
                     target === format.id
                       ? "bg-cryo/10 text-cryo-type"
                       : "text-muted-foreground hover:text-foreground"
@@ -250,7 +255,7 @@ export default function CircuitSandbox() {
             <button
               type="button"
               onClick={() => void copy()}
-              className={`inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 font-mono text-2xs uppercase tracking-widest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+              className={`inline-flex min-h-11 items-center gap-1.5 rounded-md border px-3 py-2 font-mono text-2xs uppercase tracking-widest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:min-h-0 lg:px-2.5 lg:py-1 ${
                 copied
                   ? "border-systems/35 bg-systems/10 text-systems-type"
                   : "border-cryo/25 text-cryo-type hover:border-cryo"

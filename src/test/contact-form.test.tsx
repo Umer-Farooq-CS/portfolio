@@ -54,6 +54,29 @@ describe("contact form", () => {
     expect(email).toHaveAttribute("aria-describedby", "contact-email-error");
   });
 
+  it("updates intent defaults without erasing a visitor's draft", async () => {
+    const user = userEvent.setup();
+    const view = render(
+      <MemoryRouter>
+        <ContactForm defaultSubject="GPU kernel performance" defaultMessage="Current timing:" />
+      </MemoryRouter>,
+    );
+
+    await user.type(screen.getByLabelText(/^name/i), "Amina");
+    await user.clear(screen.getByLabelText(/^message/i));
+    await user.type(screen.getByLabelText(/^message/i), "This is my handwritten project context.");
+
+    view.rerender(
+      <MemoryRouter>
+        <ContactForm defaultSubject="Quantum simulation work" defaultMessage="Qubit count:" />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByLabelText(/^name/i)).toHaveValue("Amina");
+    expect(screen.getByLabelText(/^subject/i)).toHaveValue("Quantum simulation work");
+    expect(screen.getByLabelText(/^message/i)).toHaveValue("This is my handwritten project context.");
+  });
+
   it("silently drops a submission that fills the honeypot", async () => {
     const user = userEvent.setup();
     renderForm();

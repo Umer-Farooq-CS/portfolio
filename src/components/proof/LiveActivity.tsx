@@ -67,7 +67,16 @@ function authorLine(authors: string[]): string {
     : `${authors.slice(0, 3).join(", ")} et al.`;
 }
 
-export default function LiveActivity({ index }: { index?: number }) {
+const ARXIV_RECENT_URL =
+  "https://arxiv.org/search/?query=quant-ph+OR+cs.DC&searchtype=all&abstracts=show&order=-announced_date_first&size=50";
+
+interface LiveActivityProps {
+  index?: number;
+  /** A shorter homepage presentation. The default remains the complete activity ledger. */
+  compact?: boolean;
+}
+
+export default function LiveActivity({ index, compact = false }: LiveActivityProps) {
   const { enabled, duration } = useMotionPolicy();
   const profile = useGithubProfile();
   const { data: activity } = useRepos();
@@ -82,6 +91,8 @@ export default function LiveActivity({ index }: { index?: number }) {
   const hasReadouts = profile.data.publicRepos > 0 || contributions.data.total > 0;
   const maxLanguage = Math.max(1, ...activity.languages.map((language) => language.repos));
   const revalidationFailed = profile.failed || contributions.failed;
+  const visibleRepos = compact ? activity.repos.slice(0, 3) : activity.repos;
+  const visiblePapers = compact ? reading.papers.slice(0, 2) : reading.papers;
 
   // At 13 units per column a three-letter label needs about three columns of
   // clearance, so months that start too close to the previous label are dropped.
@@ -103,8 +114,10 @@ export default function LiveActivity({ index }: { index?: number }) {
   if (!hasReadouts && grid.weeks.length === 0 && reading.papers.length === 0) return null;
 
   return (
-    <section className="border-t border-border py-20 lg:py-28">
-      <div className="container">
+    <section
+      className={`border-t border-border ${compact ? "py-14 lg:py-20" : "py-20 lg:py-28"}`}
+    >
+      <div className="container min-w-0">
         <ChapterHeader
           index={index}
           eyebrow="Activity"
@@ -118,7 +131,9 @@ export default function LiveActivity({ index }: { index?: number }) {
         />
 
         {hasReadouts && (
-          <dl className="mt-12 grid grid-cols-2 gap-x-8 gap-y-10 border-t border-border pt-10 lg:grid-cols-4">
+          <dl
+            className={`${compact ? "mt-10 gap-y-8 pt-8" : "mt-12 gap-y-10 pt-10"} grid grid-cols-2 gap-x-8 border-t border-border lg:grid-cols-4`}
+          >
             <Metric
               value={String(profile.data.publicRepos)}
               label="Public repos"
@@ -141,9 +156,11 @@ export default function LiveActivity({ index }: { index?: number }) {
           </dl>
         )}
 
-        <div className="mt-16 grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,17rem)] lg:gap-14">
+        <div
+          className={`${compact ? "mt-12 gap-9 lg:gap-10" : "mt-16 gap-12 lg:gap-14"} grid min-w-0 lg:grid-cols-[minmax(0,1fr)_minmax(0,17rem)]`}
+        >
           {grid.weeks.length > 0 && (
-            <div>
+            <div className="min-w-0">
               <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
                 <MonoLabel>Contribution calendar</MonoLabel>
                 <span className="readout text-2xs text-muted-foreground">
@@ -154,7 +171,12 @@ export default function LiveActivity({ index }: { index?: number }) {
               {/* The calendar carries its own plot ground: the palest ramp step is
                   lighter than the page background in the light theme, so on
                   `background` the first step would be invisible. */}
-              <div className="mt-4 overflow-x-auto rounded-md border border-border bg-card p-3 sm:p-4">
+              <div
+                className="mt-4 w-full min-w-0 max-w-full overflow-x-auto overscroll-x-contain rounded-md border border-border bg-card p-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:p-4"
+                role="region"
+                aria-label="Scrollable contribution calendar"
+                tabIndex={0}
+              >
                 <svg
                   viewBox={`0 0 ${width} ${height}`}
                   className="block h-auto w-full min-w-[660px]"
@@ -254,7 +276,7 @@ export default function LiveActivity({ index }: { index?: number }) {
             </div>
           )}
 
-          {activity.languages.length > 0 && (
+          {!compact && activity.languages.length > 0 && (
             <div className="lg:border-l lg:border-border lg:pl-10">
               <MonoLabel className="text-interface-type">Language distribution</MonoLabel>
               <p className="mt-2 text-sm text-muted-foreground">
@@ -290,16 +312,19 @@ export default function LiveActivity({ index }: { index?: number }) {
         </div>
 
         {activity.repos.length > 0 && (
-          <div className="mt-16 border-t border-interface/25 pt-10">
+          <div
+            className={`${compact ? "mt-12 pt-8" : "mt-16 pt-10"} border-t border-interface/25`}
+          >
             <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
               <MonoLabel className="text-interface-type">Recent pushes</MonoLabel>
               <span className="readout text-2xs text-interface-type">
-                {activity.repos.length} of {profile.data.publicRepos} public repos
+                {compact ? `${visibleRepos.length} recent` : activity.repos.length} of{" "}
+                {profile.data.publicRepos} public repos
               </span>
             </div>
 
             <ul className="mt-6">
-              {activity.repos.map((repo) => (
+              {visibleRepos.map((repo) => (
                 <li key={repo.name} className="border-b border-border py-4 first:border-t">
                   <div className="grid gap-x-8 gap-y-2 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-baseline">
                     <div>
@@ -336,11 +361,24 @@ export default function LiveActivity({ index }: { index?: number }) {
                 </li>
               ))}
             </ul>
+            {compact && (
+              <a
+                href={profile.data.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-4 inline-flex min-h-11 items-center gap-2 font-mono text-2xs uppercase tracking-widest text-interface-type underline decoration-interface/40 underline-offset-4 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:min-h-0"
+              >
+                View all repositories
+                <ExternalLink size={12} aria-hidden="true" />
+              </a>
+            )}
           </div>
         )}
 
         {reading.papers.length > 0 && (
-          <div className="mt-16 border-t border-cryo/25 pt-10">
+          <div
+            className={`${compact ? "mt-12 pt-8" : "mt-16 pt-10"} border-t border-cryo/25`}
+          >
             <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
               <MonoLabel className="text-cryo-type">Reading — arXiv quant-ph and cs.DC</MonoLabel>
               <span className="readout text-2xs text-muted-foreground">
@@ -354,7 +392,7 @@ export default function LiveActivity({ index }: { index?: number }) {
             </p>
 
             <ol className="mt-6">
-              {reading.papers.map((paper: Paper) => (
+              {visiblePapers.map((paper: Paper) => (
                 <li key={paper.id} className="border-b border-border py-4 first:border-t">
                   <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                     <span className={`font-mono text-2xs ${categoryClass(paper.category)}`}>
@@ -377,16 +415,29 @@ export default function LiveActivity({ index }: { index?: number }) {
                   <p className="mt-1 font-mono text-2xs text-muted-foreground">
                     {authorLine(paper.authors)}
                   </p>
-                  <p className="mt-2 max-w-prose text-xs leading-relaxed text-muted-foreground">
-                    {paper.summary}
-                  </p>
+                  {!compact && (
+                    <p className="mt-2 max-w-prose text-xs leading-relaxed text-muted-foreground">
+                      {paper.summary}
+                    </p>
+                  )}
                 </li>
               ))}
             </ol>
+            {compact && (
+              <a
+                href={ARXIV_RECENT_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-4 inline-flex min-h-11 items-center gap-2 font-mono text-2xs uppercase tracking-widest text-cryo-type underline decoration-cryo/40 underline-offset-4 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:min-h-0"
+              >
+                Browse the full arXiv feed
+                <ExternalLink size={12} aria-hidden="true" />
+              </a>
+            )}
           </div>
         )}
 
-        <div className="mt-10 flex flex-col gap-1.5">
+        <div className={`${compact ? "mt-8" : "mt-10"} flex flex-col gap-1.5`}>
           <p className="flex flex-wrap items-center gap-x-4 gap-y-1 text-2xs text-muted-foreground">
             <span className="label-mono">Sources</span>
             <span className="readout">GitHub REST, {freshness(profile.fetchedAt, now)}</span>

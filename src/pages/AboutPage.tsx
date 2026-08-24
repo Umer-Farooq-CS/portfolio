@@ -15,7 +15,7 @@ import { accent, type VisualAccent } from "@/lib/accent";
 /** A typed timeline: order carries information here, so it is numbered and dated. */
 const TIMELINE = [
   {
-    period: "Aug 2022 – Jun 2026",
+    period: "Aug 2022 – Jun 2026 (expected)",
     title: "BS Computer Science, FAST-NUCES",
     detail: "Islamabad. Dean's List, Spring 2023. Coursework centred on HPC, systems, and applied AI.",
     tone: "systems",
@@ -108,7 +108,7 @@ export default function AboutPage() {
                 <dd className="mt-1 text-sm text-foreground">{SITE_LINKS.location}</dd>
               </div>
               <div>
-                <dt className="label-mono">Studying</dt>
+                <dt className="label-mono">Education</dt>
                 <dd className="mt-1 text-sm text-foreground">
                   {EDUCATION.degree}
                   <span className="mt-0.5 block text-xs text-muted-foreground">
@@ -117,7 +117,7 @@ export default function AboutPage() {
                 </dd>
               </div>
               <div>
-                <dt className="label-mono">Graduating</dt>
+                <dt className="label-mono">Expected completion</dt>
                 <dd className="readout mt-1 text-sm text-systems-type">Jun 2026</dd>
               </div>
             </dl>

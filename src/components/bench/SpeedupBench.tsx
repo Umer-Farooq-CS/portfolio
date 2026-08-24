@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { RotateCw } from "lucide-react";
+import { motion } from "motion/react";
 import { useMotionPolicy } from "@/lib/motion-policy";
 import SpeedupChart from "./SpeedupChart";
 import { RECORDED_SWEEP, useBenchmark } from "./useBenchmark";
@@ -9,8 +10,8 @@ import { RECORDED_SWEEP, useBenchmark } from "./useBenchmark";
  * machine, plotted against the ideal line.
  *
  * It starts itself once, on view, and only when that is a reasonable thing to do.
- * When it isn't — reduced motion, data saving, two cores or fewer, no worker
- * support — it shows a recorded sweep, says so, and offers a manual trigger.
+ * Reduced-motion and data-saving preferences disable autoplay, not computation:
+ * a deliberate click can still run the real benchmark and render its final state.
  */
 export default function SpeedupBench() {
   const { enabled: motionEnabled } = useMotionPolicy();
@@ -21,13 +22,13 @@ export default function SpeedupBench() {
     typeof navigator !== "undefined" &&
     Boolean((navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData);
 
-  const allowLiveRun = motionEnabled && !saveData;
-  const bench = useBenchmark({ enabled: allowLiveRun });
+  const allowAutoRun = motionEnabled && !saveData;
+  const bench = useBenchmark({ enabled: true });
 
   // Start when the panel is actually on screen, so a visitor who never scrolls
   // here never pays for it.
   useEffect(() => {
-    if (autoStarted || !allowLiveRun) return;
+    if (autoStarted || !allowAutoRun) return;
     const node = containerRef.current;
     if (!node || typeof IntersectionObserver === "undefined") return;
 
@@ -43,9 +44,10 @@ export default function SpeedupBench() {
     );
     observer.observe(node);
     return () => observer.disconnect();
-  }, [allowLiveRun, autoStarted, bench]);
+  }, [allowAutoRun, autoStarted, bench]);
 
-  const isRecorded = bench.status === "skipped" || bench.status === "unsupported";
+  const isRecorded =
+    bench.status === "skipped" || bench.status === "unsupported" || (bench.status === "idle" && !allowAutoRun);
   const points = isRecorded ? RECORDED_SWEEP : bench.points;
   const maxWorkers = isRecorded ? RECORDED_SWEEP.length : bench.maxWorkers;
   const last = points[points.length - 1];
@@ -67,7 +69,10 @@ export default function SpeedupBench() {
     >
       <div className="mb-3 flex items-baseline justify-between gap-3">
         <p className="label-mono text-primary-type">Live benchmark</p>
-        <p className={`readout text-2xs ${bench.status === "done" ? "text-systems-type" : "text-muted-foreground"}`}>
+        <p
+          aria-live="polite"
+          className={`readout text-2xs ${bench.status === "done" ? "text-systems-type" : "text-muted-foreground"}`}
+        >
           {statusLine}
         </p>
       </div>
@@ -82,15 +87,25 @@ export default function SpeedupBench() {
         </div>
         <div>
           <dt className="label-mono">Speedup</dt>
-          <dd className="readout text-lg text-primary-type">
+          <motion.dd
+            key={`speed-${last?.speedup ?? "empty"}`}
+            initial={motionEnabled ? { opacity: 0.35, y: 3 } : false}
+            animate={{ opacity: 1, y: 0 }}
+            className="readout text-lg text-primary-type"
+          >
             {last ? `${last.speedup.toFixed(2)}×` : "—"}
-          </dd>
+          </motion.dd>
         </div>
         <div>
           <dt className="label-mono">Efficiency</dt>
-          <dd className="readout text-lg text-cryo-type">
+          <motion.dd
+            key={`efficiency-${last?.efficiency ?? "empty"}`}
+            initial={motionEnabled ? { opacity: 0.35, y: 3 } : false}
+            animate={{ opacity: 1, y: 0 }}
+            className="readout text-lg text-cryo-type"
+          >
             {last ? `${Math.round(last.efficiency * 100)}%` : "—"}
-          </dd>
+          </motion.dd>
         </div>
         <div>
           <dt className="label-mono" title="Karp–Flatt metric">
@@ -116,7 +131,7 @@ export default function SpeedupBench() {
           type="button"
           onClick={() => void bench.run()}
           disabled={busy}
-          className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-border px-3 py-1.5 font-mono text-2xs uppercase tracking-widest text-foreground transition-colors hover:border-thermal hover:text-primary-type focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
+          className="inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-md border border-border px-3 py-2 font-mono text-2xs uppercase tracking-widest text-foreground transition-[color,border-color,transform] hover:border-thermal hover:text-primary-type active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
         >
           <RotateCw size={12} className={busy ? "animate-spin" : undefined} aria-hidden="true" />
           {busy ? "Running" : isRecorded ? "Run it here" : "Run again"}

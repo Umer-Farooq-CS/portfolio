@@ -4,6 +4,13 @@ import { AccentText, PrimaryAction, QuietAction } from "@/components/kit/Primiti
 import { useIslamabadClock } from "@/lib/clock";
 import { useMotionPolicy } from "@/lib/motion-policy";
 
+const HERO_SIGNALS = [
+  { label: "Compute", detail: "CUDA · MPI", mark: "bg-thermal", value: "text-primary-type" },
+  { label: "Quantum", detail: "Qiskit · Cirq", mark: "bg-cryo", value: "text-cryo-type" },
+  { label: "Verified AI", detail: "PyTorch · RAG", mark: "bg-neural", value: "text-neural-type" },
+  { label: "Platforms", detail: "React · FastAPI", mark: "bg-interface", value: "text-interface-type" },
+] as const;
+
 /**
  * Chapter 01. The hero doesn't claim the skill — it runs a parallel workload on
  * the visitor's machine and plots the result. Everything else here is quiet so
@@ -14,7 +21,7 @@ export default function BenchChapter() {
   const clock = useIslamabadClock();
 
   const rise = (delay: number) => ({
-    initial: enabled ? { opacity: 0, y: 14 } : { opacity: 0 },
+    initial: enabled ? { opacity: 0, y: 14 } : false,
     animate: { opacity: 1, y: 0 },
     transition: { duration: duration(0.6), delay: enabled ? delay : 0, ease: [0.16, 1, 0.3, 1] as const },
   });
@@ -45,16 +52,27 @@ export default function BenchChapter() {
 
             <motion.p {...rise(0.16)} className="mt-6 max-w-xl text-lg text-muted-foreground">
               I work on high-performance and GPU computing, quantum simulation platforms, and AI
-              pipelines that are checked rather than trusted. Final-year CS at FAST-NUCES, third at the
+              pipelines that are checked rather than trusted. CS at FAST-NUCES, third at the
               Huawei ICT national finals, 30 projects shipped.
             </motion.p>
 
-            <motion.p
+            <motion.ul
               {...rise(0.22)}
-              className="readout mt-5 text-2xs uppercase tracking-widest text-muted-foreground"
+              aria-label="Technical domains"
+              className="mt-7 grid max-w-2xl grid-cols-2 gap-x-5 gap-y-3 border-y border-border py-4 sm:grid-cols-4"
             >
-              CUDA · MPI · OpenMP · Qiskit · Cirq · PennyLane · PyTorch · FastAPI · Kubernetes
-            </motion.p>
+              {HERO_SIGNALS.map((signal) => (
+                <li key={signal.label} className="min-w-0">
+                  <span className="flex items-center gap-2">
+                    <span aria-hidden="true" className={`h-1.5 w-1.5 rounded-full ${signal.mark}`} />
+                    <span className={`label-mono ${signal.value}`}>{signal.label}</span>
+                  </span>
+                  <span className="readout mt-1 block truncate text-2xs text-muted-foreground">
+                    {signal.detail}
+                  </span>
+                </li>
+              ))}
+            </motion.ul>
 
             <motion.div {...rise(0.3)} className="mt-9 flex flex-wrap items-center gap-3">
               <PrimaryAction to="/projects">See the work</PrimaryAction>

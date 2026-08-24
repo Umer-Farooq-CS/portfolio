@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "@/lib/theme";
 import { MotionPolicyProvider } from "@/lib/motion-policy";
@@ -28,8 +28,15 @@ function renderAt(path: string) {
 }
 
 describe("project routes", () => {
-  it("lists every project on /projects", () => {
+  it("starts with best work and can reveal every project", () => {
     renderAt("/projects");
+    expect(screen.getByRole("button", { name: /best work/i })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: /all projects/i }));
+
     for (const project of PROJECTS) {
       expect(screen.getByText(project.title)).toBeInTheDocument();
     }

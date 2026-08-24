@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -42,12 +42,27 @@ export default function ContactForm({ defaultSubject = "", defaultMessage = "" }
     register,
     handleSubmit,
     reset,
+    getFieldState,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<ContactValues>({
     resolver: zodResolver(contactSchema),
     defaultValues: { name: "", email: "", subject: defaultSubject, message: defaultMessage, company: "" },
     mode: "onBlur",
   });
+
+  // Intent changes should help compose the enquiry, not erase it. Programmatic
+  // defaults continue to follow the selected intent until the visitor edits a
+  // field themselves; names, email addresses, and handwritten copy are never
+  // remounted or reset.
+  useEffect(() => {
+    if (!getFieldState("subject").isDirty) {
+      setValue("subject", defaultSubject, { shouldDirty: false, shouldValidate: false });
+    }
+    if (!getFieldState("message").isDirty) {
+      setValue("message", defaultMessage, { shouldDirty: false, shouldValidate: false });
+    }
+  }, [defaultMessage, defaultSubject, getFieldState, setValue]);
 
   const onSubmit = async (values: ContactValues) => {
     setSubmitError("");

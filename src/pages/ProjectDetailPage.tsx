@@ -1,7 +1,7 @@
 import { Suspense, lazy } from "react";
 import { Link, useParams } from "react-router-dom";
 import { motion } from "motion/react";
-import { ArrowLeft, ArrowRight, ExternalLink, Github } from "lucide-react";
+import { ArrowLeft, ArrowRight, ChartNoAxesCombined, ExternalLink, FileText, Github, Images, Trophy } from "lucide-react";
 import { getAdjacentProjects, getProjectBySlug } from "@/data/projects";
 import { getDomain } from "@/data/taxonomy";
 import { accent } from "@/lib/accent";
@@ -44,8 +44,17 @@ export default function ProjectDetailPage() {
   const tone = accent(domain.accent);
   const prevTone = prev ? accent(getDomain(prev.domains[0]).accent) : null;
   const nextTone = next ? accent(getDomain(next.domains[0]).accent) : null;
+  const brief = project.objective ?? project.description[0];
+  const overviewPoints = project.objective ? project.description : project.description.slice(1);
+  const hasArchitectureEvidence = Boolean(project.image || project.slug === "cirq-rag");
+  const hasInspectibleEvidence = Boolean(
+    project.githubUrl ||
+      project.externalUrl ||
+      project.metrics?.length ||
+      hasArchitectureEvidence,
+  );
   const rise = (delay: number) => ({
-    initial: enabled ? { opacity: 0, y: 14 } : { opacity: 0 },
+    initial: enabled ? { opacity: 0, y: 14 } : false,
     animate: { opacity: 1, y: 0 },
     transition: { duration: duration(0.5), delay: enabled ? delay : 0 },
   });
@@ -66,7 +75,7 @@ export default function ProjectDetailPage() {
         <motion.div {...rise(0)}>
           <Link
             to="/projects"
-            className={`inline-flex items-center gap-1.5 font-mono text-2xs uppercase tracking-widest transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${tone.value}`}
+            className={`inline-flex min-h-11 items-center gap-1.5 rounded-md px-2 font-mono text-2xs uppercase tracking-widest transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${tone.value}`}
           >
             <ArrowLeft size={12} aria-hidden="true" />
             All work
@@ -95,16 +104,16 @@ export default function ProjectDetailPage() {
             </p>
           )}
 
-          <div className="mt-6 flex flex-wrap items-center gap-4">
+          <div className="mt-6 flex flex-wrap items-center gap-3">
             {project.githubUrl && (
               <a
                 href={project.githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5 font-mono text-2xs uppercase tracking-widest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${tone.panel} ${tone.value}`}
+                className={`inline-flex min-h-11 items-center gap-1.5 rounded-md border px-4 py-2 font-mono text-2xs uppercase tracking-widest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${tone.panel} ${tone.value}`}
               >
                 <Github size={12} aria-hidden="true" />
-                Source
+                Repository
               </a>
             )}
             {project.externalUrl && (
@@ -112,21 +121,35 @@ export default function ProjectDetailPage() {
                 href={project.externalUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5 font-mono text-2xs uppercase tracking-widest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${tone.panel} ${tone.value}`}
+                className={`inline-flex min-h-11 items-center gap-1.5 rounded-md border px-4 py-2 font-mono text-2xs uppercase tracking-widest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${tone.panel} ${tone.value}`}
               >
                 <ExternalLink size={12} aria-hidden="true" />
-                Live
+                Live demo
               </a>
             )}
           </div>
         </motion.header>
 
-        {/* Results first, when there are measured results to show. */}
+        <motion.section
+          {...rise(0.08)}
+          aria-labelledby="brief"
+          className={`mt-12 border-l-2 pl-5 sm:pl-7 ${tone.panel}`}
+        >
+          <h2 id="brief" className={`label-mono ${tone.label}`}>
+            {project.objective ? "The problem" : "Project brief"}
+          </h2>
+          <p className="mt-4 text-lg leading-relaxed text-foreground">{brief}</p>
+        </motion.section>
+
+        {/* Measurements follow the problem so every number has context. */}
         {project.metrics && project.metrics.length > 0 && (
           <motion.section {...rise(0.1)} aria-labelledby="results" className="mt-12">
             <h2 id="results" className={`label-mono ${tone.label}`}>
-              Results
+              Measured result
             </h2>
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+              Baselines are shown beside the result where the project record includes one.
+            </p>
             <dl className="mt-5 grid gap-8 border-y border-border py-7 sm:grid-cols-2 lg:grid-cols-3">
               {project.metrics.map((metric) => (
                 <Metric key={metric.label} {...metric} tone={domain.accent} />
@@ -134,6 +157,68 @@ export default function ProjectDetailPage() {
             </dl>
           </motion.section>
         )}
+
+        <motion.section {...rise(0.11)} aria-labelledby="evidence" className="mt-12">
+          <div className="flex flex-wrap items-baseline justify-between gap-3">
+            <h2 id="evidence" className={`label-mono ${tone.label}`}>
+              Evidence available
+            </h2>
+            <span className="readout text-2xs text-muted-foreground">
+              {hasInspectibleEvidence
+                ? "linked or shown below"
+                : project.award
+                  ? "recognition recorded"
+                  : "write-up only"}
+            </span>
+          </div>
+          <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+            {project.githubUrl && (
+              <li>
+                <a
+                  href={project.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`flex min-h-11 items-center gap-2 rounded-md border px-3 py-2 font-mono text-2xs uppercase tracking-widest focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${tone.panel} ${tone.value}`}
+                >
+                  <Github size={13} aria-hidden="true" /> Repository
+                  <ExternalLink size={11} className="ml-auto" aria-hidden="true" />
+                </a>
+              </li>
+            )}
+            {project.externalUrl && (
+              <li>
+                <a
+                  href={project.externalUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`flex min-h-11 items-center gap-2 rounded-md border px-3 py-2 font-mono text-2xs uppercase tracking-widest focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${tone.panel} ${tone.value}`}
+                >
+                  <ExternalLink size={13} aria-hidden="true" /> Live demo
+                </a>
+              </li>
+            )}
+            {project.metrics && project.metrics.length > 0 && (
+              <li className="flex min-h-11 items-center gap-2 rounded-md border border-systems/25 bg-systems/5 px-3 py-2 font-mono text-2xs uppercase tracking-widest text-systems-type">
+                <ChartNoAxesCombined size={13} aria-hidden="true" /> Measured comparison
+              </li>
+            )}
+            {hasArchitectureEvidence && (
+              <li className={`flex min-h-11 items-center gap-2 rounded-md border px-3 py-2 font-mono text-2xs uppercase tracking-widest ${tone.panel} ${tone.value}`}>
+                <Images size={13} aria-hidden="true" /> Architecture evidence
+              </li>
+            )}
+            {project.award && (
+              <li className="flex min-h-11 items-center gap-2 rounded-md border border-award/25 bg-award/5 px-3 py-2 font-mono text-2xs uppercase tracking-widest text-award-type">
+                <Trophy size={13} aria-hidden="true" /> External recognition
+              </li>
+            )}
+            {!hasInspectibleEvidence && !project.award && (
+              <li className="flex min-h-11 items-center gap-2 rounded-md border border-border px-3 py-2 font-mono text-2xs uppercase tracking-widest text-muted-foreground">
+                <FileText size={13} aria-hidden="true" /> No external artifact linked
+              </li>
+            )}
+          </ul>
+        </motion.section>
 
         {project.image && project.slug !== "cirq-rag" && (
           <motion.figure {...rise(0.12)} className="mt-12">
@@ -163,28 +248,21 @@ export default function ProjectDetailPage() {
           <ProjectFigures slug={project.slug} tone={domain.accent} className="mt-12" />
         </Suspense>
 
-        {project.objective && (
-          <motion.section {...rise(0.14)} aria-labelledby="objective" className="mt-14">
-            <h2 id="objective" className={`label-mono ${tone.label}`}>
-              The problem
+        {overviewPoints.length > 0 && (
+          <motion.section {...rise(0.16)} aria-labelledby="overview" className="mt-14">
+            <h2 id="overview" className={`label-mono ${tone.label}`}>
+              What it does
             </h2>
-            <p className="mt-4 text-lg leading-relaxed text-foreground">{project.objective}</p>
+            <ul className="mt-4 flex flex-col gap-3">
+              {overviewPoints.map((point) => (
+                <li key={point.slice(0, 40)} className="flex gap-3 text-base leading-relaxed text-muted-foreground">
+                  <span aria-hidden="true" className={`mt-2.5 h-1 w-1 shrink-0 rounded-full ${tone.mark}`} />
+                  <span>{point}</span>
+                </li>
+              ))}
+            </ul>
           </motion.section>
         )}
-
-        <motion.section {...rise(0.16)} aria-labelledby="overview" className="mt-14">
-          <h2 id="overview" className={`label-mono ${tone.label}`}>
-            What it does
-          </h2>
-          <ul className="mt-4 flex flex-col gap-3">
-            {project.description.map((point) => (
-              <li key={point.slice(0, 40)} className="flex gap-3 text-base leading-relaxed text-muted-foreground">
-                <span aria-hidden="true" className={`mt-2.5 h-1 w-1 shrink-0 rounded-full ${tone.mark}`} />
-                <span>{point}</span>
-              </li>
-            ))}
-          </ul>
-        </motion.section>
 
         {project.strategy && project.strategy.length > 0 && (
           <motion.section {...rise(0.18)} aria-labelledby="approach" className="mt-14">
