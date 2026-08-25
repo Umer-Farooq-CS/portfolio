@@ -36,9 +36,9 @@ describe("theme provider", () => {
     document.querySelectorAll("link[data-theme-favicon]").forEach((link) => link.remove());
   });
 
-  it("opens in light when nothing is stored, whatever the OS says", () => {
-    // A dark OS must not override the design's default — the site was built
-    // light-first, and a visitor should see it as designed until they choose.
+  it("follows the OS by default when nothing is stored", () => {
+    // No stored preference yet — the visitor should see their own OS/browser
+    // preference, not a hardcoded default.
     const matchMedia = vi.fn().mockImplementation((query: string) => ({
       matches: query.includes("dark"), // pretend the OS is in dark mode
       media: query,
@@ -57,9 +57,9 @@ describe("theme provider", () => {
       </ThemeProvider>,
     );
 
-    expect(screen.getByTestId("choice")).toHaveTextContent("light");
-    expect(screen.getByTestId("resolved")).toHaveTextContent("light");
-    expect(document.documentElement.classList.contains("dark")).toBe(false);
+    expect(screen.getByTestId("choice")).toHaveTextContent("system");
+    expect(screen.getByTestId("resolved")).toHaveTextContent("dark");
+    expect(document.documentElement.classList.contains("dark")).toBe(true);
 
     vi.unstubAllGlobals();
   });
@@ -190,7 +190,7 @@ describe("theme provider", () => {
         );
       });
       // Falls back to the design's default rather than throwing.
-      expect(screen.getByTestId("choice")).toHaveTextContent("light");
+      expect(screen.getByTestId("choice")).toHaveTextContent("system");
     } finally {
       Storage.prototype.getItem = original;
     }

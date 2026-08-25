@@ -31,10 +31,9 @@ interface ThemeContextValue {
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 /**
- * Light is the default, deliberately — the design was built light-first, and a
- * visitor arriving with a dark OS should still see the site as designed. The
- * system preference is honoured only if someone explicitly picks "system"; a dark
- * OS alone does not override the design's default.
+ * A first-time visitor follows their browser/OS theme preference by default —
+ * once someone explicitly picks light or dark, that choice is stored and takes
+ * over completely, exactly as before.
  */
 function readStoredChoice(): ThemeChoice {
   try {
@@ -43,7 +42,7 @@ function readStoredChoice(): ThemeChoice {
   } catch {
     // Private mode or blocked storage — fall through to the default.
   }
-  return "light";
+  return "system";
 }
 
 function systemTheme(): ResolvedTheme {
