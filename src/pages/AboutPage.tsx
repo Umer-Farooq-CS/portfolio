@@ -3,14 +3,30 @@ import { ExternalLink, Github, Linkedin, Mail } from "lucide-react";
 import { portrait } from "@/assets/optimized/manifest";
 import Picture from "@/components/Picture";
 import JsonLd from "@/components/JsonLd";
-import { CERTIFICATIONS, EDUCATION, PROFESSIONAL_SUMMARY, SKILL_GROUPS } from "@/data/profile";
+import { CERTIFICATIONS, EDUCATION, PROFESSIONAL_SUMMARY } from "@/data/profile";
+import { EXPERIENCE } from "@/data/cv";
 import { SITE_LINKS } from "@/data/siteLinks";
 import { AccentText, ChapterHeader, Tag } from "@/components/kit/Primitives";
+import SkillsSection from "@/components/kit/SkillsSection";
 import { useDocumentMeta } from "@/lib/meta";
 import { routeMeta } from "@/data/routeMeta";
 import { personSchema } from "@/lib/seo";
 import { useMotionPolicy } from "@/lib/motion-policy";
+import { useActiveProfile } from "@/lib/profile";
 import { accent, type VisualAccent } from "@/lib/accent";
+
+/**
+ * `period` for the three entries below that correspond to a role is read from
+ * `EXPERIENCE` (cv.ts) rather than typed again, so a changed employment date
+ * can't drift between /about and /cv. Throws if the organisation is renamed
+ * there without updating it here — surfaced immediately by any test that
+ * renders this page, rather than shipping a silently wrong date.
+ */
+function experiencePeriod(organisation: string): string {
+  const entry = EXPERIENCE.find((item) => item.organisation === organisation);
+  if (!entry) throw new Error(`AboutPage TIMELINE: no EXPERIENCE entry for organisation "${organisation}"`);
+  return entry.period;
+}
 
 /** A typed timeline: order carries information here, so it is numbered and dated. */
 const TIMELINE = [
@@ -21,7 +37,7 @@ const TIMELINE = [
     tone: "systems",
   },
   {
-    period: "Aug 2023 – Aug 2024",
+    period: experiencePeriod("Fiverr"),
     title: "Freelance developer, Fiverr",
     detail:
       "Level 2 seller — the top tier. 100+ projects completed at 98% client satisfaction and 80% repeat custom, including 30+ full-stack MERN and .NET applications.",
@@ -34,7 +50,7 @@ const TIMELINE = [
     tone: "award",
   },
   {
-    period: "Feb – May 2025",
+    period: experiencePeriod("NaSCon'25, FAST-NUCES"),
     title: "NaSCon'25, PR and marketing",
     detail: "Core team. Partner outreach and campaigns for a national tech event.",
     tone: "interface",
@@ -46,7 +62,7 @@ const TIMELINE = [
     tone: "neural",
   },
   {
-    period: "Sep 2025 – present",
+    period: experiencePeriod("Open Quantum Workbench, FAST-NUCES"),
     title: "Software engineer, Open Quantum Workbench",
     detail: "FAST-NUCES. Full-stack work on an open quantum simulation and numerical computing workbench.",
     tone: "cryo",
@@ -63,6 +79,7 @@ const QUICK_LINKS: { label: string; href: string; icon: typeof Github; tone: Vis
 
 export default function AboutPage() {
   const { enabled, duration } = useMotionPolicy();
+  const profile = useActiveProfile();
 
   useDocumentMeta({ ...routeMeta("/about"), path: "/about" });
 
@@ -225,32 +242,7 @@ export default function AboutPage() {
               <h2 id="skills" className="label-mono text-neural-type">
                 Skills
               </h2>
-              <dl className="mt-5 flex flex-col">
-                {SKILL_GROUPS.map((group) => {
-                  const tone = accent(group.accent);
-                  return (
-                  <div key={group.title} className={`border-t py-5 ${tone.panel}`}>
-                    <dt className={`text-sm font-semibold ${tone.value}`}>{group.title}</dt>
-                    <dd className="mt-2.5">
-                      <ul className="flex flex-col gap-2">
-                        {group.items.map((item) => (
-                          <li
-                            key={item}
-                            className="flex gap-2.5 text-sm leading-relaxed text-muted-foreground"
-                          >
-                            <span
-                              aria-hidden="true"
-                              className={`mt-2 h-1 w-1 shrink-0 rounded-full ${tone.mark}`}
-                            />
-                            <span>{item}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </dd>
-                  </div>
-                  );
-                })}
-              </dl>
+              <SkillsSection profile={profile} />
             </motion.section>
 
             <motion.section {...rise(0.16)} aria-labelledby="off" className="mt-12 border-t border-border pt-8">

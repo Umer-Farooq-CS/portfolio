@@ -3,19 +3,20 @@ import { Link } from "react-router-dom";
 import { Printer } from "lucide-react";
 import JsonLd from "@/components/JsonLd";
 import { AccentText, MonoLabel, QuietAction, TextAction } from "@/components/kit/Primitives";
+import SkillsSection from "@/components/kit/SkillsSection";
+import ExperienceSection from "@/components/kit/ExperienceSection";
 import {
   AWARDS,
   COURSEWORK,
   CV_CONTACT,
   CV_EDUCATION_HIGHLIGHTS,
   CV_PDF_PATH,
-  EXPERIENCE,
   LANGUAGES,
   cvProjectOverflow,
   getCvProjects,
 } from "@/data/cv";
-import { CERTIFICATIONS, EDUCATION, PROFESSIONAL_SUMMARY, SKILL_GROUPS } from "@/data/profile";
-import { PROJECTS } from "@/data/projects";
+import { CERTIFICATIONS, EDUCATION, PROFESSIONAL_SUMMARY } from "@/data/profile";
+import { PROJECTS, getProjectLensView } from "@/data/projects";
 import { useDocumentMeta } from "@/lib/meta";
 import { routeMeta } from "@/data/routeMeta";
 import { personSchema } from "@/lib/seo";
@@ -23,6 +24,7 @@ import { SITE, absoluteUrl } from "@/lib/site";
 import printStyles from "@/styles/print.css?raw";
 import { accent, type VisualAccent } from "@/lib/accent";
 import { getDomain } from "@/data/taxonomy";
+import { pathForProfile, useActiveProfile } from "@/lib/profile";
 
 /**
  * The CV, rendered from src/data rather than typed out again — so it cannot say
@@ -94,6 +96,8 @@ function Bullet({ children, tone = "none" }: { children: ReactNode; tone?: Visua
 export default function CvPage() {
   const projects = getCvProjects();
   const overflow = cvProjectOverflow();
+  const profile = useActiveProfile();
+  const basePath = pathForProfile("/", profile.id);
 
   useDocumentMeta({ ...routeMeta("/cv"), path: "/cv" });
 
@@ -170,26 +174,7 @@ export default function CvPage() {
           </CvSection>
 
           <CvSection id="cv-experience" title="Experience" tone="interface">
-            <ul className="flex flex-col gap-7">
-              {EXPERIENCE.map((job) => (
-                <li key={`${job.role}-${job.period}`} className="cv-entry">
-                  <EntryHead title={job.role} meta={job.period} tone="interface" />
-                  <p className="mt-0.5 text-sm text-muted-foreground">
-                    {job.organisation} · {job.location}
-                  </p>
-                  <ul className="mt-2.5 flex flex-col gap-1.5">
-                    {job.points.map((point) => (
-                      <Bullet key={point} tone="interface">{point}</Bullet>
-                    ))}
-                  </ul>
-                  {job.technologies && (
-                    <p className="mt-2.5 font-mono text-2xs text-muted-foreground">
-                      {job.technologies.join(" · ")}
-                    </p>
-                  )}
-                </li>
-              ))}
-            </ul>
+            <ExperienceSection profile={profile} />
           </CvSection>
 
           <CvSection id="cv-education" title="Education" tone="systems">
@@ -215,13 +200,14 @@ export default function CvPage() {
               {projects.map((project) => {
                 const projectToneName = getDomain(project.domains[0]).accent;
                 const projectTone = accent(projectToneName);
+                const lens = getProjectLensView(project, profile.id);
                 return (
                 <li key={project.slug} className={`cv-entry border-l-2 pl-4 ${projectTone.panel}`}>
                   <EntryHead
                     tone={projectToneName}
                     title={
                       <Link
-                        to={`/projects/${project.slug}`}
+                        to={`${basePath}/projects/${project.slug}`}
                         className="transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       >
                         {project.title}
@@ -229,9 +215,7 @@ export default function CvPage() {
                     }
                     meta={project.period ?? project.category}
                   />
-                  <p className="mt-1 text-sm leading-relaxed text-foreground">
-                    {project.tagline ?? project.subtitle}
-                  </p>
+                  <p className="mt-1 text-sm leading-relaxed text-foreground">{lens.summary}</p>
                   {project.award && (
                     <p className="mt-1 text-sm text-award-type">{project.award}</p>
                   )}
@@ -249,7 +233,7 @@ export default function CvPage() {
                     </dl>
                   )}
                   <p className="mt-2 font-mono text-2xs text-muted-foreground">
-                    {project.technologies.slice(0, 7).join(" · ")}
+                    {(lens.techFocus ?? project.technologies).slice(0, 7).join(" · ")}
                   </p>
                 </li>
                 );
@@ -261,29 +245,13 @@ export default function CvPage() {
                 applications, and games — are listed in full on the work page.
               </p>
               <div className="mt-2.5">
-                <TextAction to="/projects" tone="interface">All {PROJECTS.length} projects</TextAction>
+                <TextAction to={`${basePath}/projects`} tone="interface">All {PROJECTS.length} projects</TextAction>
               </div>
             </div>
           </CvSection>
 
           <CvSection id="cv-skills" title="Skills" tone="neural">
-            <dl className="cv-columns grid gap-5 sm:grid-cols-2">
-              {SKILL_GROUPS.map((group) => {
-                const tone = accent(group.accent);
-                return (
-                <div key={group.title} className={`cv-entry border-t pt-3 ${tone.panel}`}>
-                  <dt className={`label-mono ${tone.label}`}>{group.title}</dt>
-                  <dd className="mt-1.5">
-                    <ul className="flex flex-col gap-1 text-sm leading-relaxed text-muted-foreground">
-                      {group.items.map((item) => (
-                        <li key={item}>{item}</li>
-                      ))}
-                    </ul>
-                  </dd>
-                </div>
-                );
-              })}
-            </dl>
+            <SkillsSection profile={profile} dense />
           </CvSection>
 
           <CvSection id="cv-certifications" title="Certifications" tone="award">

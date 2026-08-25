@@ -99,7 +99,10 @@ describe("/cv", () => {
     const allProjects = screen.getByRole("link", {
       name: new RegExp(`all ${PROJECTS.length} projects`, "i"),
     });
-    expect(allProjects).toHaveAttribute("href", "/projects");
+    // Bare /cv resolves to the default profile and normalizes its internal
+    // links into that profile's URL space — same as TopBar, ProjectsPage, and
+    // WorkChapter already do (see src/lib/profile.ts's pathForProfile).
+    expect(allProjects).toHaveAttribute("href", "/development/projects");
     // The count of what was left out has to be stated, not implied.
     expect(screen.getByText(new RegExp(`${cvProjectOverflow()} further projects`))).toBeInTheDocument();
   });

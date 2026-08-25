@@ -16,7 +16,7 @@
 
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
-import { allRoutes, projectSlugs, root } from "./routes.mjs";
+import { PROFILE_LABELS, PROFILE_ROUTE_PATHS, allRoutes, projectSlugs, root } from "./routes.mjs";
 
 const dist = resolve(root, "dist");
 const shellPath = join(dist, "index.html");
@@ -120,19 +120,47 @@ if (missing.length > 0) {
   process.exit(1);
 }
 
+/**
+ * A profile-prefixed inner page or project detail has no metadata of its own —
+ * it falls back to the bare route's title/description (prefixed with the
+ * profile's full name) and, critically, to the bare route's canonical URL, so
+ * the ~90 profile-prefixed pages consolidate onto the same handful of
+ * canonical write-ups instead of reading as duplicate content.
+ *
+ * A profile's own home route (e.g. "/development") is a direct hit in
+ * routeMeta — it has real, distinct copy and canonicalizes to itself.
+ */
+function resolveMeta(path) {
+  if (routeMeta[path]) return { meta: routeMeta[path], canonicalPath: path, prefixLabel: null };
+
+  for (const profilePath of PROFILE_ROUTE_PATHS) {
+    const prefix = `/${profilePath}/`;
+    if (!path.startsWith(prefix)) continue;
+    const bareRest = path.slice(prefix.length); // "about" or "projects/qcanvas"
+    const barePath = `/${bareRest}`;
+    const bareMeta = routeMeta[barePath] ?? projects.get(bareRest.replace(/^projects\//, ""));
+    if (bareMeta) {
+      return { meta: bareMeta, canonicalPath: barePath, prefixLabel: PROFILE_LABELS[profilePath] };
+    }
+  }
+
+  const projectMetaEntry = projects.get(path.replace("/projects/", ""));
+  if (projectMetaEntry) return { meta: projectMetaEntry, canonicalPath: path, prefixLabel: null };
+
+  return null;
+}
+
 let written = 0;
 for (const route of routes) {
-  const meta =
-    routeMeta[route.path] ??
-    projects.get(route.path.replace("/projects/", "")) ??
-    null;
-
-  if (!meta) {
+  const resolved = resolveMeta(route.path);
+  if (!resolved) {
     console.error(`no metadata for route ${route.path} — add it to src/data/route-meta.json`);
     process.exit(1);
   }
 
-  const html = withMeta(shell, { path: route.path, ...meta });
+  const { meta, canonicalPath, prefixLabel } = resolved;
+  const title = prefixLabel ? `${prefixLabel} — ${meta.title}` : meta.title;
+  const html = withMeta(shell, { path: canonicalPath, title, description: meta.description });
   const target = route.path === "/" ? shellPath : join(dist, route.path, "index.html");
   await mkdir(dirname(target), { recursive: true });
   await writeFile(target, html, "utf8");

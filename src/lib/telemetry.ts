@@ -1,4 +1,5 @@
 import type { VisualAccent } from "@/lib/accent";
+import { stripProfilePrefix } from "@/lib/profile";
 
 const ROUTE_TONES: Record<string, VisualAccent> = {
   "/about": "systems",
@@ -11,7 +12,9 @@ const ROUTE_TONES: Record<string, VisualAccent> = {
   "/notes": "neural",
 };
 
+/** Strips a leading profile segment first, so "/development/lab" reads the same as "/lab". */
 export function telemetryToneForPath(pathname: string): VisualAccent {
-  if (pathname.startsWith("/projects/")) return "interface";
-  return ROUTE_TONES[pathname] ?? "thermal";
+  const rest = stripProfilePrefix(pathname);
+  if (rest.startsWith("/projects/")) return "interface";
+  return ROUTE_TONES[rest] ?? "thermal";
 }

@@ -2,7 +2,7 @@ import { Suspense, lazy } from "react";
 import { Link, useParams } from "react-router-dom";
 import { motion } from "motion/react";
 import { ArrowLeft, ArrowRight, ChartNoAxesCombined, ExternalLink, FileText, Github, Images, Trophy } from "lucide-react";
-import { getAdjacentProjects, getProjectBySlug } from "@/data/projects";
+import { detailLabel, getAdjacentProjects, getProjectBySlug, resolveDetailSections } from "@/data/projects";
 import { getDomain } from "@/data/taxonomy";
 import { accent } from "@/lib/accent";
 import Picture from "@/components/Picture";
@@ -12,6 +12,7 @@ import { TechnologyChip } from "@/components/technology/TechnologyMark";
 import { useDocumentMeta } from "@/lib/meta";
 import { breadcrumbSchema, projectSchema } from "@/lib/seo";
 import { useMotionPolicy } from "@/lib/motion-policy";
+import { pathForProfile, useActiveProfile } from "@/lib/profile";
 import NotFound from "./NotFound";
 
 // Both load on demand: the pipeline diagram carries anime.js, and the figures are
@@ -29,6 +30,8 @@ export default function ProjectDetailPage() {
   const project = slug ? getProjectBySlug(slug) : undefined;
   const { prev, next } = getAdjacentProjects(slug ?? "");
   const { enabled, duration } = useMotionPolicy();
+  const profile = useActiveProfile();
+  const basePath = pathForProfile("/", profile.id);
 
   // Hooks run before the early return, so the order stays stable either way.
   useDocumentMeta({
@@ -46,7 +49,9 @@ export default function ProjectDetailPage() {
   const prevTone = prev ? accent(getDomain(prev.domains[0]).accent) : null;
   const nextTone = next ? accent(getDomain(next.domains[0]).accent) : null;
   const brief = project.objective ?? project.description[0];
-  const overviewPoints = project.objective ? project.description : project.description.slice(1);
+  const briefLabel = detailLabel(profile, "objective", project.objective ? "The problem" : "Project brief");
+  const metricsLabel = detailLabel(profile, "metrics", "Measured result");
+  const sections = resolveDetailSections(project, profile);
   const hasArchitectureEvidence = Boolean(project.image || project.slug === "cirq-rag");
   const hasInspectibleEvidence = Boolean(
     project.githubUrl ||
@@ -75,7 +80,7 @@ export default function ProjectDetailPage() {
       <div className="container max-w-4xl">
         <motion.div {...rise(0)}>
           <Link
-            to="/projects"
+            to={`${basePath}/projects`}
             className={`inline-flex min-h-11 items-center gap-1.5 rounded-md px-2 font-mono text-2xs uppercase tracking-widest transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${tone.value}`}
           >
             <ArrowLeft size={12} aria-hidden="true" />
@@ -137,7 +142,7 @@ export default function ProjectDetailPage() {
           className={`mt-12 border-l-2 pl-5 sm:pl-7 ${tone.panel}`}
         >
           <h2 id="brief" className={`label-mono ${tone.label}`}>
-            {project.objective ? "The problem" : "Project brief"}
+            {briefLabel}
           </h2>
           <p className="mt-4 text-lg leading-relaxed text-foreground">{brief}</p>
         </motion.section>
@@ -146,7 +151,7 @@ export default function ProjectDetailPage() {
         {project.metrics && project.metrics.length > 0 && (
           <motion.section {...rise(0.1)} aria-labelledby="results" className="mt-12">
             <h2 id="results" className={`label-mono ${tone.label}`}>
-              Measured result
+              {metricsLabel}
             </h2>
             <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
               Baselines are shown beside the result where the project record includes one.
@@ -249,78 +254,69 @@ export default function ProjectDetailPage() {
           <ProjectFigures slug={project.slug} tone={domain.accent} className="mt-12" />
         </Suspense>
 
-        {overviewPoints.length > 0 && (
-          <motion.section {...rise(0.16)} aria-labelledby="overview" className="mt-14">
-            <h2 id="overview" className={`label-mono ${tone.label}`}>
-              What it does
+        {sections.map((section, index) => (
+          <motion.section
+            key={section.key}
+            {...rise(0.16 + index * 0.02)}
+            aria-labelledby={section.key}
+            className="mt-14"
+          >
+            <h2 id={section.key} className={`label-mono ${tone.label}`}>
+              {section.label}
             </h2>
-            <ul className="mt-4 flex flex-col gap-3">
-              {overviewPoints.map((point) => (
-                <li key={point.slice(0, 40)} className="flex gap-3 text-base leading-relaxed text-muted-foreground">
-                  <span aria-hidden="true" className={`mt-2.5 h-1 w-1 shrink-0 rounded-full ${tone.mark}`} />
-                  <span>{point}</span>
-                </li>
-              ))}
-            </ul>
-          </motion.section>
-        )}
 
-        {project.strategy && project.strategy.length > 0 && (
-          <motion.section {...rise(0.18)} aria-labelledby="approach" className="mt-14">
-            <h2 id="approach" className={`label-mono ${tone.label}`}>
-              How it was built
-            </h2>
-            {/* Numbered, because these steps happened in this order. */}
-            <ol className="mt-4 flex flex-col gap-4">
-              {project.strategy.map((step, index) => (
-                <li key={step} className="flex gap-4">
-                  <span className={`readout shrink-0 text-2xs ${tone.value}`}>
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <span className="text-base leading-relaxed text-muted-foreground">{step}</span>
-                </li>
-              ))}
-            </ol>
-          </motion.section>
-        )}
+            {section.kind === "list" && (
+              <ul className="mt-4 flex flex-col gap-3">
+                {section.content.map((point) => (
+                  <li key={point.slice(0, 40)} className="flex gap-3 text-base leading-relaxed text-muted-foreground">
+                    <span aria-hidden="true" className={`mt-2.5 h-1 w-1 shrink-0 rounded-full ${tone.mark}`} />
+                    <span>{point}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
 
-        {project.architectureHighlights && project.architectureHighlights.length > 0 && (
-          <motion.section {...rise(0.2)} aria-labelledby="architecture" className="mt-14">
-            <h2 id="architecture" className={`label-mono ${tone.label}`}>
-              Key architecture
-            </h2>
-            <ul className="mt-4 flex flex-col gap-3">
-              {project.architectureHighlights.map((point) => (
-                <li
-                  key={point.slice(0, 40)}
-                  className={`border-l-2 pl-4 text-base leading-relaxed text-muted-foreground ${tone.panel}`}
-                >
-                  {point}
-                </li>
-              ))}
-            </ul>
-          </motion.section>
-        )}
+            {section.kind === "orderedList" && (
+              // Numbered, because these steps happened in this order.
+              <ol className="mt-4 flex flex-col gap-4">
+                {section.content.map((step, stepIndex) => (
+                  <li key={step} className="flex gap-4">
+                    <span className={`readout shrink-0 text-2xs ${tone.value}`}>
+                      {String(stepIndex + 1).padStart(2, "0")}
+                    </span>
+                    <span className="text-base leading-relaxed text-muted-foreground">{step}</span>
+                  </li>
+                ))}
+              </ol>
+            )}
 
-        <motion.section {...rise(0.22)} aria-labelledby="stack" className="mt-14">
-          <h2 id="stack" className={`label-mono ${tone.label}`}>
-            Stack
-          </h2>
-          <div className="mt-4 flex flex-wrap gap-1.5">
-            {project.technologies.map((tech) => (
-              <TechnologyChip
-                key={tech}
-                technology={tech}
-                fallbackTone={domain.accent}
-              />
-            ))}
-          </div>
-        </motion.section>
+            {section.kind === "highlights" && (
+              <ul className="mt-4 flex flex-col gap-3">
+                {section.content.map((point) => (
+                  <li
+                    key={point.slice(0, 40)}
+                    className={`border-l-2 pl-4 text-base leading-relaxed text-muted-foreground ${tone.panel}`}
+                  >
+                    {point}
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            {section.kind === "techChips" && (
+              <div className="mt-4 flex flex-wrap gap-1.5">
+                {section.content.map((tech) => (
+                  <TechnologyChip key={tech} technology={tech} fallbackTone={domain.accent} />
+                ))}
+              </div>
+            )}
+          </motion.section>
+        ))}
 
         <nav aria-label="Project navigation" className="mt-16 grid gap-2 border-t border-border pt-8 sm:grid-cols-2">
           {prev && prevTone && (
             <Link
-              to={`/projects/${prev.slug}`}
+              to={`${basePath}/projects/${prev.slug}`}
               className={`group rounded-md border p-5 transition-colors hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${prevTone.panel}`}
             >
               <span className="flex items-center gap-1.5 font-mono text-2xs uppercase tracking-widest text-muted-foreground">
@@ -334,7 +330,7 @@ export default function ProjectDetailPage() {
           )}
           {next && nextTone && (
             <Link
-              to={`/projects/${next.slug}`}
+              to={`${basePath}/projects/${next.slug}`}
               className={`group rounded-md border p-5 transition-colors hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:text-right ${nextTone.panel}`}
             >
               <span className="flex items-center gap-1.5 font-mono text-2xs uppercase tracking-widest text-muted-foreground sm:justify-end">

@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import { useIslamabadClock } from "@/lib/clock";
 import { sectionIndex, sectionsForRoute } from "@/lib/sections";
 import { accent } from "@/lib/accent";
+import { useActiveProfile } from "@/lib/profile";
 
 /**
  * The rail is the site's status display and its section index at once — the one
@@ -11,7 +12,8 @@ import { accent } from "@/lib/accent";
  */
 export default function Rail() {
   const { pathname } = useLocation();
-  const sections = sectionsForRoute(pathname);
+  const profile = useActiveProfile();
+  const sections = sectionsForRoute(pathname, profile.homeChapterOrder);
   const clock = useIslamabadClock();
   const [active, setActive] = useState<string | null>(sections[0]?.id ?? null);
   const [logicalCpus, setLogicalCpus] = useState<number | null>(null);

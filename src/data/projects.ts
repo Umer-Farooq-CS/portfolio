@@ -3,6 +3,25 @@ import { cirqRagDiagram } from "@/assets/optimized/manifest";
 import type { ResponsiveImage } from "@/assets/optimized/manifest";
 import { DOMAIN_IDS, type Domain } from "./taxonomy";
 import type { Metric } from "./schema";
+import type { DetailSectionSource, ProfileConfig, ProfileId } from "./profiles";
+
+/**
+ * How this one project reads under a given profile. Every field here is a
+ * *subset or relabeling* of the project's own shared facts — never new facts.
+ * The schema (projectSchema, src/data/schema.ts) enforces that `techFocus` and
+ * `metricFocus` can only reference technologies/metrics the project already
+ * has, so a lens override cannot fabricate a capability the project lacks.
+ */
+export interface ProjectLensView {
+  /** Replaces the shared subtitle/tagline as this lens's card/lead summary. */
+  summary?: string;
+  /** Subset of `technologies`, in the order this lens leads with. */
+  techFocus?: string[];
+  /** Subset of `metrics[].label`, in the order this lens leads with. */
+  metricFocus?: string[];
+  /** Authored detail-page sections for this lens, overriding the generic template. */
+  sections?: { key: string; label: string; points: string[] }[];
+}
 
 export interface ProjectItem {
   slug: string;
@@ -29,6 +48,8 @@ export interface ProjectItem {
   objective?: string;
   /** How it was approached — the moves that mattered. */
   strategy?: string[];
+  /** Per-profile presentation overrides. Absent lenses fall back to the shared fields. */
+  lenses?: Partial<Record<ProfileId, ProjectLensView>>;
 }
 
 export const PROJECTS: ProjectItem[] = [
@@ -50,7 +71,17 @@ export const PROJECTS: ProjectItem[] = [
       "Hybrid architecture: Next.js for UI/routing and FastAPI for compute-heavy quantum operations.",
       "OpenQASM 3.0 integration for portable circuit exchange; plugin-based system for additional frameworks.",
     ],
-    technologies: ["Next.js", "TypeScript", "FastAPI", "Qiskit", "Cirq", "PennyLane", "OpenQASM", "REST/Web APIs"],
+    technologies: [
+      "Next.js",
+      "TypeScript",
+      "FastAPI",
+      "Qiskit",
+      "Cirq",
+      "PennyLane",
+      "OpenQASM",
+      "REST/Web APIs",
+      "Kubernetes",
+    ],
     objective:
       "Eliminate vendor lock-in by providing a unified platform where users can write and execute quantum circuits across multiple frameworks seamlessly.",
     strategy: [
@@ -63,6 +94,18 @@ export const PROJECTS: ProjectItem[] = [
       "OpenQASM 3.0 intermediate representation core decouples the web UI from backend simulators.",
       "Kubernetes-backed job manager schedules quantum simulations across containerized workers for fair, efficient resource usage.",
     ],
+    lenses: {
+      infrastructure: {
+        summary:
+          "A Kubernetes-backed job manager schedules quantum simulation workloads across containerized workers, behind one framework-agnostic execution core.",
+        techFocus: ["Kubernetes", "FastAPI", "OpenQASM"],
+      },
+      presales: {
+        summary:
+          "Needed one interface across three incompatible quantum SDKs, so a user's circuit work wasn't locked to a single vendor's toolchain.",
+        techFocus: ["Qiskit", "Cirq", "PennyLane", "OpenQASM"],
+      },
+    },
   },
   {
     slug: "cirq-rag",
@@ -98,6 +141,20 @@ export const PROJECTS: ProjectItem[] = [
       "Multi-agent pipeline orchestrates designer, validator, optimizer, and educator agents with explicit hand-off and feedback channels.",
       "FAISS-backed vector store over a curated Cirq knowledge base grounds generation and validation, minimizing hallucinations in produced circuits.",
     ],
+    lenses: {
+      infrastructure: {
+        summary:
+          "A multi-agent pipeline runs behind a FAISS-backed vector store, with bounded self-repair retries instead of a single unchecked generation pass.",
+        techFocus: ["FAISS", "Multi-Agent"],
+        metricFocus: ["Knowledge base entries"],
+      },
+      presales: {
+        summary:
+          "Needed quantum code generation reliable enough to trust without a human re-checking every circuit, not just plausible-looking output.",
+        techFocus: ["RAG", "FAISS", "Prompt Engineering"],
+        metricFocus: ["Circuit generation success"],
+      },
+    },
   },
   // HPC & GPU
   {
@@ -115,6 +172,18 @@ export const PROJECTS: ProjectItem[] = [
       "CUDA acceleration of tensor contractions; optimized memory access and sparse tensor networks.",
     ],
     technologies: ["C++", "CUDA", "OpenMP", "MPI", "METIS", "CMake", "Quantum Computing"],
+    lenses: {
+      infrastructure: {
+        summary:
+          "Hybrid MPI/OpenMP distributed workload with CUDA-accelerated tensor contractions and METIS-based partitioning to balance compute across ranks.",
+        techFocus: ["MPI", "OpenMP", "CUDA", "METIS"],
+      },
+      presales: {
+        summary:
+          "Needed to simulate 20+ qubit circuits within a fixed compute budget, so the design split work across distributed and GPU resources rather than relying on bigger hardware alone.",
+        techFocus: ["CUDA", "MPI", "OpenMP"],
+      },
+    },
   },
   {
     slug: "mnist-gpu",
@@ -130,6 +199,18 @@ export const PROJECTS: ProjectItem[] = [
       "95%+ GPU utilization; 99%+ accuracy maintained; profiled with Nsight Systems and Nsight Compute.",
     ],
     technologies: ["CUDA", "Python", "PyTorch", "Nsight", "Tensor Cores", "FP16 Mixed Precision"],
+    lenses: {
+      infrastructure: {
+        summary:
+          "95%+ GPU utilization reached through CUDA streams, kernel fusion, and Tensor Core mixed precision, profiled end-to-end with Nsight Systems and Nsight Compute.",
+        techFocus: ["CUDA", "Tensor Cores", "Nsight"],
+      },
+      presales: {
+        summary:
+          "Needed inference fast enough for production use without giving up accuracy, so the trade-off was mixed precision and kernel-level tuning rather than a bigger model.",
+        techFocus: ["Tensor Cores", "FP16 Mixed Precision"],
+      },
+    },
   },
   {
     slug: "canny-edge-detector",
@@ -171,6 +252,18 @@ export const PROJECTS: ProjectItem[] = [
       "Near-linear speedup with thread affinity, cache-aware processing, fine-grained locking; profiled with perf.",
     ],
     technologies: ["C++", "pthreads", "perf", "Graph Algorithms"],
+    lenses: {
+      infrastructure: {
+        summary:
+          "Near-linear multi-core scaling from thread affinity and cache-aware chunking, verified with perf rather than assumed.",
+        techFocus: ["pthreads", "perf"],
+      },
+      presales: {
+        summary:
+          "Needed throughput that actually scaled with core count, which meant measuring and fixing lock contention rather than just adding threads.",
+        techFocus: ["pthreads"],
+      },
+    },
   },
   // Generative AI & Deep Learning
   {
@@ -343,6 +436,18 @@ export const PROJECTS: ProjectItem[] = [
       "DHT with Chord-like ring (160-bit SHA-1); finger table O(log N) routing; IPFS integration; B-Tree local storage; console UI for nodes and file ops; replication and fault tolerance.",
     ],
     technologies: ["C++", "DHT", "SHA-1", "B-Trees", "IPFS"],
+    lenses: {
+      infrastructure: {
+        summary:
+          "Chord-style ring topology with O(log N) finger-table routing, replication, and fault tolerance — the operational concerns of running a distributed store, not just the lookup algorithm.",
+        techFocus: ["DHT", "IPFS"],
+      },
+      presales: {
+        summary:
+          "Needed lookups to keep working as nodes join, leave, or fail, so replication and fault tolerance were requirements from the start, not an afterthought.",
+        techFocus: ["IPFS", "DHT"],
+      },
+    },
   },
   {
     slug: "doodle-dash",
@@ -354,6 +459,18 @@ export const PROJECTS: ProjectItem[] = [
       "Real-time multiplayer game: TCP sockets, multi-threaded server (pthreads), game rooms, stroke sync, turn-based roles, scoring; SFML canvas, custom protocol, delta encoding.",
     ],
     technologies: ["C++", "SFML", "TCP", "pthreads", "Game Development"],
+    lenses: {
+      infrastructure: {
+        summary:
+          "A multi-threaded TCP server handles game rooms and stroke sync over a custom, delta-encoded protocol — the networking layer that scales past a single game session.",
+        techFocus: ["TCP", "pthreads"],
+      },
+      presales: {
+        summary:
+          "Needed multiple concurrent game rooms without one slow client blocking another, hence a multi-threaded server per room rather than a single event loop.",
+        techFocus: ["TCP", "pthreads"],
+      },
+    },
   },
   // Full-Stack
   {
@@ -366,6 +483,18 @@ export const PROJECTS: ProjectItem[] = [
       ".NET 8 Web API: users, organizations, JWT auth, RBAC, clean architecture (repository, service layer, DTOs), BCrypt, Entity Framework Core + PostgreSQL, Swagger.",
     ],
     technologies: [".NET 8", "ASP.NET Core", "EF Core", "PostgreSQL", "JWT", "Swagger", "Docker"],
+    lenses: {
+      infrastructure: {
+        summary:
+          "A dockerized .NET 8 Web API with a clean repository/service-layer split, so the deployment unit and the data access stay separable when this moves onto a container platform.",
+        techFocus: ["Docker", "PostgreSQL", "EF Core"],
+      },
+      presales: {
+        summary:
+          "Needed role-based access and a documented API surface a client team could integrate against, not just working endpoints — RBAC, JWT auth, and Swagger were the answer.",
+        techFocus: ["JWT", "Swagger", "ASP.NET Core"],
+      },
+    },
   },
   {
     slug: "harmoniq",
@@ -378,6 +507,18 @@ export const PROJECTS: ProjectItem[] = [
       "Full-stack audio platform: Express REST API, playlist management, auth, range-request streaming; React UI, waveform visualization, infinite scroll; PostgreSQL schema, full-text search.",
     ],
     technologies: ["JavaScript", "React", "Node.js", "Express", "PostgreSQL", "HTML5 Audio"],
+    lenses: {
+      infrastructure: {
+        summary:
+          "Range-request audio streaming over a REST API backed by PostgreSQL full-text search — the parts of the stack that matter once this runs behind a real CDN or edge layer.",
+        techFocus: ["Express", "PostgreSQL"],
+      },
+      presales: {
+        summary:
+          "Needed playback that behaves like a real audio product — seek, resume, search — rather than a file download, which drove the choice of range requests and full-text search over a flat file list.",
+        techFocus: ["HTML5 Audio", "PostgreSQL"],
+      },
+    },
   },
   {
     slug: "dj-web-app",
@@ -389,6 +530,18 @@ export const PROJECTS: ProjectItem[] = [
       "MERN stack: React (Vite), Web Audio visualization, drag-drop playlists, mixing controls; Express, WebSockets, MongoDB/GridFS; real-time sync and chat.",
     ],
     technologies: ["React", "Vite", "Node.js", "Express", "MongoDB", "WebSockets", "Web Audio API"],
+    lenses: {
+      infrastructure: {
+        summary:
+          "Real-time sync over WebSockets with MongoDB/GridFS for media storage — the state-and-media split that matters once multiple listeners share one session.",
+        techFocus: ["WebSockets", "MongoDB"],
+      },
+      presales: {
+        summary:
+          "Needed every listener to hear the same mix at the same time, which meant WebSockets carrying playback state, not just chat.",
+        techFocus: ["WebSockets"],
+      },
+    },
   },
   // Desktop
   {
@@ -496,6 +649,93 @@ export function getTechnologyFacets(): { tech: string; count: number }[] {
   return [...counts.entries()]
     .map(([tech, count]) => ({ tech, count }))
     .sort((a, b) => b.count - a.count || a.tech.localeCompare(b.tech));
+}
+
+/**
+ * How a project reads under a given profile — falling back to the shared
+ * fields when no lens override is authored, so an unauthored lens degrades to
+ * the same facts under a plainer label rather than showing nothing.
+ */
+export function getProjectLensView(project: ProjectItem, profileId: ProfileId): ProjectLensView {
+  const lens = project.lenses?.[profileId];
+  return {
+    summary: lens?.summary ?? project.tagline ?? project.subtitle,
+    techFocus: lens?.techFocus ?? project.technologies,
+    metricFocus: lens?.metricFocus ?? project.metrics?.map((m) => m.label),
+    sections: lens?.sections,
+  };
+}
+
+/** The label a profile wants for a section whose rendering stays fixed (brief, metrics). */
+export function detailLabel(profile: ProfileConfig, source: DetailSectionSource, fallback: string): string {
+  return profile.detailTemplate.find((section) => section.source === source)?.label ?? fallback;
+}
+
+export interface ResolvedDetailSection {
+  key: string;
+  label: string;
+  kind: "list" | "orderedList" | "highlights" | "techChips";
+  content: string[];
+}
+
+/**
+ * The generic, reorderable detail-page sections for a project under a
+ * profile — everything except "objective" and "metrics", which keep their
+ * own fixed, bespoke rendering in ProjectDetailPage (a highlighted lead
+ * paragraph and a measurement grid, not a simple list) and are looked up via
+ * detailLabel() instead. A project's authored `lenses[x].sections`, if any,
+ * are returned verbatim in their authored order; otherwise this maps the
+ * profile's template over the shared fields, in the order that profile lists
+ * them, dropping any section whose source field is empty.
+ */
+export function resolveDetailSections(project: ProjectItem, profile: ProfileConfig): ResolvedDetailSection[] {
+  const authored = project.lenses?.[profile.id]?.sections;
+  if (authored && authored.length > 0) {
+    return authored.map((section) => ({
+      key: section.key,
+      label: section.label,
+      kind: "list",
+      content: section.points,
+    }));
+  }
+
+  const sections: ResolvedDetailSection[] = [];
+  for (const template of profile.detailTemplate) {
+    switch (template.source) {
+      case "description": {
+        const points = project.objective ? project.description : project.description.slice(1);
+        if (points.length > 0) {
+          sections.push({ key: "description", label: template.label, kind: "list", content: points });
+        }
+        break;
+      }
+      case "strategy":
+        if (project.strategy && project.strategy.length > 0) {
+          sections.push({ key: "strategy", label: template.label, kind: "orderedList", content: project.strategy });
+        }
+        break;
+      case "architectureHighlights":
+        if (project.architectureHighlights && project.architectureHighlights.length > 0) {
+          sections.push({
+            key: "architectureHighlights",
+            label: template.label,
+            kind: "highlights",
+            content: project.architectureHighlights,
+          });
+        }
+        break;
+      case "technologies":
+        if (project.technologies.length > 0) {
+          sections.push({ key: "technologies", label: template.label, kind: "techChips", content: project.technologies });
+        }
+        break;
+      // "objective" and "metrics" are rendered directly by ProjectDetailPage via detailLabel().
+      case "objective":
+      case "metrics":
+        break;
+    }
+  }
+  return sections;
 }
 
 /** Previous/next in display order, for project-page navigation. Wraps around. */
