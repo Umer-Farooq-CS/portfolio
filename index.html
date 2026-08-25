@@ -50,12 +50,13 @@
       (function () {
         try {
           var stored = localStorage.getItem("uf-theme");
-          // Dark only when it was chosen, or when the visitor opted into following
-          // the OS. Must match readStoredChoice() in src/lib/theme.tsx exactly, or
-          // the first paint disagrees with the app and the theme flashes.
+          // Dark when it was chosen, or when the visitor opted into (or defaults
+          // to, absent a stored choice) following the OS. Must match
+          // readStoredChoice()/resolve() in src/lib/theme.tsx exactly, or the
+          // first paint disagrees with the app and the theme flashes.
           var dark =
             stored === "dark" ||
-            (stored === "system" &&
+            ((stored === "system" || !stored) &&
               window.matchMedia &&
               window.matchMedia("(prefers-color-scheme: dark)").matches);
           var root = document.documentElement;
