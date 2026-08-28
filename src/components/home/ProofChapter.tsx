@@ -5,41 +5,22 @@ import { getProjectsInDomain } from "@/data/projects";
 import { accent } from "@/lib/accent";
 import { AccentText, ChapterHeader, Metric, MonoLabel, TextAction } from "@/components/kit/Primitives";
 import { useMotionPolicy } from "@/lib/motion-policy";
+import { useActiveProfile } from "@/lib/profile";
 
 /**
  * Chapter 03. A measurement band: dense, tabular, no cards. Claims elsewhere on
  * the page get their evidence here.
  *
- * The freelance figures are the ones master_detailed_cv.tex actually states: 100+
- * projects completed at 98% satisfaction, of which 30+ were full-stack MERN/.NET
- * builds. The old site's "50+" understated it.
+ * Which four numbers lead comes from the active lens (`profile.headlineMetrics`)
+ * — an infrastructure visitor should not be met with a qubit count as the
+ * headline proof. Each entry that cites a project metric is checked against it
+ * in src/test/profiles.test.ts, so the band cannot drift from the project pages.
  */
-const HEADLINE_METRICS = [
-  {
-    value: "6×",
-    label: "Faster inference",
-    baseline: "FP32",
-    note: "FP16 Tensor Cores, MNIST",
-    tone: "thermal",
-  },
-  {
-    value: "92%",
-    label: "Circuit generation",
-    baseline: "52%",
-    note: "vs single-agent baseline",
-    tone: "neural",
-  },
-  {
-    value: "20+",
-    label: "Qubits simulated",
-    note: "hybrid MPI + OpenMP + CUDA",
-    tone: "cryo",
-  },
-  { value: "3rd", label: "Huawei ICT finals", note: "national, UniQ team", tone: "award" },
-] as const;
 
 export default function ProofChapter({ index = 2, basePath = "" }: { index?: number; basePath?: string }) {
-  const { enabled, duration } = useMotionPolicy();
+  const { enabled, reveal } = useMotionPolicy();
+  const profile = useActiveProfile();
+  const headlineMetrics = profile.headlineMetrics;
   const domainCounts = DOMAINS.map((domain) => ({
     ...domain,
     count: getProjectsInDomain(domain.id).length,
@@ -65,10 +46,10 @@ export default function ProofChapter({ index = 2, basePath = "" }: { index?: num
           initial={enabled ? { opacity: 0, y: 16 } : false}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: duration(0.6) }}
+          transition={{ duration: reveal.section }}
           className="mt-12 grid grid-cols-2 gap-x-8 gap-y-10 border-t border-border pt-10 lg:grid-cols-4"
         >
-          {HEADLINE_METRICS.map((metric) => (
+          {headlineMetrics.map((metric) => (
             <Metric key={metric.label} {...metric} />
           ))}
         </motion.dl>
@@ -96,7 +77,7 @@ export default function ProofChapter({ index = 2, basePath = "" }: { index?: num
                         initial={enabled ? { scaleX: 0 } : false}
                         whileInView={{ scaleX: 1 }}
                         viewport={{ once: true }}
-                        transition={{ duration: duration(0.7), ease: [0.16, 1, 0.3, 1] }}
+                        transition={{ duration: reveal.section, ease: [0.16, 1, 0.3, 1] }}
                         className={`block h-full origin-left ${tone.mark}`}
                         style={{ width }}
                       />

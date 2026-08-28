@@ -67,7 +67,7 @@ export default function Rail() {
                   <span className="readout">{sectionIndex(index)}</span>
                   <span
                     aria-hidden="true"
-                    className={`h-px transition-all duration-300 ${
+                    className={`h-px transition-[width] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] ${
                       isActive ? `w-3 ${tone.mark}` : "w-1.5 bg-border group-hover:w-3"
                     }`}
                   />

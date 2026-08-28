@@ -45,7 +45,7 @@ export default function ProfileSwitcher({ activeId }: { activeId: ProfileId }) {
         onClick={() => setOpen((value) => !value)}
         aria-haspopup="listbox"
         aria-expanded={open}
-        className={`inline-flex min-h-11 items-center gap-1.5 rounded-md border px-2.5 py-1.5 font-mono text-2xs uppercase tracking-widest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${tone.panel} ${tone.value}`}
+        className={`pressable inline-flex min-h-11 items-center gap-1.5 rounded-md border px-2.5 py-1.5 font-mono text-2xs uppercase tracking-widest transition-[color,border-color,transform] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${tone.panel} ${tone.value}`}
       >
         <span className="hidden text-muted-foreground sm:inline">Viewing as</span>
         {active.navLabel}
@@ -68,7 +68,7 @@ export default function ProfileSwitcher({ activeId }: { activeId: ProfileId }) {
                 role="option"
                 aria-selected={isActive}
                 onClick={() => setOpen(false)}
-                className={`block min-h-11 rounded-md px-2.5 py-2 font-mono text-2xs uppercase tracking-widest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                className={`pressable block min-h-11 rounded-md px-2.5 py-2 font-mono text-2xs uppercase tracking-widest transition-[color,background-color,transform] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                   isActive ? `${profileTone.selected} ${profileTone.value}` : "text-muted-foreground hover:text-foreground"
                 }`}
               >
@@ -80,7 +80,7 @@ export default function ProfileSwitcher({ activeId }: { activeId: ProfileId }) {
             <Link
               to="/"
               onClick={() => setOpen(false)}
-              className="block min-h-11 rounded-md px-2.5 py-2 font-mono text-2xs uppercase tracking-widest text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="pressable block min-h-11 rounded-md px-2.5 py-2 font-mono text-2xs uppercase tracking-widest text-muted-foreground transition-[color,transform] hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               Compare all profiles →
             </Link>

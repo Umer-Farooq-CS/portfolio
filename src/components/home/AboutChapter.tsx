@@ -13,7 +13,7 @@ import { useMotionPolicy } from "@/lib/motion-policy";
  * without pretending a table-tennis habit is a professional credential.
  */
 export default function AboutChapter({ index = 4, basePath = "" }: { index?: number; basePath?: string }) {
-  const { enabled, duration } = useMotionPolicy();
+  const { enabled, reveal } = useMotionPolicy();
 
   return (
     <section id="about" className="scroll-mt-20 border-t border-border py-20 lg:py-28">
@@ -33,7 +33,7 @@ export default function AboutChapter({ index = 4, basePath = "" }: { index?: num
           initial={enabled ? { opacity: 0, y: 16 } : false}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: duration(0.6) }}
+          transition={{ duration: reveal.section }}
           className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,14rem)_minmax(0,34rem)] lg:gap-16"
         >
           <div className="grid max-w-xl grid-cols-[7.5rem_minmax(0,1fr)] items-start gap-5 lg:block lg:max-w-[14rem]">

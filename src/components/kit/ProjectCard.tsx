@@ -26,7 +26,7 @@ interface ProjectCardProps {
 }
 
 export default function ProjectCard({ project, profile, basePath, variant, animationDelay = 0 }: ProjectCardProps) {
-  const { enabled, duration } = useMotionPolicy();
+  const { enabled, reveal } = useMotionPolicy();
   const domain = getDomain(project.domains[0]);
   const tone = accent(domain.accent);
   const lens = getProjectLensView(project, profile.id);
@@ -97,11 +97,11 @@ export default function ProjectCard({ project, profile, basePath, variant, anima
       initial={enabled ? { opacity: 0 } : false}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: duration(0.4), delay: enabled ? animationDelay : 0 }}
+      transition={{ duration: reveal.element, delay: enabled ? animationDelay : 0 }}
     >
       <Link
         to={href}
-        className={`group flex h-full flex-col rounded-md border border-border bg-card p-5 transition-colors hover:bg-surface-alt focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${tone.panel}`}
+        className={`pressable-panel group flex h-full flex-col rounded-md border border-border bg-card p-5 transition-[background-color,border-color,transform] hover:bg-surface-alt focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${tone.panel}`}
       >
         <div className="flex items-start justify-between gap-2">
           <h3 className={`text-base font-semibold leading-snug ${tone.value}`}>{project.title}</h3>

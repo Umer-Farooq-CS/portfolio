@@ -92,7 +92,7 @@ export default function TopBar() {
                   key={item.to}
                   to={pathForProfile(item.to, profile.id)}
                   aria-current={active ? "page" : undefined}
-                  className={`rounded-md border px-3 py-1.5 font-mono text-2xs uppercase tracking-widest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                  className={`pressable rounded-md border px-3 py-1.5 font-mono text-2xs uppercase tracking-widest transition-[color,border-color,transform] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                     active
                       ? tone.chip
                       : "border-transparent text-muted-foreground hover:text-foreground"
@@ -113,7 +113,7 @@ export default function TopBar() {
               </div>
               <Link
                 to={`${profileHome}#talk`}
-                className="hidden rounded-md bg-thermal px-3.5 py-1.5 font-mono text-2xs uppercase tracking-widest text-on-thermal transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:inline-block"
+                className="pressable hidden rounded-md bg-thermal px-3.5 py-1.5 font-mono text-2xs uppercase tracking-widest text-on-thermal transition-[opacity,transform] hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:inline-block"
               >
                 Talk to me
               </Link>
@@ -125,7 +125,7 @@ export default function TopBar() {
             onClick={toggle}
             aria-pressed={isDark}
             aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
-            className="flex h-11 w-11 items-center justify-center rounded-md text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="pressable flex h-11 w-11 items-center justify-center rounded-md text-muted-foreground transition-[color,transform] hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             {isDark ? <Moon size={16} /> : <Sun size={16} />}
           </button>
@@ -136,7 +136,7 @@ export default function TopBar() {
               <button
                 type="button"
                 aria-label="Open menu"
-                className="flex h-11 w-11 items-center justify-center rounded-md text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:hidden"
+                className="pressable flex h-11 w-11 items-center justify-center rounded-md text-muted-foreground transition-[color,transform] hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:hidden"
               >
                 <Menu size={18} />
               </button>

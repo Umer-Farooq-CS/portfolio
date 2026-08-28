@@ -131,10 +131,10 @@ export const PROJECTS: ProjectItem[] = [
     ],
     metrics: [
       {
-        label: "Critical audit findings closed",
-        value: "5 + 1 high",
+        label: "Critical findings closed",
+        value: "5",
         baseline: "20 tracked",
-        note: "Nine-part security and performance audit I ran against the delivered platform; every critical closed before handover.",
+        note: "Plus one high. Nine-part security and performance audit I ran against the delivered platform; every critical closed before handover.",
       },
       {
         label: "Orchestration surface",
@@ -164,13 +164,13 @@ export const PROJECTS: ProjectItem[] = [
         summary:
           "The cluster was being run by hand, so no provisioning or storage change was reviewable. This is the control plane that made cluster operations auditable — and the audit that proved it.",
         techFocus: ["Slurm", "GPFS", "MAAS", "Keycloak", "Prometheus"],
-        metricFocus: ["Critical audit findings closed", "Manual SSH operations"],
+        metricFocus: ["Critical findings closed", "Manual SSH operations"],
       },
       development: {
         summary:
           "A FastAPI and Celery control plane where every long-running operation has one shape — route, task, a single SSH session, Redis ledger, WebSocket — so a reload reattaches instead of losing the run.",
         techFocus: ["Python", "FastAPI", "Celery", "Redis", "React", "asyncssh"],
-        metricFocus: ["Orchestration surface", "Critical audit findings closed"],
+        metricFocus: ["Orchestration surface", "Critical findings closed"],
       },
     },
   },
@@ -242,7 +242,7 @@ export const PROJECTS: ProjectItem[] = [
       },
       {
         label: "Control-plane replicas",
-        value: "3x",
+        value: "3×",
         note: "Stacked etcd quorum behind a floating VIP.",
       },
       {
@@ -404,7 +404,7 @@ export const PROJECTS: ProjectItem[] = [
       "Tied SLA credit reporting to the same commitment matrix, so the commercial and operational documents cannot disagree",
     ],
     architectureHighlights: [
-      "P0: 15-minute response commitment, 4-hour restore target, 24x7 on-call, immediate exec plus OEM/vendor TAC engagement in parallel.",
+      "P0: 15-minute response commitment, 4-hour restore target, 24×7 on-call, immediate exec plus OEM/vendor TAC engagement in parallel.",
       "Four severity tiers each carrying a definition, a response commitment, a restore target and an escalation owner — P1 1h/8h, P2 4h/3 business days, P3 next business day and scheduled release.",
       "Warm-handoff escalation across four levels, so ownership is never dropped between tiers.",
       "The preventive-action step feeds runbook and monitoring updates back into the platform, closing the lifecycle rather than ending it at 'restored'.",
@@ -413,7 +413,7 @@ export const PROJECTS: ProjectItem[] = [
       {
         label: "P0 response commitment",
         value: "15 min",
-        note: "Acknowledgement with a named engineer engaged, 24x7.",
+        note: "Acknowledgement with a named engineer engaged, 24×7.",
       },
       {
         label: "P0 restore target",
@@ -422,7 +422,7 @@ export const PROJECTS: ProjectItem[] = [
       },
       {
         label: "Severity tiers and escalation levels",
-        value: "4 x 4",
+        value: "4 × 4",
         note: "P0 through P3 against L1 service desk through L4 vendor TAC/OEM.",
       },
       {

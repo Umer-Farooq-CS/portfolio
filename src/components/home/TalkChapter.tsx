@@ -16,7 +16,7 @@ const ContactForm = lazy(() => import("@/components/portfolio/ContactForm"));
  */
 export default function TalkChapter({ index = 5 }: { index?: number }) {
   const [selected, setSelected] = useState<Intent | null>(null);
-  const { enabled, duration } = useMotionPolicy();
+  const { enabled, duration, reveal } = useMotionPolicy();
 
   return (
     <section id="talk" className="scroll-mt-20 border-t border-border py-20 lg:py-28">
@@ -50,7 +50,7 @@ export default function TalkChapter({ index = 5 }: { index?: number }) {
                   initial={enabled ? { opacity: 0, y: 12 } : false}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-40px" }}
-                  transition={{ duration: duration(0.45), delay: enabled ? index * 0.05 : 0 }}
+                  transition={{ duration: reveal.element, delay: index * reveal.stagger }}
                 >
                   <button
                     type="button"

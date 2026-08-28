@@ -18,7 +18,7 @@ import { useActiveProfile } from "@/lib/profile";
  */
 export default function WorkChapter({ index = 1, basePath = "" }: { index?: number; basePath?: string }) {
   const profile = useActiveProfile();
-  const { enabled, duration } = useMotionPolicy();
+  const { enabled, reveal } = useMotionPolicy();
   const featured = profile.workChapter.slugs
     .map(getProjectBySlug)
     .filter((project): project is NonNullable<typeof project> => project !== undefined);
@@ -44,7 +44,7 @@ export default function WorkChapter({ index = 1, basePath = "" }: { index?: numb
                 initial={enabled ? { opacity: 0, y: 18 } : false}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: duration(0.6), delay: enabled ? index * 0.08 : 0 }}
+                transition={{ duration: reveal.section, delay: index * reveal.stagger }}
                 className={`group border-t py-10 first:border-t-0 first:pt-0 ${tone.panel}`}
               >
                 <div className="grid gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-14">

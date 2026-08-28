@@ -20,6 +20,20 @@ export interface MotionPolicy {
     animate: { opacity: number; y?: number };
     transition: { duration: number; delay: number; ease: [number, number, number, number] };
   };
+  /**
+   * Named entrance timings, already scaled by `duration`. Reveal speed is a
+   * system decision, not a per-component guess — before these existed the
+   * chapters ran anywhere between 0.22s and 0.7s for the same kind of reveal,
+   * and the slow end read as lag while scrolling past it.
+   */
+  reveal: {
+    /** One element arriving — a card, a row, a readout. */
+    element: number;
+    /** A whole section or chapter block. */
+    section: number;
+    /** Delay step between staggered siblings. Kept short; stagger is decorative. */
+    stagger: number;
+  };
   /** Spring presets for interaction. */
   spring: {
     snappy: { type: "spring"; stiffness: number; damping: number };
@@ -41,11 +55,16 @@ export function MotionPolicyProvider({ children }: { children: ReactNode }) {
     return {
       enabled,
       duration,
-      rise: (delay = 0, distance = 20) => ({
+      rise: (delay = 0, distance = 14) => ({
         initial: enabled ? { opacity: 0, y: distance } : { opacity: 0 },
         animate: enabled ? { opacity: 1, y: 0 } : { opacity: 1 },
-        transition: { duration: duration(0.5), delay: enabled ? delay : 0, ease: EASE_OUT },
+        transition: { duration: duration(0.44), delay: enabled ? delay : 0, ease: EASE_OUT },
       }),
+      reveal: {
+        element: duration(0.4),
+        section: duration(0.48),
+        stagger: enabled ? 0.06 : 0,
+      },
       spring: {
         snappy: { type: "spring", stiffness: 500, damping: 32 },
         soft: { type: "spring", stiffness: 220, damping: 26 },

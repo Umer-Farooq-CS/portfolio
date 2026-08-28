@@ -85,6 +85,29 @@ describe("profile configuration", () => {
     }
   });
 
+  // The evidence band leads with four numbers per lens. Any of them that cites a
+  // project metric must still equal that metric — otherwise a headline figure and
+  // the project page it points at can quietly disagree.
+  it("keeps every sourced headline metric equal to the project metric it cites", () => {
+    for (const profile of PROFILES) {
+      expect(profile.headlineMetrics.length).toBeGreaterThan(0);
+      for (const metric of profile.headlineMetrics) {
+        expect(metric.value.trim()).not.toBe("");
+        expect(metric.label.trim()).not.toBe("");
+        if (!metric.source) continue;
+        const project = PROJECTS.find((p) => p.slug === metric.source!.slug);
+        expect(project, `${profile.id}: unknown project ${metric.source.slug}`).toBeDefined();
+        const real = project?.metrics?.find((m) => m.label === metric.source!.metricLabel);
+        expect(
+          real,
+          `${profile.id}: ${metric.source.slug} has no metric "${metric.source.metricLabel}"`,
+        ).toBeDefined();
+        expect(metric.value).toBe(real?.value);
+        if (metric.baseline) expect(metric.baseline).toBe(real?.baseline);
+      }
+    }
+  });
+
   it("isProfileId/getProfile agree with the PROFILES list", () => {
     for (const profile of PROFILES) {
       expect(isProfileId(profile.id)).toBe(true);

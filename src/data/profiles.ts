@@ -71,6 +71,24 @@ export interface ProfileDetailSection {
  * which of the flagships lead and in what order, it does not promote a project
  * that isn't featured. `src/test/profiles.test.ts` enforces both halves.
  */
+/**
+ * One number in the homepage's evidence band, per lens.
+ *
+ * `source` names the project metric the number came from. Where it is present,
+ * `src/test/profiles.test.ts` checks the value against that project's real
+ * metric, so a headline figure cannot drift from the project page it cites.
+ * It is optional only because a few standing claims (an award, a figure whose
+ * project record keeps its numbers in prose) have no metric record to point at.
+ */
+export interface ProfileHeadlineMetric {
+  value: string;
+  label: string;
+  baseline?: string;
+  note?: string;
+  tone: VisualAccent;
+  source?: { slug: string; metricLabel: string };
+}
+
 export interface ProfileWorkChapter {
   title: string;
   lede: string;
@@ -107,6 +125,8 @@ export interface ProfileConfig {
   projectCardTechLimit: ProjectCardTechLimits;
   /** Which featured projects lead the homepage under this lens, and the copy above them. */
   workChapter: ProfileWorkChapter;
+  /** The four numbers the evidence band leads with under this lens. */
+  headlineMetrics: ProfileHeadlineMetric[];
   /** Default project-detail section order/labels when a project has no authored lens sections. */
   detailTemplate: ProfileDetailSection[];
 }
@@ -150,6 +170,19 @@ export const PROFILES: readonly ProfileConfig[] = [
       lede: "An AI pipeline that had to stop being confidently wrong, a platform that had to be fast and correct across three quantum frameworks, and a control plane that had to run a cluster without an SSH session.",
       slugs: ["cirq-rag", "qcanvas", "hpc-cluster-platform"],
     },
+    headlineMetrics: [
+      { value: "6×", label: "Faster inference", baseline: "FP32", note: "FP16 Tensor Cores, MNIST", tone: "thermal" },
+      {
+        value: "92%",
+        label: "Circuit generation",
+        baseline: "52%",
+        note: "vs single-agent baseline",
+        tone: "neural",
+        source: { slug: "cirq-rag", metricLabel: "Circuit generation success" },
+      },
+      { value: "20+", label: "Qubits simulated", note: "hybrid MPI + OpenMP + CUDA", tone: "cryo" },
+      { value: "3rd", label: "Huawei ICT finals", note: "national, UniQ team", tone: "award" },
+    ],
     detailTemplate: [
       { source: "objective", label: "The problem" },
       { source: "description", label: "What it does" },
@@ -177,7 +210,7 @@ export const PROFILES: readonly ProfileConfig[] = [
       "I design and automate the infrastructure underneath HPC and AI workloads — zero-touch bare-metal provisioning, hardened Kubernetes bootstrap, GitOps delivery, and Slurm/GPFS scheduling over parallel storage. Enterprise GPU-as-a-Service platforms delivered at MAK Technology: no manual OS installs, all cluster state in Git.",
     heroSignals: [
       { label: "Bare metal", detail: "MAAS · Warewulf · IPMI", tone: "systems" },
-      { label: "Orchestration", detail: "Kubernetes · ArgoCD · Slurm", tone: "systems" },
+      { label: "Orchestration", detail: "Kubernetes · ArgoCD", tone: "systems" },
       { label: "Compute", detail: "CUDA · MPI · GPFS", tone: "thermal" },
       { label: "Platforms", detail: "React · FastAPI", tone: "interface" },
     ],
@@ -201,6 +234,31 @@ export const PROFILES: readonly ProfileConfig[] = [
       lede: "A control plane over a bare-metal HPC cluster, a declarative path from an empty rack to a hardened Kubernetes cluster, and the multi-tenant GPU cloud architecture they were built to serve.",
       slugs: ["hpc-cluster-platform", "k8s-bare-metal-automation", "gpu-cloud-reference-architecture"],
     },
+    headlineMetrics: [
+      {
+        value: "0",
+        label: "Manual OS install steps",
+        baseline: "every node",
+        note: "PXE-booted and imaged from a machine profile",
+        tone: "systems",
+        source: { slug: "k8s-bare-metal-automation", metricLabel: "Manual OS install steps" },
+      },
+      {
+        value: "100%",
+        label: "Cluster state in Git",
+        note: "declared and auto-synced; drift reconciled",
+        tone: "systems",
+        source: { slug: "k8s-bare-metal-automation", metricLabel: "Cluster & add-on state in Git" },
+      },
+      {
+        value: "15 tasks",
+        label: "Orchestration surface",
+        note: "nine modules, four host tiers",
+        tone: "interface",
+        source: { slug: "hpc-cluster-platform", metricLabel: "Orchestration surface" },
+      },
+      { value: "6×", label: "Faster inference", baseline: "FP32", note: "FP16 Tensor Cores, MNIST", tone: "thermal" },
+    ],
     detailTemplate: [
       { source: "objective", label: "Infrastructure challenge" },
       { source: "architectureHighlights", label: "Architecture" },
@@ -253,6 +311,30 @@ export const PROFILES: readonly ProfileConfig[] = [
       lede: "A multi-tenant GPU cloud reference architecture, the SLA and incident-response model that lets it be sold with a support commitment, and the HPC platform whose delivery I audited before handover.",
       slugs: ["gpu-cloud-reference-architecture", "enterprise-sla-framework", "hpc-cluster-platform"],
     },
+    headlineMetrics: [
+      {
+        value: "~50",
+        label: "Architecture diagrams",
+        note: "plus compliance and RACI, for enterprise bids",
+        tone: "neural",
+        source: { slug: "gpu-cloud-reference-architecture", metricLabel: "Architecture diagrams authored" },
+      },
+      {
+        value: "5",
+        label: "Tenant isolation layers",
+        note: "identity, network, quota, GPU/MIG, data",
+        tone: "systems",
+        source: { slug: "gpu-cloud-reference-architecture", metricLabel: "Tenant isolation layers" },
+      },
+      {
+        value: "15 min",
+        label: "P0 response commitment",
+        note: "named engineer engaged, 24×7",
+        tone: "thermal",
+        source: { slug: "enterprise-sla-framework", metricLabel: "P0 response commitment" },
+      },
+      { value: "3rd", label: "Huawei ICT finals", note: "national, UniQ team", tone: "award" },
+    ],
     detailTemplate: [
       { source: "objective", label: "Requirements" },
       { source: "strategy", label: "Proposed approach" },

@@ -26,13 +26,13 @@ export default function BenchChapter({
   signals: ProfileHeroSignal[];
   worksHref: string;
 }) {
-  const { enabled, duration } = useMotionPolicy();
+  const { enabled, reveal } = useMotionPolicy();
   const clock = useIslamabadClock();
 
   const rise = (delay: number) => ({
     initial: enabled ? { opacity: 0, y: 14 } : false,
     animate: { opacity: 1, y: 0 },
-    transition: { duration: duration(0.6), delay: enabled ? delay : 0, ease: [0.16, 1, 0.3, 1] as const },
+    transition: { duration: reveal.section, delay: enabled ? delay : 0, ease: [0.16, 1, 0.3, 1] as const },
   });
 
   return (

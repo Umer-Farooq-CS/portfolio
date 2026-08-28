@@ -245,19 +245,40 @@ export default function ProjectDetailPage() {
           </ul>
         </motion.section>
 
+        {/* These diagrams carry real label text at 2200px wide, and the article
+            column is a third of that — inline they are a thumbnail, not evidence.
+            The figure is a link to the full-resolution file so the detail is one
+            click away, with the affordance stated rather than left to discovery. */}
         {project.image && project.slug !== "cirq-rag" && (
           <motion.figure {...rise(0.12)} className="mt-12">
-            <div className={`overflow-hidden rounded-lg border bg-card ${tone.panel}`}>
+            <a
+              href={project.image.fallback}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Open the full-size ${project.title} architecture diagram`}
+              className={`group block cursor-zoom-in overflow-hidden rounded-lg border bg-card transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${tone.panel}`}
+            >
               <Picture
                 image={project.image}
                 alt={`${project.title} architecture diagram`}
                 sizes="(min-width: 1024px) 896px, 100vw"
                 className="h-auto w-full object-contain"
               />
-            </div>
-            <figcaption className="mt-2 text-2xs text-muted-foreground">
-              Architecture of {project.title}.
-              {project.confidentiality && " Client, site and product identifiers withheld."}
+            </a>
+            <figcaption className="mt-2 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 text-2xs text-muted-foreground">
+              <span>
+                Architecture of {project.title}.
+                {project.confidentiality && " Client, site and product identifiers withheld."}
+              </span>
+              <a
+                href={project.image.fallback}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`readout inline-flex shrink-0 items-center gap-1 uppercase tracking-widest focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${tone.value}`}
+              >
+                Open full size
+                <ExternalLink size={10} aria-hidden="true" />
+              </a>
             </figcaption>
           </motion.figure>
         )}

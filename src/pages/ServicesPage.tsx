@@ -32,7 +32,7 @@ function getRelatedProjects(intentId: string): ProjectItem[] {
  */
 export default function ServicesPage() {
   const [open, setOpen] = useState<string | null>(INTENTS[0].id);
-  const { enabled, duration } = useMotionPolicy();
+  const { enabled, reveal } = useMotionPolicy();
 
   useDocumentMeta({ ...routeMeta("/services"), path: "/services" });
 
@@ -62,7 +62,7 @@ export default function ServicesPage() {
                 initial={enabled ? { opacity: 0, y: 10 } : false}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: duration(0.45), delay: enabled ? index * 0.04 : 0 }}
+                transition={{ duration: reveal.element, delay: index * reveal.stagger }}
                 className="border-b border-border"
                 id={intent.id}
               >

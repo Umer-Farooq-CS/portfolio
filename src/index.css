@@ -711,6 +711,35 @@
     border-top: 1px solid var(--color-border);
   }
 
+  /* Press feedback. Every pressable surface gives way slightly under the
+     pointer, so the interface reads as having heard the press before the route
+     changes. 140ms is short enough that it never delays the action, and the
+     transform is the only property that moves, so it stays off the layout path.
+
+     `transition-property` is named rather than `all`: these surfaces also
+     animate colour and border on hover, and those want their own timing.
+
+     The reduced-motion block in @layer base already collapses every transition
+     duration, so a visitor who asked for less motion gets the state change
+     without the travel — nothing extra to declare here. */
+  .pressable {
+    transition: transform 140ms var(--ease-out-quint);
+  }
+
+  .pressable:active {
+    transform: scale(0.98);
+  }
+
+  /* A full-width row or card would read as wobbling at 0.98 — it travels much
+     further at the edges than a pill does. Scale it less, not none. */
+  .pressable-panel {
+    transition: transform 140ms var(--ease-out-quint);
+  }
+
+  .pressable-panel:active {
+    transform: scale(0.994);
+  }
+
   /* --- transitional aliases --------------------------------------------
      The pages still carry class names from the previous design. Redefining
      them here retires the gradient-and-glow look in one place; they are

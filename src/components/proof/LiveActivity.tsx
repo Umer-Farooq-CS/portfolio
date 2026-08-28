@@ -294,12 +294,16 @@ export default function LiveActivity({ index, compact = false }: LiveActivityPro
                         {language.name}
                       </span>
                       <span className="h-1.5 w-full bg-border/60" aria-hidden="true">
+                        {/* The bar's length is `width`, but the growth is `scaleX` from
+                            a left origin — animating width itself would re-run layout
+                            on every frame of a scroll-triggered reveal. */}
                         <motion.span
-                          initial={enabled ? { width: 0 } : { width: barWidth }}
-                          whileInView={{ width: barWidth }}
+                          style={{ width: barWidth }}
+                          initial={enabled ? { scaleX: 0 } : { scaleX: 1 }}
+                          whileInView={{ scaleX: 1 }}
                           viewport={{ once: true }}
-                          transition={{ duration: duration(0.7), ease: [0.16, 1, 0.3, 1] }}
-                          className="block h-full bg-interface"
+                          transition={{ duration: duration(0.5), ease: [0.16, 1, 0.3, 1] }}
+                          className="block h-full origin-left bg-interface"
                         />
                       </span>
                       <span className="readout text-xs text-interface-type">{language.repos}</span>

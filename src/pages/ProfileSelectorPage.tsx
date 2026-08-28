@@ -21,7 +21,7 @@ import { personSchema } from "@/lib/seo";
  * work is to put the same count under all three, in the open.
  */
 export default function ProfileSelectorPage() {
-  const { enabled, duration } = useMotionPolicy();
+  const { enabled, reveal } = useMotionPolicy();
   useDocumentMeta({ ...routeMeta("/"), path: "/" });
 
   const storedId = getStoredProfileId();
@@ -30,7 +30,7 @@ export default function ProfileSelectorPage() {
   const rise = (delay: number) => ({
     initial: enabled ? { opacity: 0, y: 14 } : false,
     animate: { opacity: 1, y: 0 },
-    transition: { duration: duration(0.6), delay: enabled ? delay : 0, ease: [0.16, 1, 0.3, 1] as const },
+    transition: { duration: reveal.section, delay: enabled ? delay : 0, ease: [0.16, 1, 0.3, 1] as const },
   });
 
   return (
@@ -103,7 +103,7 @@ export default function ProfileSelectorPage() {
                   key={profile.id}
                   initial={enabled ? { opacity: 0, y: 16 } : false}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: duration(0.5), delay: enabled ? 0.2 + index * 0.06 : 0 }}
+                  transition={{ duration: reveal.element, delay: enabled ? 0.2 + index * reveal.stagger : 0 }}
                 >
                   <Link
                     to={`/${profile.path}`}

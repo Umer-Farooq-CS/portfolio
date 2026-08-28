@@ -18,7 +18,30 @@ const dist = resolve(root, "dist");
 const outDir = resolve(root, ".shots");
 
 const BASE = ((process.env.VITE_BASE_PATH || "").trim() || "/portfolio/").replace(/\/+$/, "");
-const ROUTES = ["/", "/about", "/services", "/projects", "/projects/qcanvas", "/projects/cirq-rag", "/lab", "/cv", "/uses", "/notes", "/thanks", "/nope"];
+// "/" is the profile selector, so each lens's own home is listed too — they
+// order the chapters differently and carry different hero copy, which is exactly
+// what a visual diff needs to catch. One project page per rendering shape:
+// a diagram-led infrastructure page, an architecture page, the interactive
+// cirq-rag page, and a plain write-up.
+const ROUTES = [
+  "/",
+  "/development",
+  "/infrastructure",
+  "/solutions",
+  "/about",
+  "/services",
+  "/projects",
+  "/projects/hpc-cluster-platform",
+  "/projects/gpu-cloud-reference-architecture",
+  "/projects/qcanvas",
+  "/projects/cirq-rag",
+  "/lab",
+  "/cv",
+  "/uses",
+  "/notes",
+  "/thanks",
+  "/nope",
+];
 const VIEWPORTS = [
   { name: "desktop", width: 1440, height: 900 },
   { name: "mobile", width: 390, height: 844 },
