@@ -111,3 +111,29 @@ export const ACCENTS: Record<VisualAccent, AccentClasses> = {
 export function accent(kind: VisualAccent): AccentClasses {
   return ACCENTS[kind];
 }
+
+/**
+ * The raw hue for an accent, as a CSS variable reference.
+ *
+ * Everything above hands back Tailwind class names, which covers the cases the
+ * design system anticipated. This is the escape hatch for the ones it did not:
+ * a custom property fed to a CSS module, where the value has to be a colour
+ * rather than a class. It resolves to the *vivid* token, so it belongs in
+ * fills, washes, rules and shadows, never in text (use `accent().value` there,
+ * which is the contrast-safe pair).
+ *
+ * Kept beside ACCENTS so the two cannot drift.
+ */
+const ACCENT_VARS: Record<VisualAccent, string> = {
+  thermal: "var(--color-thermal)",
+  cryo: "var(--color-cryo)",
+  neural: "var(--color-neural)",
+  systems: "var(--color-systems)",
+  interface: "var(--color-interface)",
+  award: "var(--color-award)",
+  none: "var(--color-graphite)",
+};
+
+export function accentVar(kind: VisualAccent): string {
+  return ACCENT_VARS[kind];
+}

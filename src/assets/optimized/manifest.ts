@@ -17,6 +17,14 @@ import heroBg1440Avif from "./heroBg-1440.avif";
 import heroBg1440Webp from "./heroBg-1440.webp";
 import heroBg1920Avif from "./heroBg-1920.avif";
 import heroBg1920Webp from "./heroBg-1920.webp";
+import heroPortrait280Avif from "./heroPortrait-280.avif";
+import heroPortrait280Webp from "./heroPortrait-280.webp";
+import heroPortrait460Avif from "./heroPortrait-460.avif";
+import heroPortrait460Webp from "./heroPortrait-460.webp";
+import heroPortrait560Avif from "./heroPortrait-560.avif";
+import heroPortrait560Webp from "./heroPortrait-560.webp";
+import heroPortrait760Avif from "./heroPortrait-760.avif";
+import heroPortrait760Webp from "./heroPortrait-760.webp";
 import cirqRagDiagram800Avif from "./cirqRagDiagram-800.avif";
 import cirqRagDiagram800Webp from "./cirqRagDiagram-800.webp";
 import cirqRagDiagram1200Avif from "./cirqRagDiagram-1200.avif";
@@ -80,6 +88,16 @@ export const heroBg: ResponsiveImage = {
   ],
   width: 1920,
   height: 1080,
+};
+
+export const heroPortrait: ResponsiveImage = {
+  fallback: heroPortrait760Webp,
+  sources: [
+    { type: "image/avif", srcSet: `${heroPortrait280Avif} 280w, ${heroPortrait460Avif} 460w, ${heroPortrait560Avif} 560w, ${heroPortrait760Avif} 760w` },
+    { type: "image/webp", srcSet: `${heroPortrait280Webp} 280w, ${heroPortrait460Webp} 460w, ${heroPortrait560Webp} 560w, ${heroPortrait760Webp} 760w` },
+  ],
+  width: 3000,
+  height: 3750,
 };
 
 export const cirqRagDiagram: ResponsiveImage = {

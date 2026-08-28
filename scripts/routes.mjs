@@ -20,7 +20,6 @@ export const STATIC_ROUTES = [
   { path: "/projects", priority: "0.9", changefreq: "weekly", indexed: true },
   { path: "/lab", priority: "0.8", changefreq: "monthly", indexed: true },
   { path: "/cv", priority: "0.9", changefreq: "monthly", indexed: true },
-  { path: "/uses", priority: "0.5", changefreq: "monthly", indexed: true },
   { path: "/notes", priority: "0.7", changefreq: "weekly", indexed: false },
   { path: "/thanks", priority: "0.1", changefreq: "yearly", indexed: false },
 ];
@@ -41,7 +40,7 @@ export const PROFILE_LABELS = {
 };
 
 /** Static inner pages that exist per profile — mirrors the nested :profile block in App.tsx. */
-const PROFILE_INNER_PATHS = ["about", "services", "projects", "lab", "cv", "uses", "notes"];
+const PROFILE_INNER_PATHS = ["about", "services", "projects", "lab", "cv", "notes"];
 
 /** Slugs read straight out of the data file, so there is no second list. */
 export async function projectSlugs() {

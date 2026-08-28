@@ -1,0 +1,136 @@
+/* The choice panel.
+   ---------------------------------------------------------------------------
+   This is the one screen whose whole job is to make a decision unmissable, so
+   the cards are the page rather than three tiles under a paragraph.
+
+   Two effects do the heavy lifting, both pure CSS:
+
+   1. Focus by subtraction. When any card is hovered, the other two recede.
+      Done with `:has()` on the grid, so there is no JS hover state and no
+      re-render on pointer move. The hovered card does not brighten as much as
+      the others dim, which is what makes it feel like attention rather than a
+      highlight effect.
+
+   2. The wash. Each card carries its own accent as a soft gradient that grows
+      on hover. It is a background-image transition on a fixed-size layer, not
+      a size or position change, so nothing re-lays-out.
+
+   Everything animated here is transform, opacity or background, so it all
+   stays off the layout path. */
+
+.grid {
+  --lens-lift: -6px;
+}
+
+.card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  transition:
+    transform 260ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 260ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 260ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 260ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* The accent wash. Sits behind the content, inside the card's isolation. */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.55;
+  background-image: radial-gradient(
+    120% 78% at 50% 108%,
+    color-mix(in oklab, var(--lens-accent) 26%, transparent) 0%,
+    transparent 62%
+  );
+  transition: opacity 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* A hairline that draws itself across the top of the hovered card. Scale on a
+   left origin, so it reads as a measurement being taken. */
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 2px;
+  z-index: 1;
+  background-color: var(--lens-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* --- hover and focus ----------------------------------------------------- */
+@media (hover: hover) and (pointer: fine) {
+  .grid:has(.card:hover) .card:not(:hover) {
+    opacity: 0.42;
+    transform: scale(0.985);
+  }
+
+  .card:hover {
+    transform: translateY(var(--lens-lift));
+    border-color: var(--lens-accent);
+    box-shadow: 0 18px 44px color-mix(in oklab, var(--lens-accent) 18%, transparent);
+  }
+
+  .card:hover::before { opacity: 1; }
+  .card:hover::after { transform: scaleX(1); }
+  .card:hover .arrow { transform: translate(3px, -3px); }
+  .card:hover .rank { opacity: 1; }
+}
+
+/* Keyboard parity: a card reached by Tab gets the same treatment as one
+   reached by pointer, without the sibling dimming that a pointer implies. */
+.card:focus-visible {
+  transform: translateY(var(--lens-lift));
+  border-color: var(--lens-accent);
+  outline: 2px solid var(--color-ring);
+  outline-offset: 3px;
+}
+
+.card:focus-visible::before { opacity: 1; }
+.card:focus-visible::after { transform: scaleX(1); }
+
+.card:active {
+  transform: translateY(-2px) scale(0.994);
+}
+
+.arrow {
+  transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* The index sits quiet until the card is engaged. It marks position in the
+   three, which is real information: the lenses have an order. */
+.rank {
+  opacity: 0.45;
+  transition: opacity 260ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .card::before,
+  .card::after,
+  .arrow,
+  .rank {
+    transition: none;
+  }
+
+  .grid:has(.card:hover) .card:not(:hover) {
+    opacity: 1;
+    transform: none;
+  }
+
+  .card:hover,
+  .card:focus-visible,
+  .card:active {
+    transform: none;
+  }
+
+  /* Colour still carries the state; only the travel is dropped. */
+  .card::after { transform: scaleX(0); }
+  .card:hover::after,
+  .card:focus-visible::after { transform: scaleX(1); }
+}

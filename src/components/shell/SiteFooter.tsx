@@ -22,7 +22,6 @@ const PAGES: { label: string; to: string; tone: VisualAccent }[] = [
   { label: "About", to: "/about", tone: "systems" },
   { label: "Lab", to: "/lab", tone: "neural" },
   { label: "CV", to: "/cv", tone: "cryo" },
-  { label: "Uses", to: "/uses", tone: "thermal" },
   ...(NOTES_ARE_PUBLIC ? [{ label: "Notes", to: "/notes", tone: "neural" as const }] : []),
 ];
 

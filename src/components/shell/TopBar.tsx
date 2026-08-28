@@ -12,6 +12,10 @@ import { PROFILES } from "@/data/profiles";
 import { pathForProfile, stripProfilePrefix, useActiveProfile } from "@/lib/profile";
 
 const NAV: { label: string; to: string; tone: VisualAccent }[] = [
+  // "/" resolves through pathForProfile to the active lens's own home page,
+  // e.g. /infrastructure. The wordmark to its left goes to the lens selector
+  // instead, so the two are different destinations on purpose.
+  { label: "Home", to: "/", tone: "thermal" },
   { label: "Work", to: "/projects", tone: "interface" },
   { label: "Services", to: "/services", tone: "systems" },
   { label: "About", to: "/about", tone: "systems" },
@@ -50,11 +54,13 @@ export default function TopBar() {
 
   useEffect(() => setMenuOpen(false), [pathname, hash]);
 
+  // The wordmark points at "/", so a click from anywhere else is a real
+  // navigation and needs no help. Only a click while already on "/" has
+  // nowhere to go, and there it should return to the top.
   const goHome = () => {
-    if (pathname === profileHome || onSelector) {
-      window.scrollTo({ top: 0, behavior: enabled ? "smooth" : "auto" });
-      if (hash) navigate(pathname, { replace: true });
-    }
+    if (!onSelector) return;
+    window.scrollTo({ top: 0, behavior: enabled ? "smooth" : "auto" });
+    if (hash) navigate(pathname, { replace: true });
   };
 
   return (
@@ -65,8 +71,11 @@ export default function TopBar() {
     >
       <div className="container flex h-14 items-center justify-between gap-4 lg:h-16">
         <div className="flex shrink-0 items-center gap-3">
+          {/* Always the lens selector, never the current lens's home. The
+              wordmark is the way back out of a lens; "Home" in the nav is the
+              way to the top of the one you are in. */}
           <Link
-            to={onSelector ? "/" : profileHome}
+            to="/"
             onClick={goHome}
             className="group -ml-2 flex min-h-11 shrink-0 items-center gap-2 rounded-md px-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >

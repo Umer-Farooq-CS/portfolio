@@ -36,10 +36,6 @@
     "title": "CV",
     "description": "Umer Farooq — CV. HPC and AI infrastructure, GPU computing, and solution architecture. Experience, education, selected projects, skills, and certifications."
   },
-  "/uses": {
-    "title": "Uses",
-    "description": "The machine and toolchain behind the work: GPU and profilers, editor and shell, languages, and the services this site runs on."
-  },
   "/notes": {
     "title": "Notes",
     "description": "Notes on parallel performance, quantum simulation, and making AI output verifiable."

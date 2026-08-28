@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import Picture from "@/components/Picture";
-import { portrait } from "@/assets/optimized/manifest";
+import { heroPortrait } from "@/assets/optimized/manifest";
+import { Metric } from "@/components/kit/Primitives";
+import { PROJECTS } from "@/data/projects";
+import { PROFILES } from "@/data/profiles";
+import { DOMAINS } from "@/data/taxonomy";
 import { SITE } from "@/lib/site";
 import { useSiteClock } from "@/lib/clock";
 import { useMotionPolicy } from "@/lib/motion-policy";
@@ -77,16 +81,16 @@ export default function LandingHero() {
 
       <div className="container relative">
         <div className="grid items-center gap-10 sm:grid-cols-[minmax(0,auto)_minmax(0,1fr)] sm:gap-12 lg:gap-16">
-          {/* The portrait, duotoned into the palette. Eager and high priority:
-              on this route it is the largest contentful paint. */}
+          {/* Eager and high priority: on this route it is the largest
+              contentful paint. */}
           <div
-            className={`${styles.portraitFrame} ${styles.step} ${styles.s2} relative w-44 shrink-0 rounded-md border border-border sm:w-56 lg:w-[19rem]`}
+            className={`${styles.portraitFrame} ${styles.step} ${styles.s2} relative w-[11.5rem] shrink-0 rounded-md border border-border sm:w-60 lg:w-[19rem]`}
           >
             <Picture
-              image={portrait}
+              image={heroPortrait}
               alt="Umer Farooq"
-              sizes="(min-width: 1024px) 304px, (min-width: 640px) 224px, 176px"
-              className={`${styles.portrait} aspect-[3/4] h-auto w-full object-cover object-[50%_18%]`}
+              sizes="(min-width: 1024px) 304px, (min-width: 640px) 240px, 184px"
+              className="aspect-[4/5] h-auto w-full object-cover object-[50%_20%]"
               priority
             />
             <span className={styles.scan} aria-hidden="true" />
@@ -123,6 +127,16 @@ export default function LandingHero() {
             </p>
           </div>
         </div>
+
+        {/* The scale of the record, stated on arrival rather than held back
+            until after the choice. Counts are derived, never typed. */}
+        <dl
+          className={`${styles.step} ${styles.s4} mt-12 grid max-w-2xl grid-cols-3 gap-6 border-t border-border pt-7 lg:mt-14`}
+        >
+          <Metric value={String(PROJECTS.length)} label="Projects" note="one shared set" />
+          <Metric value={String(DOMAINS.length)} label="Technical domains" note="infrastructure to full-stack" />
+          <Metric value={String(PROFILES.length)} label="Lenses" note="same evidence, every time" />
+        </dl>
       </div>
     </div>
   );

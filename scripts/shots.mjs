@@ -37,7 +37,6 @@ const ROUTES = [
   "/projects/cirq-rag",
   "/lab",
   "/cv",
-  "/uses",
   "/notes",
   "/thanks",
   "/nope",

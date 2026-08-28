@@ -9,7 +9,8 @@ export const SITE = {
    * One line for the landing hero. Shorter than `description`, which has to
    * carry keywords for search; this only has to be true and land in a breath.
    */
-  tagline: "I build the systems underneath AI and HPC workloads.",
+  tagline:
+    "I build the systems underneath AI and HPC workloads: the clusters they run on, the GPU kernels that make them fast, and the architectures behind both.",
   description:
     "Umer Farooq builds the infrastructure underneath HPC and AI workloads — bare-metal Kubernetes and HPC platforms, GPU-accelerated systems, and the reference architectures behind enterprise GPU cloud bids.",
   /** Deploy target. Override with VITE_SITE_URL for a custom domain. */

@@ -8,7 +8,6 @@ const ROUTE_TONES: Record<string, VisualAccent> = {
   "/lab": "cryo",
   "/thanks": "systems",
   "/cv": "systems",
-  "/uses": "interface",
   "/notes": "neural",
 };
 

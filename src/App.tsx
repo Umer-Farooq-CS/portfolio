@@ -20,7 +20,6 @@ const ProjectDetailPage = lazy(() => import("./pages/ProjectDetailPage"));
 const ThanksPage = lazy(() => import("./pages/ThanksPage"));
 const LabPage = lazy(() => import("./pages/LabPage"));
 const CvPage = lazy(() => import("./pages/CvPage"));
-const UsesPage = lazy(() => import("./pages/UsesPage"));
 const NotesPage = lazy(() => import("./pages/NotesPage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
@@ -63,7 +62,6 @@ const App = () => (
                   <Route path="/lab" element={<LabPage />} />
                   <Route path="/thanks" element={<ThanksPage />} />
                   <Route path="/cv" element={<CvPage />} />
-                  <Route path="/uses" element={<UsesPage />} />
                   <Route path="/notes" element={<NotesPage />} />
 
                   {/*
@@ -81,7 +79,6 @@ const App = () => (
                     <Route path="projects/:slug" element={<ProjectDetailPage />} />
                     <Route path="lab" element={<LabPage />} />
                     <Route path="cv" element={<CvPage />} />
-                    <Route path="uses" element={<UsesPage />} />
                     <Route path="notes" element={<NotesPage />} />
                   </Route>
 

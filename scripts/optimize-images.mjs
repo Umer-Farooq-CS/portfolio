@@ -18,6 +18,10 @@ const outDir = resolve(root, "src/assets/optimized");
 const TARGETS = [
   { file: "me.jpg", name: "portrait", widths: [160, 320, 480, 720, 960], quality: 72 },
   { file: "hero-bg.jpg", name: "heroBg", widths: [960, 1440, 1920], quality: 62 },
+  // The landing hero's own portrait: a better frame than me.jpg, orientation
+  // corrected and gently graded. Higher quality than the small avatar because
+  // it is displayed several times larger.
+  { file: "portrait-hero.jpg", name: "heroPortrait", widths: [280, 460, 560, 760], quality: 80 },
   // A diagram: text legibility matters more than file size, so quality stays high.
   { file: "Cirq-RAG-Agent.png", name: "cirqRagDiagram", widths: [800, 1200, 1600], quality: 82 },
   // The architecture diagrams. Denser than the RAG diagram — small labels have to

@@ -25,7 +25,6 @@ const STATIC_ROUTES = [
   "/projects",
   "/lab",
   "/cv",
-  "/uses",
   "/notes",
   "/thanks",
 ];

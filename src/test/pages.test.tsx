@@ -5,7 +5,6 @@ import { ThemeProvider } from "@/lib/theme";
 import { MotionPolicyProvider } from "@/lib/motion-policy";
 import AppShell from "@/components/shell/AppShell";
 import CvPage from "@/pages/CvPage";
-import UsesPage from "@/pages/UsesPage";
 import NotesPage from "@/pages/NotesPage";
 import {
   AWARDS,
@@ -23,8 +22,9 @@ import {
 } from "@/data/cv";
 import { CERTIFICATIONS, EDUCATION, PROFESSIONAL_SUMMARY, SKILL_GROUPS } from "@/data/profile";
 import { PROJECTS } from "@/data/projects";
-import { USES_GROUPS, getUnconfirmedItems, usesGroupSchema } from "@/data/uses";
 import { NOTES, NOTES_ARE_PUBLIC, getNoteBySlug, getPublishedNotes, noteSchema } from "@/data/notes";
+import { DEFAULT_PROFILE_ID } from "@/data/profiles";
+import { pathForProfile } from "@/lib/profile";
 
 function renderAt(path: string) {
   return render(
@@ -34,7 +34,6 @@ function renderAt(path: string) {
           <Routes>
             <Route element={<AppShell />}>
               <Route path="/cv" element={<CvPage />} />
-              <Route path="/uses" element={<UsesPage />} />
               <Route path="/notes" element={<NotesPage />} />
             </Route>
           </Routes>
@@ -149,16 +148,8 @@ describe("cv data", () => {
     expect(CV_EDUCATION_HIGHLIGHTS.length).toBe(EDUCATION.highlights.length - 1);
   });
 
-  it("formats the phone number into readable groups", () => {
-    const phone = CV_CONTACT.find((item) => item.label === "Phone");
-    expect(phone?.text).toBe("+92 336 5522666");
-    expect(phone?.href).toBe("tel:+923365522666");
-  });
-});
-
-describe("/uses", () => {
   it("describes the mobile navigation dialog for assistive technology", () => {
-    renderAt("/uses");
+    renderAt("/cv");
     fireEvent.click(screen.getByRole("button", { name: "Open menu" }));
 
     const dialog = screen.getByRole("dialog", { name: "Menu" });
@@ -169,26 +160,10 @@ describe("/uses", () => {
     );
   });
 
-  it("renders every group and every row", () => {
-    renderAt("/uses");
-    for (const group of USES_GROUPS) {
-      expect(screen.getByRole("heading", { level: 2, name: group.title })).toBeInTheDocument();
-      for (const item of group.items) {
-        expect(screen.getByText(item.value)).toBeInTheDocument();
-      }
-    }
-  });
-
-  it("marks unconfirmed rows instead of inventing a specific", () => {
-    const { container } = renderAt("/uses");
-    const unconfirmed = getUnconfirmedItems();
-    expect(unconfirmed.length).toBeGreaterThan(0);
-    expect(container.querySelectorAll('[data-todo="true"]')).toHaveLength(unconfirmed.length);
-    expect(screen.getAllByText("Unconfirmed")).toHaveLength(unconfirmed.length);
-  });
-
-  it("matches its schema", () => {
-    for (const group of USES_GROUPS) expect(() => usesGroupSchema.parse(group)).not.toThrow();
+  it("formats the phone number into readable groups", () => {
+    const phone = CV_CONTACT.find((item) => item.label === "Phone");
+    expect(phone?.text).toBe("+92 336 5522666");
+    expect(phone?.href).toBe("tel:+923365522666");
   });
 });
 
@@ -227,5 +202,32 @@ describe("/notes", () => {
 
   it("matches its schema", () => {
     for (const note of NOTES) expect(() => noteSchema.parse(note)).not.toThrow();
+  });
+});
+
+describe("top bar navigation", () => {
+  // The wordmark and "Home" are deliberately different destinations: the
+  // wordmark leaves the current lens for the selector, "Home" goes to the top
+  // of the lens you are already reading. They were the same link before, which
+  // left no way back to the selector at all.
+  it("points the wordmark at the lens selector, not the lens home", () => {
+    renderAt("/cv");
+    const wordmark = screen.getByRole("link", { name: /umer farooq/i });
+    expect(wordmark).toHaveAttribute("href", "/");
+  });
+
+  it("offers Home in the main navigation, resolved to the active lens", () => {
+    renderAt("/cv");
+    const nav = screen.getByRole("navigation", { name: "Main" });
+    const home = within(nav).getByRole("link", { name: "Home" });
+    // Resolved through the active lens, so it is "/development" here rather
+    // than "/". That difference from the wordmark's "/" is the point.
+    expect(home).toHaveAttribute("href", pathForProfile("/", DEFAULT_PROFILE_ID));
+    expect(home.getAttribute("href")).not.toBe("/");
+  });
+
+  it("no longer offers the removed /uses page anywhere in the shell", () => {
+    const { container } = renderAt("/cv");
+    expect(container.querySelector('a[href*="/uses"]')).toBeNull();
   });
 });
