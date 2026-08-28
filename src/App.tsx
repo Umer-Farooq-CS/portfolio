@@ -8,9 +8,11 @@ import { MotionPolicyProvider } from "@/lib/motion-policy";
 import { ThemeProvider } from "@/lib/theme";
 import AppShell from "./components/shell/AppShell";
 import Index from "./pages/Index";
+import ProfileSelectorPage from "./pages/ProfileSelectorPage";
 
 // Routes below the homepage load on demand, so the first paint doesn't pay for
 // pages the visitor may never open.
+const ProfileLayout = lazy(() => import("./components/profile/ProfileLayout"));
 const AboutPage = lazy(() => import("./pages/AboutPage"));
 const ServicesPage = lazy(() => import("./pages/ServicesPage"));
 const ProjectsPage = lazy(() => import("./pages/ProjectsPage"));
@@ -53,7 +55,7 @@ const App = () => (
             <BrowserRouter basename={getBasename()}>
               <Routes>
                 <Route element={<AppShell />}>
-                  <Route path="/" element={<Index />} />
+                  <Route path="/" element={<ProfileSelectorPage />} />
                   <Route path="/about" element={<AboutPage />} />
                   <Route path="/services" element={<ServicesPage />} />
                   <Route path="/projects" element={<ProjectsPage />} />
@@ -63,6 +65,26 @@ const App = () => (
                   <Route path="/cv" element={<CvPage />} />
                   <Route path="/uses" element={<UsesPage />} />
                   <Route path="/notes" element={<NotesPage />} />
+
+                  {/*
+                    One parametric block for all three profiles, instead of
+                    tripling every route above: React Router ranks the static
+                    segments above over ":profile", so "/about" still matches
+                    its own literal route first. ProfileLayout 404s on an
+                    unknown segment before any child page renders.
+                  */}
+                  <Route path=":profile" element={<ProfileLayout />}>
+                    <Route index element={<Index />} />
+                    <Route path="about" element={<AboutPage />} />
+                    <Route path="services" element={<ServicesPage />} />
+                    <Route path="projects" element={<ProjectsPage />} />
+                    <Route path="projects/:slug" element={<ProjectDetailPage />} />
+                    <Route path="lab" element={<LabPage />} />
+                    <Route path="cv" element={<CvPage />} />
+                    <Route path="uses" element={<UsesPage />} />
+                    <Route path="notes" element={<NotesPage />} />
+                  </Route>
+
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
                 </Route>

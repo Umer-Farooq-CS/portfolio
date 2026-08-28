@@ -7,10 +7,33 @@
 
 import { z } from "zod";
 import { DOMAIN_IDS } from "./taxonomy";
+import { PROFILE_IDS } from "./profiles";
 
 const domainSchema = z.enum(DOMAIN_IDS as [string, ...string[]]);
+export const profileIdSchema = z.enum(PROFILE_IDS as [string, ...string[]]);
 
 const nonEmpty = z.string().trim().min(1);
+
+/**
+ * A lens can only subset or relabel a project's own facts. `techFocus` and
+ * `metricFocus` are checked against the project's real `technologies`/
+ * `metrics` in projectSchema's superRefine below — this is what makes "never
+ * fabricate a capability" a build failure instead of a convention.
+ */
+export const projectLensViewSchema = z.object({
+  summary: nonEmpty.optional(),
+  techFocus: z.array(nonEmpty).min(1).optional(),
+  metricFocus: z.array(nonEmpty).min(1).optional(),
+  sections: z
+    .array(
+      z.object({
+        key: nonEmpty,
+        label: nonEmpty,
+        points: z.array(nonEmpty).min(1),
+      }),
+    )
+    .optional(),
+});
 
 export const metricSchema = z.object({
   label: nonEmpty,
@@ -30,30 +53,55 @@ export const responsiveImageSchema = z.object({
   height: z.number().positive(),
 });
 
-export const projectSchema = z.object({
-  slug: z
-    .string()
-    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "slug must be lowercase kebab-case"),
-  title: nonEmpty,
-  subtitle: nonEmpty,
-  /** Specific human-facing label, e.g. "High-Performance Computing & Quantum". */
-  category: nonEmpty,
-  /** Closed-taxonomy domains, most relevant first. Drives grouping and filters. */
-  domains: z.array(domainSchema).min(1),
-  period: nonEmpty.optional(),
-  githubUrl: z.string().url().optional(),
-  externalUrl: z.string().url().optional(),
-  award: nonEmpty.optional(),
-  description: z.array(nonEmpty).min(1),
-  technologies: z.array(nonEmpty).min(1),
-  featured: z.boolean().optional(),
-  image: responsiveImageSchema.optional(),
-  architectureHighlights: z.array(nonEmpty).optional(),
-  metrics: z.array(metricSchema).optional(),
-  tagline: nonEmpty.optional(),
-  objective: nonEmpty.optional(),
-  strategy: z.array(nonEmpty).optional(),
-});
+export const projectSchema = z
+  .object({
+    slug: z
+      .string()
+      .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "slug must be lowercase kebab-case"),
+    title: nonEmpty,
+    subtitle: nonEmpty,
+    /** Specific human-facing label, e.g. "High-Performance Computing & Quantum". */
+    category: nonEmpty,
+    /** Closed-taxonomy domains, most relevant first. Drives grouping and filters. */
+    domains: z.array(domainSchema).min(1),
+    period: nonEmpty.optional(),
+    githubUrl: z.string().url().optional(),
+    externalUrl: z.string().url().optional(),
+    award: nonEmpty.optional(),
+    description: z.array(nonEmpty).min(1),
+    technologies: z.array(nonEmpty).min(1),
+    featured: z.boolean().optional(),
+    image: responsiveImageSchema.optional(),
+    architectureHighlights: z.array(nonEmpty).optional(),
+    metrics: z.array(metricSchema).optional(),
+    tagline: nonEmpty.optional(),
+    objective: nonEmpty.optional(),
+    strategy: z.array(nonEmpty).optional(),
+    /** Per-profile presentation overrides — see projectLensViewSchema above. */
+    lenses: z.record(profileIdSchema, projectLensViewSchema).optional(),
+  })
+  .superRefine((project, ctx) => {
+    if (!project.lenses) return;
+    const metricLabels = new Set((project.metrics ?? []).map((m) => m.label));
+    for (const [profileId, lens] of Object.entries(project.lenses)) {
+      for (const tech of lens?.techFocus ?? []) {
+        if (!project.technologies.includes(tech)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `${project.slug}: lenses.${profileId}.techFocus references "${tech}", which is not in this project's technologies`,
+          });
+        }
+      }
+      for (const label of lens?.metricFocus ?? []) {
+        if (!metricLabels.has(label)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `${project.slug}: lenses.${profileId}.metricFocus references "${label}", which is not one of this project's metrics`,
+          });
+        }
+      }
+    }
+  });
 
 export const projectsSchema = z
   .array(projectSchema)

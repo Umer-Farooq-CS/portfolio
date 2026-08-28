@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import type { VisualAccent } from "@/lib/accent";
 import { sectionsForRoute } from "@/lib/sections";
 import { telemetryToneForPath } from "@/lib/telemetry";
+import { useActiveProfile } from "@/lib/profile";
 
 /**
  * A restrained, code-native field behind the site shell. The traces read as a
@@ -12,7 +13,11 @@ import { telemetryToneForPath } from "@/lib/telemetry";
  */
 export default function TelemetryBackdrop() {
   const { pathname } = useLocation();
-  const sections = useMemo(() => sectionsForRoute(pathname), [pathname]);
+  const profile = useActiveProfile();
+  const sections = useMemo(
+    () => sectionsForRoute(pathname, profile.homeChapterOrder),
+    [pathname, profile.homeChapterOrder],
+  );
   const routeTone = telemetryToneForPath(pathname);
   const [tone, setTone] = useState<VisualAccent>(sections[0]?.tone ?? routeTone);
 

@@ -4,6 +4,18 @@
     "title": "Umer Farooq",
     "description": "Umer Farooq builds high-performance and GPU-accelerated systems, quantum circuit simulation platforms, and AI pipelines that hold up under validation."
   },
+  "/development": {
+    "title": "HPC & AI Development",
+    "description": "Umer Farooq's work as an HPC and AI developer: CUDA and GPU programming, parallel and distributed computing, quantum simulation, and applied AI."
+  },
+  "/infrastructure": {
+    "title": "HPC & AI Infrastructure",
+    "description": "Umer Farooq's work on HPC and AI infrastructure: GPU platforms, Kubernetes, cluster architecture, and the systems that run compute at scale."
+  },
+  "/solutions": {
+    "title": "Pre-Sales Solution Architect",
+    "description": "Umer Farooq translates HPC and AI requirements into architectures: technology selection, solution design, trade-offs, and validation."
+  },
   "/about": {
     "title": "About",
     "description": "Umer Farooq — a systems-focused computer scientist in Islamabad working across high-performance computing, quantum simulation, and applied AI."

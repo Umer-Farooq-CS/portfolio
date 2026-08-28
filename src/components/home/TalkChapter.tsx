@@ -14,7 +14,7 @@ const ContactForm = lazy(() => import("@/components/portfolio/ContactForm"));
  * problem and starting a message are still the same action, but changing the
  * selection never remounts (and therefore never erases) the visitor's draft.
  */
-export default function TalkChapter() {
+export default function TalkChapter({ index = 5 }: { index?: number }) {
   const [selected, setSelected] = useState<Intent | null>(null);
   const { enabled, duration } = useMotionPolicy();
 
@@ -22,7 +22,7 @@ export default function TalkChapter() {
     <section id="talk" className="scroll-mt-20 border-t border-border py-20 lg:py-28">
       <div className="container">
         <ChapterHeader
-          index={5}
+          index={index}
           eyebrow="Get in touch"
           title={
             <>

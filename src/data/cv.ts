@@ -12,6 +12,7 @@ import { z } from "zod";
 import { EDUCATION } from "./profile";
 import { PROJECTS, getProjectBySlug, type ProjectItem } from "./projects";
 import { SITE_LINKS } from "./siteLinks";
+import { PROFILE_IDS, type ProfileId } from "./profiles";
 
 export interface ExperienceItem {
   role: string;
@@ -21,6 +22,19 @@ export interface ExperienceItem {
   /** One clause per line. Numbers carry their unit and, where one exists, a baseline. */
   points: string[];
   technologies?: string[];
+  /**
+   * Per-profile emphasis: which `points` this lens leads with, and in what
+   * order (indices into `points`, a subset allowed). The role and dates never
+   * change between lenses — only which of its real bullet points lead.
+   */
+  lensEmphasis?: Partial<Record<ProfileId, number[]>>;
+}
+
+/** `points` reordered/subset for a lens, or the full list in written order if none is authored. */
+export function getExperiencePoints(item: ExperienceItem, profileId: ProfileId): string[] {
+  const indices = item.lensEmphasis?.[profileId];
+  if (!indices) return item.points;
+  return indices.map((i) => item.points[i]);
 }
 
 export const EXPERIENCE: ExperienceItem[] = [
@@ -35,6 +49,10 @@ export const EXPERIENCE: ExperienceItem[] = [
       "Turn requirements from the group's researchers into APIs and UI that keep the physics legible.",
     ],
     technologies: ["Python", "FastAPI", "React", "Qiskit", "PennyLane", "OpenQASM 3.0"],
+    lensEmphasis: {
+      infrastructure: [0, 1],
+      presales: [2, 1, 0],
+    },
   },
   {
     role: "Freelance developer — Level 2 seller",
@@ -60,6 +78,9 @@ export const EXPERIENCE: ExperienceItem[] = [
       "SFML",
       "SDL2",
     ],
+    lensEmphasis: {
+      presales: [3, 0, 2, 1],
+    },
   },
   {
     role: "Core team member — PR and marketing",
@@ -203,14 +224,31 @@ export const CV_PDF_PATH = `${import.meta.env.BASE_URL}umer-farooq-cv.pdf`;
 
 const nonEmpty = z.string().trim().min(1);
 
-export const experienceSchema = z.object({
-  role: nonEmpty,
-  organisation: nonEmpty,
-  location: nonEmpty,
-  period: nonEmpty,
-  points: z.array(nonEmpty).min(1),
-  technologies: z.array(nonEmpty).min(1).optional(),
-});
+const profileIdSchema = z.enum(PROFILE_IDS as [ProfileId, ...ProfileId[]]);
+
+export const experienceSchema = z
+  .object({
+    role: nonEmpty,
+    organisation: nonEmpty,
+    location: nonEmpty,
+    period: nonEmpty,
+    points: z.array(nonEmpty).min(1),
+    technologies: z.array(nonEmpty).min(1).optional(),
+    lensEmphasis: z.record(profileIdSchema, z.array(z.number().int().nonnegative())).optional(),
+  })
+  .superRefine((experience, ctx) => {
+    if (!experience.lensEmphasis) return;
+    for (const [profileId, indices] of Object.entries(experience.lensEmphasis)) {
+      for (const index of indices) {
+        if (index >= experience.points.length) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `${experience.role}: lensEmphasis.${profileId} references point index ${index}, out of range (points.length=${experience.points.length})`,
+          });
+        }
+      }
+    }
+  });
 
 export const awardSchema = z.object({
   year: z.string().regex(/^\d{4}$/, "year must be a 4-digit string"),

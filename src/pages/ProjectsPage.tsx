@@ -1,15 +1,13 @@
 import { useDeferredValue, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
-import { motion } from "motion/react";
-import { ArrowUpRight, ExternalLink, Github, Search, SlidersHorizontal, Trophy, X } from "lucide-react";
+import { Search, SlidersHorizontal, X } from "lucide-react";
 import { PROJECTS, getFeaturedProjects, getTechnologyFacets } from "@/data/projects";
 import { DOMAINS, getDomain, type Domain } from "@/data/taxonomy";
 import { accent, type VisualAccent } from "@/lib/accent";
 import { AccentText, ChapterHeader, MonoLabel } from "@/components/kit/Primitives";
-import { TechnologyChip } from "@/components/technology/TechnologyMark";
+import ProjectCard from "@/components/kit/ProjectCard";
 import { useDocumentMeta } from "@/lib/meta";
 import { routeMeta } from "@/data/routeMeta";
-import { useMotionPolicy } from "@/lib/motion-policy";
+import { pathForProfile, useActiveProfile } from "@/lib/profile";
 
 /**
  * Thirty projects is too many to read as a wall, so the page opens with a
@@ -25,7 +23,8 @@ export default function ProjectsPage() {
   const [query, setQuery] = useState("");
   const [domain, setDomain] = useState<Domain | "all">("all");
   const [tech, setTech] = useState<string | null>(null);
-  const { enabled, duration } = useMotionPolicy();
+  const profile = useActiveProfile();
+  const basePath = pathForProfile("/", profile.id);
 
   const deferredQuery = useDeferredValue(query);
 
@@ -280,79 +279,14 @@ export default function ProjectsPage() {
 
                   <ul className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                     {projects.map((project, index) => (
-                      <motion.li
+                      <ProjectCard
                         key={project.slug}
-                        initial={enabled ? { opacity: 0 } : false}
-                        whileInView={{ opacity: 1 }}
-                        viewport={{ once: true, margin: "-40px" }}
-                        transition={{
-                          duration: duration(0.4),
-                          delay: enabled ? Math.min(groupIndex * 0.03 + index * 0.02, 0.3) : 0,
-                        }}
-                      >
-                        <Link
-                          to={`/projects/${project.slug}`}
-                          className={`group flex h-full flex-col rounded-md border border-border bg-card p-5 transition-colors hover:bg-surface-alt focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${tone.panel}`}
-                        >
-                          <div className="flex items-start justify-between gap-2">
-                            <h3 className={`text-base font-semibold leading-snug ${tone.value}`}>
-                              {project.title}
-                            </h3>
-                            <ArrowUpRight
-                              size={14}
-                              className={`mt-1 shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 ${tone.value}`}
-                              aria-hidden="true"
-                            />
-                          </div>
-                          <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
-                            {project.tagline ?? project.subtitle}
-                          </p>
-                          {project.award && (
-                            <p className="mt-3 flex items-start gap-1.5 text-2xs text-award-type">
-                              <Trophy size={11} className="mt-0.5 shrink-0" aria-hidden="true" />
-                              {project.award}
-                            </p>
-                          )}
-                          <div className="mt-4 flex flex-wrap gap-x-3 gap-y-1 border-t border-border pt-3">
-                            {project.githubUrl && (
-                              <span className={`inline-flex items-center gap-1 font-mono text-2xs uppercase tracking-wider ${tone.label}`}>
-                                <Github size={11} aria-hidden="true" /> Repository
-                              </span>
-                            )}
-                            {project.externalUrl && (
-                              <span className={`inline-flex items-center gap-1 font-mono text-2xs uppercase tracking-wider ${tone.label}`}>
-                                <ExternalLink size={11} aria-hidden="true" /> Live demo
-                              </span>
-                            )}
-                            {project.metrics && project.metrics.length > 0 && (
-                              <span className="font-mono text-2xs uppercase tracking-wider text-systems-type">
-                                Measured result
-                              </span>
-                            )}
-                            {!project.githubUrl && !project.externalUrl && !project.metrics?.length && (
-                              <span className="font-mono text-2xs uppercase tracking-wider text-muted-foreground">
-                                Portfolio write-up
-                              </span>
-                            )}
-                          </div>
-                          <div className="mt-auto pt-4">
-                            <div className="flex flex-wrap gap-1">
-                              {project.technologies.slice(0, 3).map((item) => (
-                                <TechnologyChip
-                                  key={item}
-                                  technology={item}
-                                  fallbackTone={meta.accent}
-                                />
-                              ))}
-                              {project.technologies.length > 3 && (
-                                <span className="readout self-center text-2xs text-muted-foreground">
-                                  +{project.technologies.length - 3}
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        </Link>
-                      </motion.li>
+                        project={project}
+                        profile={profile}
+                        basePath={basePath}
+                        variant="grid"
+                        animationDelay={Math.min(groupIndex * 0.03 + index * 0.02, 0.3)}
+                      />
                     ))}
                   </ul>
                 </section>

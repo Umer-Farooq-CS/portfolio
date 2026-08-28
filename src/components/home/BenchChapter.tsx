@@ -1,22 +1,31 @@
 import { motion } from "motion/react";
 import SpeedupBench from "@/components/bench/SpeedupBench";
 import { AccentText, PrimaryAction, QuietAction } from "@/components/kit/Primitives";
+import { accent } from "@/lib/accent";
 import { useIslamabadClock } from "@/lib/clock";
 import { useMotionPolicy } from "@/lib/motion-policy";
-
-const HERO_SIGNALS = [
-  { label: "Compute", detail: "CUDA · MPI", mark: "bg-thermal", value: "text-primary-type" },
-  { label: "Quantum", detail: "Qiskit · Cirq", mark: "bg-cryo", value: "text-cryo-type" },
-  { label: "Verified AI", detail: "PyTorch · RAG", mark: "bg-neural", value: "text-neural-type" },
-  { label: "Platforms", detail: "React · FastAPI", mark: "bg-interface", value: "text-interface-type" },
-] as const;
+import type { ProfileHeroPart, ProfileHeroSignal } from "@/data/profiles";
 
 /**
  * Chapter 01. The hero doesn't claim the skill — it runs a parallel workload on
  * the visitor's machine and plots the result. Everything else here is quiet so
  * that instrument is the thing you remember.
+ *
+ * Headline, subhead, and signals come from the active profile — same identity,
+ * different positioning. Everything below the hero (the bench itself) is
+ * shared across every lens.
  */
-export default function BenchChapter() {
+export default function BenchChapter({
+  headline,
+  subhead,
+  signals,
+  worksHref,
+}: {
+  headline: ProfileHeroPart[];
+  subhead: string;
+  signals: ProfileHeroSignal[];
+  worksHref: string;
+}) {
   const { enabled, duration } = useMotionPolicy();
   const clock = useIslamabadClock();
 
@@ -46,14 +55,19 @@ export default function BenchChapter() {
               {...rise(0.08)}
               className="mt-6 text-display text-foreground [font-variation-settings:'wdth'_118] [text-wrap:balance]"
             >
-              I make slow systems <AccentText tone="thermal">fast</AccentText>, and hard systems{" "}
-              <AccentText tone="cryo">runnable</AccentText>.
+              {headline.map((part, index) =>
+                part.tone ? (
+                  <AccentText key={index} tone={part.tone}>
+                    {part.text}
+                  </AccentText>
+                ) : (
+                  <span key={index}>{part.text}</span>
+                ),
+              )}
             </motion.h1>
 
             <motion.p {...rise(0.16)} className="mt-6 max-w-xl text-lg text-muted-foreground">
-              I work on high-performance and GPU computing, quantum simulation platforms, and AI
-              pipelines that are checked rather than trusted. CS at FAST-NUCES, third at the
-              Huawei ICT national finals, 30 projects shipped.
+              {subhead}
             </motion.p>
 
             <motion.ul
@@ -61,21 +75,24 @@ export default function BenchChapter() {
               aria-label="Technical domains"
               className="mt-7 grid max-w-2xl grid-cols-2 gap-x-5 gap-y-3 border-y border-border py-4 sm:grid-cols-4"
             >
-              {HERO_SIGNALS.map((signal) => (
-                <li key={signal.label} className="min-w-0">
-                  <span className="flex items-center gap-2">
-                    <span aria-hidden="true" className={`h-1.5 w-1.5 rounded-full ${signal.mark}`} />
-                    <span className={`label-mono ${signal.value}`}>{signal.label}</span>
-                  </span>
-                  <span className="readout mt-1 block truncate text-2xs text-muted-foreground">
-                    {signal.detail}
-                  </span>
-                </li>
-              ))}
+              {signals.map((signal) => {
+                const tone = accent(signal.tone);
+                return (
+                  <li key={signal.label} className="min-w-0">
+                    <span className="flex items-center gap-2">
+                      <span aria-hidden="true" className={`h-1.5 w-1.5 rounded-full ${tone.mark}`} />
+                      <span className={`label-mono ${tone.value}`}>{signal.label}</span>
+                    </span>
+                    <span className="readout mt-1 block truncate text-2xs text-muted-foreground">
+                      {signal.detail}
+                    </span>
+                  </li>
+                );
+              })}
             </motion.ul>
 
             <motion.div {...rise(0.3)} className="mt-9 flex flex-wrap items-center gap-3">
-              <PrimaryAction to="/projects">See the work</PrimaryAction>
+              <PrimaryAction to={worksHref}>See the work</PrimaryAction>
               <QuietAction href="#talk">Talk to me</QuietAction>
             </motion.div>
           </div>

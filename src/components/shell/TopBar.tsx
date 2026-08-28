@@ -7,6 +7,9 @@ import { useMotionPolicy } from "@/lib/motion-policy";
 import { NOTES_ARE_PUBLIC } from "@/data/notes";
 import { accent, type VisualAccent } from "@/lib/accent";
 import UFMark from "@/components/brand/UFMark";
+import ProfileSwitcher from "@/components/profile/ProfileSwitcher";
+import { PROFILES } from "@/data/profiles";
+import { pathForProfile, stripProfilePrefix, useActiveProfile } from "@/lib/profile";
 
 const NAV: { label: string; to: string; tone: VisualAccent }[] = [
   { label: "Work", to: "/projects", tone: "interface" },
@@ -19,9 +22,10 @@ const NAV: { label: string; to: string; tone: VisualAccent }[] = [
   ...(NOTES_ARE_PUBLIC ? [{ label: "Notes", to: "/notes", tone: "neural" as const }] : []),
 ];
 
-function isActive(to: string, pathname: string): boolean {
-  if (to === "/projects") return pathname === "/projects" || pathname.startsWith("/projects/");
-  return pathname === to;
+/** Compares against the pathname with any profile prefix already stripped. */
+function isActive(to: string, strippedPathname: string): boolean {
+  if (to === "/projects") return strippedPathname === "/projects" || strippedPathname.startsWith("/projects/");
+  return strippedPathname === to;
 }
 
 export default function TopBar() {
@@ -31,7 +35,11 @@ export default function TopBar() {
   const navigate = useNavigate();
   const { resolved, toggle } = useTheme();
   const { enabled } = useMotionPolicy();
+  const profile = useActiveProfile();
   const isDark = resolved === "dark";
+  const strippedPathname = stripProfilePrefix(pathname);
+  const profileHome = pathForProfile("/", profile.id);
+  const onSelector = pathname === "/";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -43,9 +51,9 @@ export default function TopBar() {
   useEffect(() => setMenuOpen(false), [pathname, hash]);
 
   const goHome = () => {
-    if (pathname === "/") {
+    if (pathname === profileHome || onSelector) {
       window.scrollTo({ top: 0, behavior: enabled ? "smooth" : "auto" });
-      if (hash) navigate("/", { replace: true });
+      if (hash) navigate(pathname, { replace: true });
     }
   };
 
@@ -56,45 +64,61 @@ export default function TopBar() {
       }`}
     >
       <div className="container flex h-14 items-center justify-between gap-4 lg:h-16">
-        <Link
-          to="/"
-          onClick={goHome}
-          className="group -ml-2 flex min-h-11 items-center gap-2 rounded-md px-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        >
-          <UFMark height={22} animated />
-          <span className="font-display text-sm font-semibold tracking-tight text-foreground [font-variation-settings:'wdth'_108]">
-            Umer Farooq
-          </span>
-        </Link>
+        <div className="flex shrink-0 items-center gap-3">
+          <Link
+            to={onSelector ? "/" : profileHome}
+            onClick={goHome}
+            className="group -ml-2 flex min-h-11 shrink-0 items-center gap-2 rounded-md px-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <UFMark height={22} animated />
+            <span className="font-display text-sm font-semibold tracking-tight text-foreground [font-variation-settings:'wdth'_108]">
+              Umer Farooq
+            </span>
+          </Link>
+          {!onSelector && (
+            <div className="hidden lg:block">
+              <ProfileSwitcher activeId={profile.id} />
+            </div>
+          )}
+        </div>
 
-        <nav aria-label="Main" className="hidden items-center gap-1 md:flex">
-          {NAV.map((item) => {
-            const active = isActive(item.to, pathname);
-            const tone = accent(item.tone);
-            return (
-              <Link
-                key={item.to}
-                to={item.to}
-                aria-current={active ? "page" : undefined}
-                className={`rounded-md border px-3 py-1.5 font-mono text-2xs uppercase tracking-widest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
-                  active
-                    ? tone.chip
-                    : "border-transparent text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
+        {!onSelector && (
+          <nav aria-label="Main" className="hidden items-center gap-1 md:flex">
+            {NAV.map((item) => {
+              const active = isActive(item.to, strippedPathname);
+              const tone = accent(item.tone);
+              return (
+                <Link
+                  key={item.to}
+                  to={pathForProfile(item.to, profile.id)}
+                  aria-current={active ? "page" : undefined}
+                  className={`rounded-md border px-3 py-1.5 font-mono text-2xs uppercase tracking-widest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                    active
+                      ? tone.chip
+                      : "border-transparent text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
+        )}
 
         <div className="flex items-center gap-1">
-          <Link
-            to="/#talk"
-            className="hidden rounded-md bg-thermal px-3.5 py-1.5 font-mono text-2xs uppercase tracking-widest text-on-thermal transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:inline-block"
-          >
-            Talk to me
-          </Link>
+          {!onSelector && (
+            <>
+              <div className="hidden md:block lg:hidden">
+                <ProfileSwitcher activeId={profile.id} />
+              </div>
+              <Link
+                to={`${profileHome}#talk`}
+                className="hidden rounded-md bg-thermal px-3.5 py-1.5 font-mono text-2xs uppercase tracking-widest text-on-thermal transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:inline-block"
+              >
+                Talk to me
+              </Link>
+            </>
+          )}
 
           <button
             type="button"
@@ -106,6 +130,7 @@ export default function TopBar() {
             {isDark ? <Moon size={16} /> : <Sun size={16} />}
           </button>
 
+          {!onSelector && (
           <Dialog.Root open={menuOpen} onOpenChange={setMenuOpen}>
             <Dialog.Trigger asChild>
               <button
@@ -124,14 +149,38 @@ export default function TopBar() {
                 <Dialog.Description className="sr-only">
                   Navigate to the portfolio's main pages or start a conversation.
                 </Dialog.Description>
+                {!onSelector && (
+                  <div className="mt-4 border-b border-border pb-4">
+                    <p className="label-mono text-muted-foreground">Viewing as</p>
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {PROFILES.map((viewProfile) => {
+                        const isActiveProfile = viewProfile.id === profile.id;
+                        const tone = accent(viewProfile.accent);
+                        return (
+                          <Link
+                            key={viewProfile.id}
+                            to={pathForProfile(pathname, viewProfile.id)}
+                            onClick={() => setMenuOpen(false)}
+                            aria-current={isActiveProfile ? "true" : undefined}
+                            className={`rounded-md border px-2.5 py-1.5 font-mono text-2xs uppercase tracking-widest focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                              isActiveProfile ? `${tone.selected} ${tone.value}` : "border-border text-muted-foreground"
+                            }`}
+                          >
+                            {viewProfile.navLabel}
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
                 <nav aria-label="Mobile" className="mt-4 flex flex-col">
                   {[{ label: "Home", to: "/", tone: "thermal" as const }, ...NAV].map((item) => {
                     const tone = accent(item.tone);
-                    const active = isActive(item.to, pathname);
+                    const active = isActive(item.to, strippedPathname);
                     return (
                       <Link
                         key={item.to}
-                        to={item.to}
+                        to={pathForProfile(item.to, profile.id)}
                         onClick={() => setMenuOpen(false)}
                         aria-current={active ? "page" : undefined}
                         className={`border-b border-border py-3.5 font-display text-xl last:border-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
@@ -144,7 +193,7 @@ export default function TopBar() {
                   })}
                 </nav>
                 <Link
-                  to="/#talk"
+                  to={`${profileHome}#talk`}
                   onClick={() => setMenuOpen(false)}
                   className="mt-6 block rounded-md bg-thermal px-4 py-3 text-center font-mono text-2xs uppercase tracking-widest text-on-thermal"
                 >
@@ -161,6 +210,7 @@ export default function TopBar() {
               </Dialog.Content>
             </Dialog.Portal>
           </Dialog.Root>
+          )}
         </div>
       </div>
     </header>

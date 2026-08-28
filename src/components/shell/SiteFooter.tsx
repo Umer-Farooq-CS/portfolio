@@ -1,10 +1,12 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Github, Linkedin, Mail, Phone } from "lucide-react";
 import { SITE_LINKS } from "@/data/siteLinks";
 import { useIslamabadClock } from "@/lib/clock";
 import { MonoLabel } from "@/components/kit/Primitives";
 import { NOTES_ARE_PUBLIC } from "@/data/notes";
+import { PROFILES } from "@/data/profiles";
 import { accent, type VisualAccent } from "@/lib/accent";
+import { pathForProfile, useActiveProfile } from "@/lib/profile";
 import UFMark from "@/components/brand/UFMark";
 
 const SOCIAL: { label: string; href: string; icon: typeof Github; tone: VisualAccent }[] = [
@@ -26,6 +28,9 @@ const PAGES: { label: string; to: string; tone: VisualAccent }[] = [
 
 export default function SiteFooter() {
   const clock = useIslamabadClock();
+  const { pathname } = useLocation();
+  const profile = useActiveProfile();
+  const onSelector = pathname === "/";
 
   return (
     <footer className="mt-24 border-t border-border bg-surface-alt/25">
@@ -43,33 +48,62 @@ export default function SiteFooter() {
             <UFMark height={32} />
             <span className="font-display text-sm font-semibold text-foreground">Umer Farooq</span>
           </div>
-          <p className="mt-2 font-mono text-2xs uppercase tracking-widest text-primary-type">
-            Performance · simulation · validation
-          </p>
-          <p className="mt-3 max-w-[26ch] text-xs leading-relaxed text-muted-foreground">
-            High-performance and <span className="text-primary-type">GPU computing</span>,{" "}
-            <span className="text-cryo-type">quantum simulation</span>, and{" "}
-            <span className="text-neural-type">AI systems</span> that hold up under validation.
-          </p>
+          {onSelector ? (
+            <>
+              <p className="mt-2 font-mono text-2xs uppercase tracking-widest text-primary-type">
+                One person · three lenses
+              </p>
+              <p className="mt-3 max-w-[26ch] text-xs leading-relaxed text-muted-foreground">
+                HPC and AI development, infrastructure, and solution architecture — the same
+                evidence, read differently.
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="mt-2 font-mono text-2xs uppercase tracking-widest text-primary-type">
+                Performance · simulation · validation
+              </p>
+              <p className="mt-3 max-w-[26ch] text-xs leading-relaxed text-muted-foreground">
+                High-performance and <span className="text-primary-type">GPU computing</span>,{" "}
+                <span className="text-cryo-type">quantum simulation</span>, and{" "}
+                <span className="text-neural-type">AI systems</span> that hold up under validation.
+              </p>
+            </>
+          )}
         </div>
 
         <div>
-          <MonoLabel className="text-interface-type">Pages</MonoLabel>
+          <MonoLabel className="text-interface-type">{onSelector ? "Profiles" : "Pages"}</MonoLabel>
           <ul className="mt-3 flex flex-col gap-2">
-            {PAGES.map((page) => {
-              const tone = accent(page.tone);
-              return (
-                <li key={page.to}>
-                  <Link
-                    to={page.to}
-                    className="group inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  >
-                    <span aria-hidden="true" className={`h-1.5 w-1.5 rounded-full ${tone.mark}`} />
-                    <span className={tone.hoverText}>{page.label}</span>
-                  </Link>
-                </li>
-              );
-            })}
+            {onSelector
+              ? PROFILES.map((viewProfile) => {
+                  const tone = accent(viewProfile.accent);
+                  return (
+                    <li key={viewProfile.id}>
+                      <Link
+                        to={`/${viewProfile.path}`}
+                        className="group inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      >
+                        <span aria-hidden="true" className={`h-1.5 w-1.5 rounded-full ${tone.mark}`} />
+                        <span className={tone.hoverText}>{viewProfile.navLabel}</span>
+                      </Link>
+                    </li>
+                  );
+                })
+              : PAGES.map((page) => {
+                  const tone = accent(page.tone);
+                  return (
+                    <li key={page.to}>
+                      <Link
+                        to={pathForProfile(page.to, profile.id)}
+                        className="group inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      >
+                        <span aria-hidden="true" className={`h-1.5 w-1.5 rounded-full ${tone.mark}`} />
+                        <span className={tone.hoverText}>{page.label}</span>
+                      </Link>
+                    </li>
+                  );
+                })}
           </ul>
         </div>
 

@@ -12,14 +12,14 @@ import { useMotionPolicy } from "@/lib/motion-policy";
  * "In compute / off compute" replaces the usual hobbies card — same information,
  * without pretending a table-tennis habit is a professional credential.
  */
-export default function AboutChapter() {
+export default function AboutChapter({ index = 4, basePath = "" }: { index?: number; basePath?: string }) {
   const { enabled, duration } = useMotionPolicy();
 
   return (
     <section id="about" className="scroll-mt-20 border-t border-border py-20 lg:py-28">
       <div className="container">
         <ChapterHeader
-          index={4}
+          index={index}
           eyebrow="Who's behind this"
           title={
             <>
@@ -94,7 +94,7 @@ export default function AboutChapter() {
             </div>
 
             <div className="mt-9">
-              <TextAction to="/about" tone="systems">Full background, timeline, and skills</TextAction>
+              <TextAction to={`${basePath}/about`} tone="systems">Full background, timeline, and skills</TextAction>
             </div>
           </div>
         </motion.div>

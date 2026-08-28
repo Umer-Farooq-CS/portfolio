@@ -4,6 +4,7 @@ import {
   getAdjacentProjects,
   getFeaturedProjects,
   getProjectBySlug,
+  getProjectLensView,
   getProjectsByDomain,
   getTechnologyFacets,
 } from "@/data/projects";
@@ -13,6 +14,7 @@ import { DOMAIN_IDS } from "@/data/taxonomy";
 import {
   certificationSchema,
   educationSchema,
+  projectSchema,
   projectsSchema,
   siteLinksSchema,
   skillGroupSchema,
@@ -32,6 +34,43 @@ describe("content schemas", () => {
       expect(() => skillGroupSchema.parse(group)).not.toThrow();
     }
     expect(() => siteLinksSchema.parse(SITE_LINKS)).not.toThrow();
+  });
+});
+
+describe("profile lens content", () => {
+  it("rejects a techFocus that isn't in the project's real technologies", () => {
+    const fabricated = {
+      ...PROJECTS[0],
+      lenses: { infrastructure: { techFocus: ["A Technology Nobody Used"] } },
+    };
+    expect(() => projectSchema.parse(fabricated)).toThrow();
+  });
+
+  it("rejects a metricFocus that isn't one of the project's real metrics", () => {
+    const fabricated = {
+      ...PROJECTS[0],
+      metrics: [{ label: "Real metric", value: "1x" }],
+      lenses: { presales: { metricFocus: ["A number nobody measured"] } },
+    };
+    expect(() => projectSchema.parse(fabricated)).toThrow();
+  });
+
+  it("falls back to the shared summary/technologies when a project has no lens override", () => {
+    const plain = PROJECTS.find((p) => !p.lenses);
+    expect(plain).toBeDefined();
+    if (!plain) return;
+    const view = getProjectLensView(plain, "infrastructure");
+    expect(view.summary).toBe(plain.tagline ?? plain.subtitle);
+    expect(view.techFocus).toEqual(plain.technologies);
+  });
+
+  it("uses the authored lens when one exists", () => {
+    const qcanvas = getProjectBySlug("qcanvas");
+    expect(qcanvas).toBeDefined();
+    if (!qcanvas) return;
+    const view = getProjectLensView(qcanvas, "infrastructure");
+    expect(view.summary).toBe(qcanvas.lenses?.infrastructure?.summary);
+    expect(view.techFocus).toEqual(qcanvas.lenses?.infrastructure?.techFocus);
   });
 });
 

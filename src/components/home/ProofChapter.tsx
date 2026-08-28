@@ -38,7 +38,7 @@ const HEADLINE_METRICS = [
   { value: "3rd", label: "Huawei ICT finals", note: "national, UniQ team", tone: "award" },
 ] as const;
 
-export default function ProofChapter() {
+export default function ProofChapter({ index = 2, basePath = "" }: { index?: number; basePath?: string }) {
   const { enabled, duration } = useMotionPolicy();
   const domainCounts = DOMAINS.map((domain) => ({
     ...domain,
@@ -50,7 +50,7 @@ export default function ProofChapter() {
     <section id="proof" className="scroll-mt-20 border-t border-border bg-surface-alt/40 py-20 lg:py-28">
       <div className="container">
         <ChapterHeader
-          index={2}
+          index={index}
           eyebrow="Evidence"
           title={
             <>
@@ -115,9 +115,9 @@ export default function ProofChapter() {
               Inspect the implementation, run the instruments, or open the complete record. The deeper proof stays one click away while this overview remains focused.
             </p>
             <div className="mt-6 flex flex-col items-start gap-4 border-t border-systems/20 pt-5">
-              <TextAction to="/projects" tone="interface">Read the project write-ups</TextAction>
-              <TextAction to="/lab" tone="cryo">Run the interactive lab</TextAction>
-              <TextAction to="/cv" tone="systems">Open the complete CV</TextAction>
+              <TextAction to={`${basePath}/projects`} tone="interface">Read the project write-ups</TextAction>
+              <TextAction to={`${basePath}/lab`} tone="cryo">Run the interactive lab</TextAction>
+              <TextAction to={`${basePath}/cv`} tone="systems">Open the complete CV</TextAction>
             </div>
           </div>
         </div>
