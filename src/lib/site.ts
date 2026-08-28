@@ -4,9 +4,9 @@
 export const SITE = {
   name: "Umer Farooq",
   /** Short role line used in titles and structured data. */
-  role: "HPC, quantum simulation, and AI systems engineer",
+  role: "HPC & AI infrastructure engineer, and solution architect",
   description:
-    "Umer Farooq builds high-performance and GPU-accelerated systems, quantum circuit simulation platforms, and AI pipelines that hold up under validation.",
+    "Umer Farooq builds the infrastructure underneath HPC and AI workloads — bare-metal Kubernetes and HPC platforms, GPU-accelerated systems, and the reference architectures behind enterprise GPU cloud bids.",
   /** Deploy target. Override with VITE_SITE_URL for a custom domain. */
   // `||`, not `??`: CI passes an unset repository variable as an empty string,
   // which would otherwise make every canonical URL and JSON-LD id relative.

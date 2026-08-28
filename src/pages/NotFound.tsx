@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { getFeaturedProjects } from "@/data/projects";
+import { PROJECTS, getFeaturedProjects } from "@/data/projects";
 import { AccentText, MonoLabel } from "@/components/kit/Primitives";
 import { useDocumentMeta } from "@/lib/meta";
 import { getDomain } from "@/data/taxonomy";
@@ -43,7 +43,7 @@ export default function NotFound() {
             >
               <span className="label-mono text-interface-type">Everything</span>
               <span className="mt-1.5 block text-base font-semibold text-interface-type">
-                All thirty projects
+                All {PROJECTS.length} projects
               </span>
             </Link>
           </li>

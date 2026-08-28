@@ -16,7 +16,9 @@ const RELATED_PROJECT_SLUGS: Record<string, string[]> = {
   "quantum-sim": ["qcanvas", "q-tensor"],
   rag: ["cirq-rag", "multimodal-rag-pdf"],
   "full-stack": ["qcanvas", "harmoniq"],
-  review: ["ring-dht-ipfs", "asco-services-api"],
+  "cluster-platform": ["hpc-cluster-platform", "k8s-bare-metal-automation"],
+  "gpu-cloud-design": ["gpu-cloud-reference-architecture", "enterprise-sla-framework"],
+  review: ["hpc-cluster-platform", "gpu-cloud-reference-architecture"],
 };
 
 function getRelatedProjects(intentId: string): ProjectItem[] {
@@ -46,7 +48,7 @@ export default function ServicesPage() {
               Start from the <AccentText tone="systems">problem</AccentText>, not the toolchain
             </>
           }
-          lede="Six things people usually need. Open one to see the approach, the concrete deliverables, and relevant project evidence before starting a conversation."
+          lede="Eight things people usually need. Open one to see the approach, the concrete deliverables, and relevant project evidence before starting a conversation."
           as="h1"
           tone="systems"
         />

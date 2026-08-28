@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { getProjectBySlug } from "@/data/projects";
+import { PROJECTS, getProjectBySlug } from "@/data/projects";
 import { getDomain } from "@/data/taxonomy";
 import { accent } from "@/lib/accent";
 import { ChapterHeader, Metric, TextAction } from "@/components/kit/Primitives";
@@ -90,7 +90,7 @@ export default function WorkChapter({ index = 1, basePath = "" }: { index?: numb
         </div>
 
         <div className="mt-12 border-t border-border pt-8">
-          <TextAction to={`${basePath}/projects`} tone="interface">All 30 projects</TextAction>
+          <TextAction to={`${basePath}/projects`} tone="interface">All {PROJECTS.length} projects</TextAction>
         </div>
       </div>
     </section>

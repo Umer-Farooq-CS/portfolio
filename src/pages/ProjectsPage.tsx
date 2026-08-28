@@ -10,7 +10,7 @@ import { routeMeta } from "@/data/routeMeta";
 import { pathForProfile, useActiveProfile } from "@/lib/profile";
 
 /**
- * Thirty projects is too many to read as a wall, so the page opens with a
+ * The full record is too many to read as a wall, so the page opens with a
  * deliberately curated view and keeps the full archive one explicit choice away.
  *
  * Grouping comes from the closed domain taxonomy, which is what makes it

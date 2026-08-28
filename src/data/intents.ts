@@ -96,6 +96,36 @@ export const INTENTS: Intent[] = [
     template: "What you're building:\n\nWho uses it:\n\nTimeline:\n",
   },
   {
+    id: "cluster-platform",
+    title: "I need a cluster or GPU platform stood up, not hand-run",
+    response:
+      "Automate the whole path — bare-metal provisioning, hardened cluster bootstrap, GitOps delivery, and the scheduler and parallel storage over it — so a rebuild is a re-run rather than an improvisation.",
+    deliverables: [
+      "Zero-touch provisioning and imaging from a machine profile",
+      "Hardened, highly-available cluster with the state declared in Git",
+      "Day-2 runbooks shipped as automation: certificate rotation, backup and restore, node replacement, upgrade, recovery",
+    ],
+    accent: "systems",
+    subject: "Cluster or GPU platform build",
+    template:
+      "What the cluster is for:\n\nHardware and how it's racked today:\n\nWho operates it now, and how:\n",
+  },
+  {
+    id: "gpu-cloud-design",
+    title: "I need this architected before we commit to it",
+    response:
+      "Turn the requirement into a reference architecture that survives customer review — multi-tenant isolation, capacity and chargeback, and the support model that lets it be sold with a commitment behind it.",
+    deliverables: [
+      "Reference architecture and diagram set, with the isolation model stated layer by layer",
+      "RFP-grade technical response, compliance mapping and RACI",
+      "SLA and incident-response framework: severity tiers, response and restore commitments, escalation ladder, RCA loop",
+    ],
+    accent: "neural",
+    subject: "Architecture and technical proposal",
+    template:
+      "What the platform has to do:\n\nWho the tenants or customers are:\n\nThe bid or decision this feeds, and when:\n",
+  },
+  {
     id: "review",
     title: "I want someone to check our architecture",
     response:
@@ -105,6 +135,8 @@ export const INTENTS: Intent[] = [
       "Concrete fixes, with effort estimates",
       "A walkthrough call to argue about it",
     ],
+    /* The nine-part audit on the HPC platform is what this looks like when it
+       runs against a real delivered system. */
     accent: "systems",
     subject: "Architecture review",
     template: "What the system does:\n\nWhat worries you about it:\n\nStack:\n",

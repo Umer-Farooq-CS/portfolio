@@ -2,7 +2,7 @@
   "$comment": "Per-route title and description. JSON rather than TS because two consumers need it: the pages at runtime (useDocumentMeta) and scripts/prerender-routes.mjs, which stamps it into the built HTML so crawlers and social scrapers see it without running JavaScript. Node cannot import a TS module, and parsing one is fragile — so this is the one shared source.",
   "/": {
     "title": "Umer Farooq",
-    "description": "Umer Farooq builds high-performance and GPU-accelerated systems, quantum circuit simulation platforms, and AI pipelines that hold up under validation."
+    "description": "Umer Farooq builds the infrastructure underneath HPC and AI workloads — bare-metal Kubernetes and HPC platforms, GPU-accelerated systems, and enterprise GPU cloud architectures."
   },
   "/development": {
     "title": "HPC & AI Development",
@@ -10,23 +10,23 @@
   },
   "/infrastructure": {
     "title": "HPC & AI Infrastructure",
-    "description": "Umer Farooq's work on HPC and AI infrastructure: GPU platforms, Kubernetes, cluster architecture, and the systems that run compute at scale."
+    "description": "Umer Farooq's work on HPC and AI infrastructure: zero-touch bare-metal provisioning, hardened Kubernetes, GitOps delivery, and Slurm/GPFS over parallel storage."
   },
   "/solutions": {
     "title": "Pre-Sales Solution Architect",
-    "description": "Umer Farooq translates HPC and AI requirements into architectures: technology selection, solution design, trade-offs, and validation."
+    "description": "Umer Farooq turns HPC and AI requirements into architectures that survive review: multi-tenant GPU cloud reference designs, RFP responses, and SLA and support models."
   },
   "/about": {
     "title": "About",
-    "description": "Umer Farooq — a systems-focused computer scientist in Islamabad working across high-performance computing, quantum simulation, and applied AI."
+    "description": "Umer Farooq — an HPC and AI infrastructure engineer and solution architect, working across bare-metal platforms, GPU computing, quantum simulation, and applied AI."
   },
   "/services": {
     "title": "Services",
-    "description": "GPU and parallel performance work, quantum simulation platforms, reliable AI pipelines, full-stack builds, and architecture review."
+    "description": "Cluster and GPU platform builds, reference architectures and technical proposals, GPU and parallel performance work, reliable AI pipelines, and architecture review."
   },
   "/projects": {
     "title": "Work",
-    "description": "Thirty projects across HPC and GPU acceleration, quantum simulation, AI and RAG systems, compilers, distributed systems, and full-stack builds."
+    "description": "Thirty-four projects across infrastructure and platform engineering, solution architecture, HPC and GPU acceleration, quantum simulation, AI, and full-stack builds."
   },
   "/lab": {
     "title": "Lab",
@@ -34,7 +34,7 @@
   },
   "/cv": {
     "title": "CV",
-    "description": "Umer Farooq — CV. High-performance and GPU computing, quantum simulation, and AI systems. Education, experience, selected projects, skills, and certifications."
+    "description": "Umer Farooq — CV. HPC and AI infrastructure, GPU computing, and solution architecture. Experience, education, selected projects, skills, and certifications."
   },
   "/uses": {
     "title": "Uses",
