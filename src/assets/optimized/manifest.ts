@@ -99,7 +99,7 @@ export const hpcClusterDiagram: ResponsiveImage = {
     { type: "image/webp", srcSet: `${hpcClusterDiagram1000Webp} 1000w, ${hpcClusterDiagram1500Webp} 1500w, ${hpcClusterDiagram2000Webp} 2000w` },
   ],
   width: 2200,
-  height: 2279,
+  height: 2278,
 };
 
 export const k8sAutomationDiagram: ResponsiveImage = {

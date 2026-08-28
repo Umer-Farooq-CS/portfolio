@@ -48,7 +48,10 @@ describe("homepage", () => {
     renderHome();
     const email = SITE_LINKS.email.replace("mailto:", "");
     expect(screen.getAllByText(email).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(/Islamabad/).length).toBeGreaterThan(0);
+    // No personal location anywhere on the page — the status readout is UTC and
+    // the availability signal stands in for a home city.
+    expect(screen.queryAllByText(/Islamabad/)).toHaveLength(0);
+    expect(screen.getAllByText(/Open to work/i).length).toBeGreaterThan(0);
   });
 
   it("sets the homepage document title", () => {

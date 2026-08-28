@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { Github, Linkedin, Mail, Phone } from "lucide-react";
 import { SITE_LINKS } from "@/data/siteLinks";
-import { useIslamabadClock } from "@/lib/clock";
+import { useSiteClock } from "@/lib/clock";
 import { MonoLabel } from "@/components/kit/Primitives";
 import { NOTES_ARE_PUBLIC } from "@/data/notes";
 import { PROFILES } from "@/data/profiles";
@@ -27,7 +27,7 @@ const PAGES: { label: string; to: string; tone: VisualAccent }[] = [
 ];
 
 export default function SiteFooter() {
-  const clock = useIslamabadClock();
+  const clock = useSiteClock();
   const { pathname } = useLocation();
   const profile = useActiveProfile();
   const onSelector = pathname === "/";
@@ -61,12 +61,13 @@ export default function SiteFooter() {
           ) : (
             <>
               <p className="mt-2 font-mono text-2xs uppercase tracking-widest text-primary-type">
-                Performance · simulation · validation
+                Platforms · performance · validation
               </p>
               <p className="mt-3 max-w-[26ch] text-xs leading-relaxed text-muted-foreground">
-                High-performance and <span className="text-primary-type">GPU computing</span>,{" "}
-                <span className="text-cryo-type">quantum simulation</span>, and{" "}
-                <span className="text-neural-type">AI systems</span> that hold up under validation.
+                <span className="text-systems-type">Bare-metal platforms</span>,{" "}
+                <span className="text-primary-type">GPU computing</span>, and the{" "}
+                <span className="text-neural-type">architectures</span> behind them — measured, not
+                asserted.
               </p>
             </>
           )}
@@ -130,14 +131,10 @@ export default function SiteFooter() {
           <MonoLabel className="text-systems-type">Status</MonoLabel>
           <dl className="mt-3 flex flex-col gap-2 text-sm">
             <div className="flex items-baseline gap-2">
-              <dt className="sr-only">Local time</dt>
+              <dt className="sr-only">Current time</dt>
               <dd className="readout text-systems-type">
                 {clock.hh}:{clock.mm} {clock.label}
               </dd>
-            </div>
-            <div className="flex items-baseline gap-2">
-              <dt className="sr-only">Location</dt>
-              <dd className="text-interface-type">{SITE_LINKS.location}</dd>
             </div>
             <div className="flex items-center gap-1.5">
               <span

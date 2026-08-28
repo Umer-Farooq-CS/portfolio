@@ -14,7 +14,7 @@ export interface EducationItem {
 
 export const EDUCATION: EducationItem = {
   degree: "Bachelor of Computer Science",
-  institution: "National University of Computer and Emerging Sciences (FAST-NUCES), Islamabad Campus",
+  institution: "National University of Computer and Emerging Sciences (FAST-NUCES)",
   period: "Aug 2022 – Jun 2026",
   highlights: [
     "Dean's List Award – Spring 2023",

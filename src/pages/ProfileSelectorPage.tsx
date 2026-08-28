@@ -142,7 +142,7 @@ export default function ProfileSelectorPage() {
           className="mt-14 grid grid-cols-3 gap-6 border-t border-border pt-8 sm:max-w-xl"
         >
           <Metric value={String(PROJECTS.length)} label="Projects" note="one shared set" />
-          <Metric value={String(DOMAINS.length)} label="Technical domains" note="HPC to full-stack" />
+          <Metric value={String(DOMAINS.length)} label="Technical domains" note="infrastructure to full-stack" />
           <Metric value="3" label="Lenses" note="same evidence, every time" />
         </motion.dl>
       </div>

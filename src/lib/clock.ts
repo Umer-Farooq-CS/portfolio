@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import { SITE } from "./site";
 
 /**
- * Islamabad local time. Pakistan is UTC+5 year-round with no daylight saving,
- * so this needs no time API — one less network dependency for one clock.
+ * The clock the status readouts run on, offset from UTC by SITE.utcOffsetHours.
+ * At UTC there is no daylight saving to track, so this needs no time API — one
+ * less network dependency for one clock.
  */
-export function islamabadTime(now = new Date()): { hh: string; mm: string; label: string } {
+export function siteTime(now = new Date()): { hh: string; mm: string; label: string } {
   const utcMinutes = now.getUTCHours() * 60 + now.getUTCMinutes();
   const local = (utcMinutes + SITE.utcOffsetHours * 60 + 24 * 60) % (24 * 60);
   const hh = String(Math.floor(local / 60)).padStart(2, "0");
@@ -13,15 +14,15 @@ export function islamabadTime(now = new Date()): { hh: string; mm: string; label
   return { hh, mm, label: SITE.timeZoneLabel };
 }
 
-/** True during a plausible working window in Islamabad (09:00–23:00 PKT). */
+/** True during a plausible working window — 04:00–18:00 UTC. */
 export function isLikelyAwake(now = new Date()): boolean {
-  const { hh } = islamabadTime(now);
+  const { hh } = siteTime(now);
   const hour = Number(hh);
-  return hour >= 9 && hour < 23;
+  return hour >= 4 && hour < 18;
 }
 
 /** Ticks once a minute — a seconds display would be motion without information. */
-export function useIslamabadClock(): { hh: string; mm: string; label: string; awake: boolean } {
+export function useSiteClock(): { hh: string; mm: string; label: string; awake: boolean } {
   const [now, setNow] = useState(() => new Date());
 
   useEffect(() => {
@@ -37,5 +38,5 @@ export function useIslamabadClock(): { hh: string; mm: string; label: string; aw
     };
   }, []);
 
-  return { ...islamabadTime(now), awake: isLikelyAwake(now) };
+  return { ...siteTime(now), awake: isLikelyAwake(now) };
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { useIslamabadClock } from "@/lib/clock";
+import { useSiteClock } from "@/lib/clock";
 import { sectionIndex, sectionsForRoute } from "@/lib/sections";
 import { accent } from "@/lib/accent";
 import { useActiveProfile } from "@/lib/profile";
@@ -14,7 +14,7 @@ export default function Rail() {
   const { pathname } = useLocation();
   const profile = useActiveProfile();
   const sections = sectionsForRoute(pathname, profile.homeChapterOrder);
-  const clock = useIslamabadClock();
+  const clock = useSiteClock();
   const [active, setActive] = useState<string | null>(sections[0]?.id ?? null);
   const [logicalCpus, setLogicalCpus] = useState<number | null>(null);
 
@@ -79,11 +79,11 @@ export default function Rail() {
         </ul>
       </nav>
 
-      {/* Live readouts: where I am, what time it is there, what this machine has. */}
+      {/* Live readouts: the time it is now, and what the reader's machine has. */}
       <div className="pointer-events-auto flex flex-col gap-2.5 pl-6">
         <dl className="flex flex-col gap-2.5">
           <div>
-            <dt className="label-mono">Local</dt>
+            <dt className="label-mono">Now</dt>
             <dd className="readout text-xs text-foreground">
               {clock.hh}:{clock.mm} {clock.label}
             </dd>

@@ -92,7 +92,7 @@ export default function ProjectsPage() {
               <AccentText tone="interface">Best work first</AccentText>. Every build behind it.
             </>
           }
-          lede="Start with the two projects that best show the range, then open the full archive to search HPC, quantum, AI, systems, and product work."
+          lede="Start with the work that best shows the range, then open the full archive to search infrastructure, solution architecture, HPC and GPU, quantum, AI, systems, and product work."
           as="h1"
           tone="interface"
         />

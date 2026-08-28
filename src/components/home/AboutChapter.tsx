@@ -23,7 +23,7 @@ export default function AboutChapter({ index = 4, basePath = "" }: { index?: num
           eyebrow="Who's behind this"
           title={
             <>
-              A <AccentText tone="systems">systems person</AccentText>, in Islamabad
+              A <AccentText tone="systems">systems person</AccentText>, from bare metal to inference
             </>
           }
           tone="systems"
@@ -50,11 +50,11 @@ export default function AboutChapter({ index = 4, basePath = "" }: { index?: num
                 <dt className="label-mono text-systems-type">Education</dt>
                 <dd className="mt-1 text-xs leading-relaxed text-foreground">
                   {EDUCATION.degree}
-                  <span className="block text-muted-foreground">FAST-NUCES, Islamabad</span>
+                  <span className="block text-muted-foreground">FAST-NUCES</span>
                 </dd>
               </div>
               <div>
-                <dt className="label-mono text-interface-type">Expected</dt>
+                <dt className="label-mono text-interface-type">Graduated</dt>
                 <dd className="readout mt-1 text-xs text-interface-type">Jun 2026</dd>
               </div>
             </dl>

@@ -14,10 +14,11 @@ export const SITE = {
     ((import.meta.env.VITE_SITE_URL as string | undefined) || "").trim() ||
     "https://umer-farooq-cs.github.io/portfolio",
   locale: "en",
-  location: "Islamabad, Pakistan",
-  /** Islamabad is UTC+5 year-round — no DST, so no time API is needed. */
-  utcOffsetHours: 5,
-  timeZoneLabel: "PKT",
+  /* The status clock reads UTC rather than a home city: the work is remote and
+     international, and where the author sits is not a fact the site trades on.
+     UTC needs no DST handling either, so the clock still costs no time API. */
+  utcOffsetHours: 0,
+  timeZoneLabel: "UTC",
   ogImage: "og-portfolio.png",
 } as const;
 

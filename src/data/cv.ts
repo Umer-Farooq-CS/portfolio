@@ -180,7 +180,7 @@ export interface AwardItem {
 
 export const AWARDS: AwardItem[] = [
   {
-    year: "2024",
+    year: "2025",
     title: "3rd prize — Huawei ICT Competition, national finals",
     detail: "With the UniQ team, for QCanvas.",
   },
@@ -208,19 +208,20 @@ export const LANGUAGES: LanguageItem[] = [
 ];
 
 /**
- * The eight the CV puts forward: both featured projects, then the HPC, quantum,
- * and AI work with measured results. The rest stay on /projects — a CV that lists
- * all 30 is a list, not an argument.
+ * The eight the CV puts forward: the four delivered infrastructure and
+ * architecture engagements first, then the technical work with measured results
+ * behind them. The rest stay on /projects — a CV that lists every project is a
+ * list, not an argument.
  */
 export const CV_PROJECT_SLUGS: string[] = [
-  "qcanvas",
+  "hpc-cluster-platform",
+  "k8s-bare-metal-automation",
+  "gpu-cloud-reference-architecture",
+  "enterprise-sla-framework",
   "cirq-rag",
+  "qcanvas",
   "q-tensor",
   "mnist-gpu",
-  "canny-edge-detector",
-  "rnn-text-generation",
-  "parallel-graph-text",
-  "pixelrnn-cifar10",
 ];
 
 /** Resolved against projects.ts, so a renamed slug drops out instead of 404-ing. */
@@ -252,7 +253,6 @@ function formatPhone(tel: string): string {
 const bareUrl = (url: string) => url.replace(/^https?:\/\//, "").replace(/\/+$/, "");
 
 export const CV_CONTACT: CvContactItem[] = [
-  { label: "Location", text: SITE_LINKS.location },
   { label: "Email", text: SITE_LINKS.email.replace(/^mailto:/, ""), href: SITE_LINKS.email },
   { label: "Phone", text: formatPhone(SITE_LINKS.phone), href: SITE_LINKS.phone },
   { label: "GitHub", text: bareUrl(SITE_LINKS.github), href: SITE_LINKS.github },

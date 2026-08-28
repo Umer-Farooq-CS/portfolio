@@ -5,11 +5,11 @@ import { SITE_LINKS } from "@/data/siteLinks";
 import { MonoLabel } from "@/components/kit/Primitives";
 import { useDocumentMeta } from "@/lib/meta";
 import { routeMeta } from "@/data/routeMeta";
-import { useIslamabadClock } from "@/lib/clock";
+import { useSiteClock } from "@/lib/clock";
 import { useMotionPolicy } from "@/lib/motion-policy";
 
 export default function ThanksPage() {
-  const clock = useIslamabadClock();
+  const clock = useSiteClock();
   const { enabled, duration } = useMotionPolicy();
 
   useDocumentMeta({ ...routeMeta("/thanks"), path: "/thanks", noIndex: true });

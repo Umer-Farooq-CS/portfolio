@@ -2,7 +2,7 @@ import { motion } from "motion/react";
 import SpeedupBench from "@/components/bench/SpeedupBench";
 import { AccentText, PrimaryAction, QuietAction } from "@/components/kit/Primitives";
 import { accent } from "@/lib/accent";
-import { useIslamabadClock } from "@/lib/clock";
+import { useSiteClock } from "@/lib/clock";
 import { useMotionPolicy } from "@/lib/motion-policy";
 import type { ProfileHeroPart, ProfileHeroSignal } from "@/data/profiles";
 
@@ -27,7 +27,7 @@ export default function BenchChapter({
   worksHref: string;
 }) {
   const { enabled, reveal } = useMotionPolicy();
-  const clock = useIslamabadClock();
+  const clock = useSiteClock();
 
   const rise = (delay: number) => ({
     initial: enabled ? { opacity: 0, y: 14 } : false,
@@ -47,7 +47,7 @@ export default function BenchChapter({
               </span>
               <span aria-hidden="true" className="h-px w-4 bg-border" />
               <span className="readout text-2xs uppercase tracking-widest text-muted-foreground">
-                Islamabad · {clock.hh}:{clock.mm} {clock.label}
+                {clock.hh}:{clock.mm} {clock.label}
               </span>
             </motion.div>
 

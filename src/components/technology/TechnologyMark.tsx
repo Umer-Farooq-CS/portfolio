@@ -11,6 +11,7 @@ import typescriptMark from "@/assets/technology/typescript.svg";
 import fastapiMark from "@/assets/technology/fastapi.svg";
 import postgresqlMark from "@/assets/technology/postgresql.svg";
 import dockerMark from "@/assets/technology/docker.svg";
+import kubernetesMark from "@/assets/technology/kubernetes-signal.svg";
 import { Tag } from "@/components/kit/Primitives";
 import {
   getTechnologyMark,
@@ -23,7 +24,7 @@ import styles from "./TechnologyMark.module.css";
 /*
  * Brand silhouettes are a focused, self-hosted subset of Simple Icons v16.0.0
  * (CC0-1.0): https://github.com/simple-icons/simple-icons/tree/16.0.0
- * CUDA, MPI, and Cirq use original, non-trademark telemetry glyphs because the
+ * CUDA, MPI, Cirq, and Kubernetes use original, non-trademark telemetry glyphs because the
  * source set has no exact technology mark. Visible labels always carry identity.
  */
 const MARK_URLS: Record<TechnologyMarkKind, string> = {
@@ -39,6 +40,7 @@ const MARK_URLS: Record<TechnologyMarkKind, string> = {
   fastapi: fastapiMark,
   postgresql: postgresqlMark,
   docker: dockerMark,
+  kubernetes: kubernetesMark,
 };
 
 export function TechnologyMark({

@@ -13,7 +13,8 @@ export type TechnologyMarkKind =
   | "typescript"
   | "fastapi"
   | "postgresql"
-  | "docker";
+  | "docker"
+  | "kubernetes";
 
 export interface TechnologyMarkDefinition {
   /** Must match the spelling in projects.ts; the mark never guesses aliases. */
@@ -36,6 +37,7 @@ export const TECHNOLOGY_MARKS = [
   { technology: "FastAPI", label: "FastAPI", mark: "fastapi", tone: "interface" },
   { technology: "PostgreSQL", label: "PostgreSQL", mark: "postgresql", tone: "systems" },
   { technology: "Docker", label: "Docker", mark: "docker", tone: "systems" },
+  { technology: "Kubernetes", label: "Kubernetes", mark: "kubernetes", tone: "systems" },
 ] as const satisfies readonly TechnologyMarkDefinition[];
 
 const MARK_BY_TECHNOLOGY = new Map<string, TechnologyMarkDefinition>(
@@ -50,6 +52,7 @@ export function getTechnologyMark(technology: string): TechnologyMarkDefinition 
 // every claim grounded in an exact technology string from projects.ts.
 const RAIL_ORDER = [
   "CUDA",
+  "Kubernetes",
   "Qiskit",
   "PyTorch",
   "React",

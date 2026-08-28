@@ -14,7 +14,6 @@ export function personSchema() {
     url: absoluteUrl("/"),
     jobTitle: SITE.role,
     description: SITE.description,
-    address: { "@type": "PostalAddress", addressLocality: "Islamabad", addressCountry: "PK" },
     alumniOf: { "@type": "CollegeOrUniversity", name: EDUCATION.institution },
     sameAs: [SITE_LINKS.github, SITE_LINKS.linkedin],
   };

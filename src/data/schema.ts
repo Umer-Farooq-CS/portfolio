@@ -145,7 +145,6 @@ export const siteLinksSchema = z.object({
   linkedin: z.string().url(),
   email: z.string().startsWith("mailto:"),
   phone: z.string().startsWith("tel:"),
-  location: nonEmpty,
 });
 
 export type ProjectInput = z.infer<typeof projectSchema>;

@@ -73,9 +73,9 @@ const svg = `
         font-size="34" font-weight="600" opacity="0.92">and hard systems runnable.</text>
 
   <text x="80" y="392" fill="${GRAPHITE}" font-family="Consolas, Menlo, monospace"
-        font-size="20" letter-spacing="1.6">HPC · GPU · QUANTUM SIMULATION · VERIFIED AI</text>
+        font-size="20" letter-spacing="1.6">HPC · GPU · KUBERNETES · SOLUTION ARCHITECTURE</text>
   <text x="80" y="424" fill="${GRAPHITE}" font-family="Consolas, Menlo, monospace"
-        font-size="20" letter-spacing="1.6">ISLAMABAD, PKT</text>
+        font-size="20" letter-spacing="1.6">OPEN TO WORK</text>
 
   <line x1="80" y1="500" x2="620" y2="500" stroke="${GRAPHITE}" stroke-width="1" opacity="0.4" />
   <text x="80" y="540" fill="${THERMAL}" font-family="Consolas, Menlo, monospace"

@@ -81,6 +81,43 @@ export const USES_GROUPS: UsesGroup[] = [
     ],
   },
   {
+    id: "infrastructure",
+    title: "Infrastructure",
+    note: "What the platform work is provisioned, bootstrapped and delivered with.",
+    items: [
+      {
+        label: "Provisioning",
+        value:
+          "MAAS for zero-touch bare-metal installs, Warewulf for diskless compute nodes, IPMI and Redfish for out-of-band power and console.",
+      },
+      {
+        label: "Configuration",
+        value:
+          "Ansible, with the inventory in version control so a rebuild is a re-run rather than an improvisation. Kubespray for the cluster bootstrap itself.",
+      },
+      {
+        label: "Kubernetes",
+        value:
+          "Bare metal, not managed: an HA control plane on stacked etcd behind a floating VIP, Calico with WireGuard encryption, Pod Security Standards and least-privilege RBAC.",
+      },
+      {
+        label: "GitOps",
+        value:
+          "ArgoCD app-of-apps for every platform add-on, Helm and Kustomize underneath it, Terraform where the substrate has an API.",
+      },
+      {
+        label: "HPC scheduling",
+        value:
+          "Slurm for batch, GPFS for parallel storage, Spack and Lmod for the environment stacks users actually load.",
+      },
+      {
+        label: "Observability",
+        value:
+          "Prometheus and Grafana for metrics and dashboards, Loki for logs, Keycloak for OIDC single sign-on in front of all of it.",
+      },
+    ],
+  },
+  {
     id: "editor",
     title: "Editor and shell",
     items: [
@@ -115,7 +152,7 @@ export const USES_GROUPS: UsesGroup[] = [
       { label: "Hosting", value: "GitHub Pages. This site is static; there is no server at runtime." },
       { label: "Cloud", value: "Oracle Cloud Infrastructure, which is also what the two 2025 certifications cover." },
       { label: "Databases", value: "PostgreSQL by default, MySQL and MongoDB where a project arrived with them." },
-      { label: "Orchestration", value: "Kubernetes, for scheduling QCanvas simulation jobs across workers." },
+      { label: "Orchestration", value: "Kubernetes — bare-metal platform clusters at work, and scheduling QCanvas simulation jobs across workers." },
       { label: "Forms", value: "Formspree handles the contact form, because a static host has nothing to POST to." },
     ],
   },

@@ -28,13 +28,46 @@ function experiencePeriod(organisation: string): string {
   return entry.period;
 }
 
-/** A typed timeline: order carries information here, so it is numbered and dated. */
+/** The role the sidebar shows as current — first EXPERIENCE entry, newest first. */
+const CURRENT_ROLE = EXPERIENCE[0];
+
+/**
+ * A typed timeline, newest first — the order a reader scans for "what is he
+ * doing now", not a chronology they have to read backwards. Education sits last
+ * because it is the entry with the earliest start, not because it matters least.
+ */
 const TIMELINE = [
   {
-    period: "Aug 2022 – Jun 2026 (expected)",
-    title: "BS Computer Science, FAST-NUCES",
-    detail: "Islamabad. Dean's List, Spring 2023. Coursework centred on HPC, systems, and applied AI.",
+    period: experiencePeriod("MAK Technology"),
+    title: "HPC & infrastructure engineer, MAK Technology",
+    detail:
+      "Dubai. Bare-metal Kubernetes and HPC platforms for enterprise GPU-as-a-Service, and the reference architectures and support models behind the bids for them.",
     tone: "systems",
+  },
+  {
+    period: experiencePeriod("Open Quantum Workbench, FAST-NUCES"),
+    title: "HPC & quantum software engineer, Open Quantum Workbench",
+    detail:
+      "FAST-NUCES. The simulation interface and the compute services behind it, plus the GPU and distributed simulation work.",
+    tone: "cryo",
+  },
+  {
+    period: "2025",
+    title: "Huawei ICT Competition, national finals",
+    detail: "Third place with QCanvas, as part of the UniQ team.",
+    tone: "award",
+  },
+  {
+    period: "2025",
+    title: "Oracle AI certifications",
+    detail: "Generative AI Professional, and AI Foundations Associate.",
+    tone: "neural",
+  },
+  {
+    period: experiencePeriod("NaSCon'25, FAST-NUCES"),
+    title: "NaSCon'25, PR and marketing",
+    detail: "Core team. Partner outreach and campaigns for a national tech event.",
+    tone: "interface",
   },
   {
     period: experiencePeriod("Fiverr"),
@@ -44,32 +77,18 @@ const TIMELINE = [
     tone: "interface",
   },
   {
-    period: "2024",
-    title: "Huawei ICT Competition, national finals",
-    detail: "Third place with QCanvas, as part of the UniQ team.",
-    tone: "award",
-  },
-  {
-    period: experiencePeriod("NaSCon'25, FAST-NUCES"),
-    title: "NaSCon'25, PR and marketing",
-    detail: "Core team. Partner outreach and campaigns for a national tech event.",
-    tone: "interface",
-  },
-  {
-    period: "2025",
-    title: "Oracle AI certifications",
-    detail: "Generative AI Professional, and AI Foundations Associate.",
-    tone: "neural",
-  },
-  {
-    period: experiencePeriod("Open Quantum Workbench, FAST-NUCES"),
-    title: "Software engineer, Open Quantum Workbench",
-    detail: "FAST-NUCES. Full-stack work on an open quantum simulation and numerical computing workbench.",
-    tone: "cryo",
+    period: "Aug 2022 – Jun 2026",
+    title: "BS Computer Science, FAST-NUCES",
+    detail: "Dean's List, Spring 2023. Coursework centred on HPC, systems, and applied AI.",
+    tone: "systems",
   },
 ];
 
-const LOOKING_FOR = ["HPC and GPU internships", "Research collaborations", "Infrastructure and platform roles"];
+const LOOKING_FOR = [
+  "Infrastructure and platform engineering",
+  "Solution architecture and technical pre-sales",
+  "HPC, GPU and AI systems work",
+];
 
 const QUICK_LINKS: { label: string; href: string; icon: typeof Github; tone: VisualAccent }[] = [
   { label: "GitHub", href: SITE_LINKS.github, icon: Github, tone: "interface" },
@@ -101,7 +120,7 @@ export default function AboutPage() {
               Umer <AccentText tone="systems">Farooq</AccentText>
             </>
           }
-          lede="Systems-focused computer scientist. High-performance and parallel computing, quantum simulation, and full-stack development — with a preference for problems where success is a measurable number."
+          lede="HPC and AI infrastructure engineer and solution architect. Bare-metal Kubernetes and HPC platforms, GPU-accelerated computing, quantum simulation, and the architectures behind enterprise GPU cloud bids — with a preference for problems where success is a measurable number."
           as="h1"
           tone="systems"
         />
@@ -121,8 +140,22 @@ export default function AboutPage() {
 
             <dl className="mt-6 flex flex-col gap-4 border-t border-border pt-5">
               <div>
-                <dt className="label-mono">Based in</dt>
-                <dd className="mt-1 text-sm text-foreground">{SITE_LINKS.location}</dd>
+                <dt className="label-mono">Availability</dt>
+                <dd className="mt-1 text-sm text-foreground">
+                  Open to work
+                  <span className="mt-0.5 block text-xs text-muted-foreground">
+                    Remote, or on site with the right engagement
+                  </span>
+                </dd>
+              </div>
+              <div>
+                <dt className="label-mono">Currently</dt>
+                <dd className="mt-1 text-sm text-foreground">
+                  {CURRENT_ROLE.role}
+                  <span className="mt-0.5 block text-xs text-muted-foreground">
+                    {CURRENT_ROLE.organisation} — {CURRENT_ROLE.location}
+                  </span>
+                </dd>
               </div>
               <div>
                 <dt className="label-mono">Education</dt>
@@ -134,7 +167,7 @@ export default function AboutPage() {
                 </dd>
               </div>
               <div>
-                <dt className="label-mono">Expected completion</dt>
+                <dt className="label-mono">Graduated</dt>
                 <dd className="readout mt-1 text-sm text-systems-type">Jun 2026</dd>
               </div>
             </dl>
