@@ -1,6 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { ROUTE_META_PATHS, routeMeta } from "@/data/routeMeta";
 import { PROJECTS } from "@/data/projects";
+import { SITE } from "@/lib/site";
+
+// Mirrors SUFFIX in scripts/prerender-routes.mjs, which stamps "<title> — <role>"
+// into every prerendered page and cannot import this TS module. It drifted once:
+// SITE.role was updated everywhere else and the prerendered <title> kept the old
+// wording, which is invisible in dev and only ships in the built HTML.
+const PRERENDER_TITLE_SUFFIX = "HPC & AI infrastructure engineer, and solution architect";
 
 /**
  * route-meta.json is read by two consumers — useDocumentMeta at runtime and
@@ -39,6 +46,10 @@ describe("route metadata", () => {
       expect(meta.description.trim().length, `${path} description too short`).toBeGreaterThan(40);
       expect(meta.description.trim().length, `${path} description too long`).toBeLessThan(200);
     }
+  });
+
+  it("keeps the prerenderer's title suffix equal to SITE.role", () => {
+    expect(PRERENDER_TITLE_SUFFIX).toBe(SITE.role);
   });
 
   it("throws on an unknown route rather than rendering a blank head", () => {

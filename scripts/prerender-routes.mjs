@@ -68,7 +68,13 @@ const escape = (value) =>
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
 
-const SUFFIX = "HPC, quantum simulation, and AI systems engineer";
+/**
+ * Mirrors SITE.role in src/lib/site.ts. A Node script can't import the TS module
+ * (the same trade-off routes.mjs makes with STATIC_ROUTES), so it is duplicated
+ * here and asserted equal in src/test/route-meta.test.ts — this string went
+ * stale once already while every other copy of the role was updated.
+ */
+const SUFFIX = "HPC & AI infrastructure engineer, and solution architect";
 
 /**
  * Replaces a whole <meta> element, whatever its attribute layout.
