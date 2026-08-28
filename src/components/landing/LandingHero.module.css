@@ -1,0 +1,185 @@
+/* The landing hero's boot sequence.
+   ---------------------------------------------------------------------------
+   Deliberately CSS keyframes rather than Motion: this runs during first paint,
+   when the main thread is at its busiest parsing and hydrating. CSS animations
+   run off the main thread and hold their frame rate through that; a JS timeline
+   competing with hydration is exactly where a load animation stutters.
+
+   Every step is a delay on the same cascade, so the sequence is one timeline
+   read top to bottom rather than state spread across components.
+
+   `.stage` carries `data-intro="running" | "done"`. "done" is the skip state:
+   it cancels every animation and pins the final values, so a visitor who
+   scrolls, clicks or types in the first second lands on a finished hero
+   instead of watching the rest of a sequence they interrupted. */
+
+/* Registered so the width axis can be tweened. An unregistered custom property
+   is a string to the animation engine and would jump rather than interpolate. */
+@property --hero-wdth {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 68;
+}
+
+.stage {
+  --intro-ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* --- the portrait, treated ------------------------------------------------
+   A duotone rather than the raw photograph: the source is a formal shot
+   against an ornate gold gate, which fights the palette at any size. Mapping
+   its luminance onto a thermal-to-ink ramp keeps the likeness and drops the
+   background into the design language. `isolation` keeps the blend inside the
+   frame instead of compositing with the page behind it. */
+.portraitFrame {
+  isolation: isolate;
+  overflow: hidden;
+  background-image: linear-gradient(
+    155deg,
+    color-mix(in oklab, var(--color-thermal) 92%, white) 0%,
+    color-mix(in oklab, var(--color-thermal) 62%, #0b0d10) 46%,
+    #06070a 100%
+  );
+}
+
+/* The gilded gate behind the subject is the *brightest* part of the source, so
+   raising contrast pushes the ornament up the ramp and makes it glow, which is
+   the opposite of what is wanted. Two moves instead: pull the highlights down
+   so the gate sits mid-ramp, and scale in so most of it is outside the frame.
+   The scale is on the image rather than the crop so the frame's aspect ratio,
+   and therefore the reserved layout space, does not change. */
+.portrait {
+  mix-blend-mode: luminosity;
+  filter: grayscale(1) contrast(1.04) brightness(0.88);
+  transform: scale(1.34);
+  transform-origin: 52% 16%;
+}
+
+/* Corners fall off, so the frame reads as a treated plate rather than a
+   cropped snapshot. Sits above the blended image, inside the isolation. */
+.portraitFrame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(
+    112% 88% at 46% 26%,
+    transparent 28%,
+    color-mix(in oklab, #06070a 78%, transparent) 100%
+  );
+}
+
+/* The scan pass. One sweep, and only over the portrait frame. */
+.scan {
+  position: absolute;
+  inset-inline: 0;
+  height: 45%;
+  pointer-events: none;
+  background-image: linear-gradient(
+    180deg,
+    transparent,
+    color-mix(in oklab, var(--color-thermal) 55%, transparent),
+    transparent
+  );
+  transform: translateY(-105%);
+}
+
+.stage[data-intro="running"] .scan {
+  animation: scanPass 1400ms var(--intro-ease) 260ms both;
+}
+
+/* --- the name -------------------------------------------------------------
+   The one gesture that belongs to the typeface rather than to a library:
+   Archivo carries a real width axis (62-125) that the site otherwise only
+   uses at a fixed value. Opening it from narrow to wide reads as the word
+   settling into place. */
+.name {
+  font-variation-settings: "wdth" var(--hero-wdth);
+  --hero-wdth: 68;
+  opacity: 0;
+  letter-spacing: 0.04em;
+}
+
+.stage[data-intro="running"] .name {
+  animation: openWidth 1150ms var(--intro-ease) 520ms both;
+}
+
+/* --- the cascade --------------------------------------------------------- */
+.step {
+  opacity: 0;
+}
+
+.stage[data-intro="running"] .step {
+  animation: riseIn 560ms var(--intro-ease) both;
+}
+
+.stage[data-intro="running"] .s1 { animation-delay: 60ms; }
+.stage[data-intro="running"] .s2 { animation-delay: 200ms; }
+.stage[data-intro="running"] .s3 { animation-delay: 980ms; }
+.stage[data-intro="running"] .s4 { animation-delay: 1120ms; }
+
+/* --- skipped / finished --------------------------------------------------
+   Also the state a visitor who asked for reduced motion starts in, and the
+   state the prerendered HTML is closest to: content present, no travel. */
+.stage[data-intro="done"] .step,
+.stage[data-intro="done"] .name {
+  animation: none;
+  opacity: 1;
+  transform: none;
+}
+
+.stage[data-intro="done"] .name {
+  --hero-wdth: 118;
+  letter-spacing: -0.02em;
+}
+
+.stage[data-intro="done"] .scan {
+  animation: none;
+  display: none;
+}
+
+@keyframes riseIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes openWidth {
+  from { --hero-wdth: 68; opacity: 0; letter-spacing: 0.04em; }
+  to { --hero-wdth: 118; opacity: 1; letter-spacing: -0.02em; }
+}
+
+@keyframes scanPass {
+  from { transform: translateY(-105%); }
+  to { transform: translateY(105%); }
+}
+
+/* The measuring field behind the hero. Static; the sequence only fades it in. */
+.field {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, var(--color-border) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-border) 1px, transparent 1px);
+  background-size: var(--telemetry-grid-size, 64px) var(--telemetry-grid-size, 64px);
+  opacity: 0.5;
+  mask-image: radial-gradient(115% 85% at 22% 38%, black 0%, transparent 72%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage .step,
+  .stage .name {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+  }
+
+  .stage .name {
+    --hero-wdth: 118;
+    letter-spacing: -0.02em;
+  }
+
+  .stage .scan {
+    display: none;
+  }
+}
