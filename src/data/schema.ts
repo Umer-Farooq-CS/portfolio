@@ -77,6 +77,7 @@ export const projectSchema = z
     tagline: nonEmpty.optional(),
     objective: nonEmpty.optional(),
     strategy: z.array(nonEmpty).optional(),
+    confidentiality: nonEmpty.optional(),
     /** Per-profile presentation overrides — see projectLensViewSchema above. */
     lenses: z.record(profileIdSchema, projectLensViewSchema).optional(),
   })

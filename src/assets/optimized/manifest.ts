@@ -23,6 +23,36 @@ import cirqRagDiagram1200Avif from "./cirqRagDiagram-1200.avif";
 import cirqRagDiagram1200Webp from "./cirqRagDiagram-1200.webp";
 import cirqRagDiagram1600Avif from "./cirqRagDiagram-1600.avif";
 import cirqRagDiagram1600Webp from "./cirqRagDiagram-1600.webp";
+import hpcClusterDiagram1000Avif from "./hpcClusterDiagram-1000.avif";
+import hpcClusterDiagram1000Webp from "./hpcClusterDiagram-1000.webp";
+import hpcClusterDiagram1500Avif from "./hpcClusterDiagram-1500.avif";
+import hpcClusterDiagram1500Webp from "./hpcClusterDiagram-1500.webp";
+import hpcClusterDiagram2000Avif from "./hpcClusterDiagram-2000.avif";
+import hpcClusterDiagram2000Webp from "./hpcClusterDiagram-2000.webp";
+import k8sAutomationDiagram1000Avif from "./k8sAutomationDiagram-1000.avif";
+import k8sAutomationDiagram1000Webp from "./k8sAutomationDiagram-1000.webp";
+import k8sAutomationDiagram1500Avif from "./k8sAutomationDiagram-1500.avif";
+import k8sAutomationDiagram1500Webp from "./k8sAutomationDiagram-1500.webp";
+import k8sAutomationDiagram2000Avif from "./k8sAutomationDiagram-2000.avif";
+import k8sAutomationDiagram2000Webp from "./k8sAutomationDiagram-2000.webp";
+import gpuCloudDiagram1000Avif from "./gpuCloudDiagram-1000.avif";
+import gpuCloudDiagram1000Webp from "./gpuCloudDiagram-1000.webp";
+import gpuCloudDiagram1500Avif from "./gpuCloudDiagram-1500.avif";
+import gpuCloudDiagram1500Webp from "./gpuCloudDiagram-1500.webp";
+import gpuCloudDiagram2000Avif from "./gpuCloudDiagram-2000.avif";
+import gpuCloudDiagram2000Webp from "./gpuCloudDiagram-2000.webp";
+import slaFrameworkDiagram1000Avif from "./slaFrameworkDiagram-1000.avif";
+import slaFrameworkDiagram1000Webp from "./slaFrameworkDiagram-1000.webp";
+import slaFrameworkDiagram1500Avif from "./slaFrameworkDiagram-1500.avif";
+import slaFrameworkDiagram1500Webp from "./slaFrameworkDiagram-1500.webp";
+import slaFrameworkDiagram2000Avif from "./slaFrameworkDiagram-2000.avif";
+import slaFrameworkDiagram2000Webp from "./slaFrameworkDiagram-2000.webp";
+import gpuOptimizationDiagram1000Avif from "./gpuOptimizationDiagram-1000.avif";
+import gpuOptimizationDiagram1000Webp from "./gpuOptimizationDiagram-1000.webp";
+import gpuOptimizationDiagram1500Avif from "./gpuOptimizationDiagram-1500.avif";
+import gpuOptimizationDiagram1500Webp from "./gpuOptimizationDiagram-1500.webp";
+import gpuOptimizationDiagram2000Avif from "./gpuOptimizationDiagram-2000.avif";
+import gpuOptimizationDiagram2000Webp from "./gpuOptimizationDiagram-2000.webp";
 
 export interface ResponsiveImage {
   /** Widest variant, used as the <img> src fallback. */
@@ -60,4 +90,54 @@ export const cirqRagDiagram: ResponsiveImage = {
   ],
   width: 2752,
   height: 1536,
+};
+
+export const hpcClusterDiagram: ResponsiveImage = {
+  fallback: hpcClusterDiagram2000Webp,
+  sources: [
+    { type: "image/avif", srcSet: `${hpcClusterDiagram1000Avif} 1000w, ${hpcClusterDiagram1500Avif} 1500w, ${hpcClusterDiagram2000Avif} 2000w` },
+    { type: "image/webp", srcSet: `${hpcClusterDiagram1000Webp} 1000w, ${hpcClusterDiagram1500Webp} 1500w, ${hpcClusterDiagram2000Webp} 2000w` },
+  ],
+  width: 2200,
+  height: 2279,
+};
+
+export const k8sAutomationDiagram: ResponsiveImage = {
+  fallback: k8sAutomationDiagram2000Webp,
+  sources: [
+    { type: "image/avif", srcSet: `${k8sAutomationDiagram1000Avif} 1000w, ${k8sAutomationDiagram1500Avif} 1500w, ${k8sAutomationDiagram2000Avif} 2000w` },
+    { type: "image/webp", srcSet: `${k8sAutomationDiagram1000Webp} 1000w, ${k8sAutomationDiagram1500Webp} 1500w, ${k8sAutomationDiagram2000Webp} 2000w` },
+  ],
+  width: 2200,
+  height: 1595,
+};
+
+export const gpuCloudDiagram: ResponsiveImage = {
+  fallback: gpuCloudDiagram2000Webp,
+  sources: [
+    { type: "image/avif", srcSet: `${gpuCloudDiagram1000Avif} 1000w, ${gpuCloudDiagram1500Avif} 1500w, ${gpuCloudDiagram2000Avif} 2000w` },
+    { type: "image/webp", srcSet: `${gpuCloudDiagram1000Webp} 1000w, ${gpuCloudDiagram1500Webp} 1500w, ${gpuCloudDiagram2000Webp} 2000w` },
+  ],
+  width: 2200,
+  height: 2166,
+};
+
+export const slaFrameworkDiagram: ResponsiveImage = {
+  fallback: slaFrameworkDiagram2000Webp,
+  sources: [
+    { type: "image/avif", srcSet: `${slaFrameworkDiagram1000Avif} 1000w, ${slaFrameworkDiagram1500Avif} 1500w, ${slaFrameworkDiagram2000Avif} 2000w` },
+    { type: "image/webp", srcSet: `${slaFrameworkDiagram1000Webp} 1000w, ${slaFrameworkDiagram1500Webp} 1500w, ${slaFrameworkDiagram2000Webp} 2000w` },
+  ],
+  width: 2200,
+  height: 1361,
+};
+
+export const gpuOptimizationDiagram: ResponsiveImage = {
+  fallback: gpuOptimizationDiagram2000Webp,
+  sources: [
+    { type: "image/avif", srcSet: `${gpuOptimizationDiagram1000Avif} 1000w, ${gpuOptimizationDiagram1500Avif} 1500w, ${gpuOptimizationDiagram2000Avif} 2000w` },
+    { type: "image/webp", srcSet: `${gpuOptimizationDiagram1000Webp} 1000w, ${gpuOptimizationDiagram1500Webp} 1500w, ${gpuOptimizationDiagram2000Webp} 2000w` },
+  ],
+  width: 2200,
+  height: 1629,
 };

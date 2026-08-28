@@ -8,6 +8,7 @@ import {
   isProfileId,
 } from "@/data/profiles";
 import { SKILL_GROUPS } from "@/data/profile";
+import { PROJECTS } from "@/data/projects";
 
 // Kept in step with PROFILE_ROUTE_PATHS/PROFILE_LABELS in scripts/routes.mjs.
 // A node script can't be imported into a typechecked test (same trade-off
@@ -66,6 +67,22 @@ describe("profile configuration", () => {
     }
     expect(getProfileByPath("presales")).toBeUndefined();
     expect(getProfileByPath("not-a-real-path")).toBeUndefined();
+  });
+
+  // A lens picks which flagships lead the homepage; it must not invent one, and
+  // it must not quietly promote a project that isn't featured — otherwise
+  // /projects and the homepage disagree about what the best work is.
+  it("leads the homepage with real, featured projects under every lens", () => {
+    const featured = new Set(PROJECTS.filter((p) => p.featured).map((p) => p.slug));
+    for (const profile of PROFILES) {
+      expect(profile.workChapter.slugs.length).toBeGreaterThan(0);
+      expect(new Set(profile.workChapter.slugs).size).toBe(profile.workChapter.slugs.length);
+      for (const slug of profile.workChapter.slugs) {
+        expect(featured).toContain(slug);
+      }
+      expect(profile.workChapter.title.trim()).not.toBe("");
+      expect(profile.workChapter.lede.trim()).not.toBe("");
+    }
   });
 
   it("isProfileId/getProfile agree with the PROFILES list", () => {

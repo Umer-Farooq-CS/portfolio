@@ -20,6 +20,13 @@ const TARGETS = [
   { file: "hero-bg.jpg", name: "heroBg", widths: [960, 1440, 1920], quality: 62 },
   // A diagram: text legibility matters more than file size, so quality stays high.
   { file: "Cirq-RAG-Agent.png", name: "cirqRagDiagram", widths: [800, 1200, 1600], quality: 82 },
+  // The architecture diagrams. Denser than the RAG diagram — small labels have to
+  // survive, so they carry a wider top variant and the same high quality.
+  { file: "arch-hpc-cluster.png", name: "hpcClusterDiagram", widths: [1000, 1500, 2000], quality: 82 },
+  { file: "arch-k8s-automation.png", name: "k8sAutomationDiagram", widths: [1000, 1500, 2000], quality: 82 },
+  { file: "arch-gpu-cloud.png", name: "gpuCloudDiagram", widths: [1000, 1500, 2000], quality: 82 },
+  { file: "arch-sla-framework.png", name: "slaFrameworkDiagram", widths: [1000, 1500, 2000], quality: 82 },
+  { file: "arch-gpu-optimization.png", name: "gpuOptimizationDiagram", widths: [1000, 1500, 2000], quality: 82 },
 ];
 
 const FORMATS = [

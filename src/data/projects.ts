@@ -1,5 +1,12 @@
 // Project portfolio data derived from master_detailed_cv.tex
-import { cirqRagDiagram } from "@/assets/optimized/manifest";
+import {
+  cirqRagDiagram,
+  gpuCloudDiagram,
+  gpuOptimizationDiagram,
+  hpcClusterDiagram,
+  k8sAutomationDiagram,
+  slaFrameworkDiagram,
+} from "@/assets/optimized/manifest";
 import type { ResponsiveImage } from "@/assets/optimized/manifest";
 import { DOMAIN_IDS, type Domain } from "./taxonomy";
 import type { Metric } from "./schema";
@@ -48,11 +55,409 @@ export interface ProjectItem {
   objective?: string;
   /** How it was approached — the moves that mattered. */
   strategy?: string[];
+  /**
+   * Attribution for work delivered under a client NDA. Present only where the
+   * engagement can't be named — the architecture and the numbers are the
+   * author's own, the client isn't. Rendered as a note, never as a claim.
+   */
+  confidentiality?: string;
   /** Per-profile presentation overrides. Absent lenses fall back to the shared fields. */
   lenses?: Partial<Record<ProfileId, ProjectLensView>>;
 }
 
 export const PROJECTS: ProjectItem[] = [
+  // --- Infrastructure & solution architecture -------------------------------
+  // Delivered at MAK Technology. The engagements can't be named; the
+  // architecture, the audit and the numbers are first-hand. Every figure here is
+  // countable off the delivered system or its report set — see the diagram on
+  // each project page.
+  {
+    slug: "hpc-cluster-platform",
+    title: "HPC Cluster Management Platform",
+    subtitle:
+      "One control plane that provisions bare metal, bakes the node image, schedules the work, mounts the parallel filesystem, and streams every line back to the browser",
+    category: "Infrastructure & Platform Engineering",
+    domains: ["infra", "hpc", "web"],
+    period: "2026",
+    featured: true,
+    image: hpcClusterDiagram,
+    confidentiality: "Delivered at MAK Technology. Client, site and host identifiers withheld under NDA.",
+    tagline: "SSH is not an operations strategy",
+    description: [
+      "A full-stack orchestration platform that replaces manual SSH and ad-hoc Ansible runs on a bare-metal HPC cluster with one auditable pipeline.",
+      "Provision and image: dual-provisioner DHCP hands chassis to MAAS, which commissions and disk-installs them; Warewulf then boots the compute nodes diskless from a three-variant image bake.",
+      "Orchestrate and execute: a FastAPI control plane turns each HTTP request into a queued Celery task that opens exactly one SSH session against the live cluster, with stdout and stderr merged and streamed.",
+      "Schedule, store and stream: Slurm on the control node, a six-stage GPFS deployment for parallel storage, Spack/Lmod environment stacks, and an Open OnDemand portal so a researcher never needs an SSH client.",
+      "A cross-cutting plane wraps all three stages — Keycloak realm bootstrap, three-role RBAC, a TLS edge, an SSH access proxy, and Prometheus/Grafana scraping the scheduler and the storage servers.",
+      "Every long-running operation has the same shape: route to Celery to a single SSH session to the Redis ledger to a WebSocket, so a reload mid-deployment reattaches to the run instead of losing it.",
+    ],
+    technologies: [
+      "Python",
+      "FastAPI",
+      "Celery",
+      "Redis",
+      "React",
+      "TypeScript",
+      "PostgreSQL",
+      "Slurm",
+      "GPFS",
+      "MAAS",
+      "Warewulf",
+      "Ansible",
+      "Keycloak",
+      "Prometheus",
+      "Grafana",
+      "Docker",
+      "WebSockets",
+      "asyncssh",
+      "Spack",
+      "Lmod",
+    ],
+    objective:
+      "A production HPC cluster was being operated by hand — SSH sessions, ad-hoc playbooks and tribal knowledge — which made every provisioning, imaging or storage change unreviewable and unrepeatable. The platform had to put one control plane over the metal without taking the cluster offline to do it.",
+    strategy: [
+      "Modelled every operation as a queued task rather than a request thread, so a deployment survives a browser reload and can never run twice concurrently",
+      "Held a single deployment lock in the control plane, so a double-clicked wizard or a second browser tab joins the run in flight instead of racing it",
+      "Made failure explicit: each task scans its own output for error markers and halts the remaining steps, rather than letting a half-provisioned node report success",
+      "Persisted every task's output to a Redis ledger with a 24-hour TTL and a terminator sentinel, so the log replays from index zero on reconnect",
+      "Ran a nine-part security and performance audit of the delivered platform and remediated the critical findings before handover",
+    ],
+    architectureHighlights: [
+      "Nine containers from the TLS edge through to the dashboards, over four host tiers: orchestration, control plane, diskless HPC nodes, and disk-installed storage.",
+      "Fifteen Celery tasks across nine modules, every one streaming into the same Redis log ledger and out over one WebSocket.",
+      "Keycloak OIDC with three roles gating every privileged route and the log socket itself — not just the UI.",
+      "A six-stage GPFS deployment that probes before each step and re-runs rather than duplicating, so a partial storage build resumes instead of restarting.",
+      "Identity, transport and telemetry are a cross-cutting plane rather than a fourth stage — every request is gated before any work happens, and every stage is scraped by the same collector.",
+    ],
+    metrics: [
+      {
+        label: "Critical audit findings closed",
+        value: "5 + 1 high",
+        baseline: "20 tracked",
+        note: "Nine-part security and performance audit I ran against the delivered platform; every critical closed before handover.",
+      },
+      {
+        label: "Orchestration surface",
+        value: "15 tasks",
+        note: "Across nine modules, over four host tiers and nine containers.",
+      },
+      {
+        label: "Scheduler memory accuracy",
+        value: "~93%",
+        note: "Slurm RealMemory pinned near 93% of physical, so the exact figure never makes a node refuse to register.",
+      },
+      {
+        label: "Manual SSH operations",
+        value: "0",
+        baseline: "every change",
+        note: "Provisioning, imaging, scheduling and storage all move through the same reviewable pipeline.",
+      },
+    ],
+    lenses: {
+      infrastructure: {
+        summary:
+          "Bare metal to running jobs in one pipeline — MAAS provisioning, Warewulf diskless imaging, Slurm scheduling and a six-stage GPFS build, all driven from one control plane with live log streaming.",
+        techFocus: ["Slurm", "GPFS", "MAAS", "Warewulf", "Ansible", "Keycloak"],
+        metricFocus: ["Manual SSH operations", "Orchestration surface", "Scheduler memory accuracy"],
+      },
+      presales: {
+        summary:
+          "The cluster was being run by hand, so no provisioning or storage change was reviewable. This is the control plane that made cluster operations auditable — and the audit that proved it.",
+        techFocus: ["Slurm", "GPFS", "MAAS", "Keycloak", "Prometheus"],
+        metricFocus: ["Critical audit findings closed", "Manual SSH operations"],
+      },
+      development: {
+        summary:
+          "A FastAPI and Celery control plane where every long-running operation has one shape — route, task, a single SSH session, Redis ledger, WebSocket — so a reload reattaches instead of losing the run.",
+        techFocus: ["Python", "FastAPI", "Celery", "Redis", "React", "asyncssh"],
+        metricFocus: ["Orchestration surface", "Critical audit findings closed"],
+      },
+    },
+  },
+  {
+    slug: "k8s-bare-metal-automation",
+    title: "Bare-Metal Kubernetes Automation Platform",
+    subtitle:
+      "From an empty rack to a production, GitOps-managed, security-hardened Kubernetes cluster — declarative end to end",
+    category: "Infrastructure & Platform Engineering",
+    domains: ["infra", "systems"],
+    period: "2026",
+    featured: true,
+    image: k8sAutomationDiagram,
+    confidentiality: "Delivered at MAK Technology. Client and product identifiers withheld under NDA.",
+    tagline: "Empty rack to hardened cluster, declaratively",
+    description: [
+      "A three-stage infrastructure-as-code platform that takes bare chassis to a running, continuously reconciled Kubernetes cluster with no operator at the rack.",
+      "Stage 01, provisioning: MAAS commissioning with PXE/iPXE boot, IPMI/Redfish out-of-band power control, hardware self-inventory, role tags that tell the bootstrap what each machine is for, and a zero-touch OS install with bonded NICs and VLANs from a machine profile.",
+      "Stage 02, cluster bootstrap: idempotent Kubespray/Ansible playbooks build a highly-available control plane from a version-controlled inventory, with security hardening applied inside the same run rather than bolted on afterwards.",
+      "Stage 03, GitOps delivery: one root ArgoCD Application renders every platform add-on straight from Git, detecting and reconciling drift continuously.",
+      "Day-2 operations span all three stages and ship as automation against the same inventory and repository, not as wiki pages: certificate rotation, etcd backup and restore, node drain and replacement, staged cluster upgrade, and disaster recovery.",
+    ],
+    technologies: [
+      "Kubernetes",
+      "Kubespray",
+      "Ansible",
+      "MAAS",
+      "ArgoCD",
+      "Terraform",
+      "Helm",
+      "Calico",
+      "WireGuard",
+      "Longhorn",
+      "Rook-Ceph",
+      "Prometheus",
+      "Loki",
+      "Kubecost",
+      "MetalLB",
+      "Slurm",
+      "YAML",
+      "Docker",
+    ],
+    objective:
+      "Cluster builds were manual, so no two environments matched and no rebuild was trustworthy. The platform had to make the entire path — OS, cluster, add-ons and day-2 operations — declarative, reviewable and re-runnable from an empty rack.",
+    strategy: [
+      "Split the path into three stages with an explicit artefact handed between them, so any stage can be re-entered on demand without unwinding the others",
+      "Kept the playbooks idempotent and the inventory in version control, so a rebuild is a re-run rather than a fresh improvisation",
+      "Applied security hardening inside the bootstrap run — encrypted CNI, Pod Security Standards, least-privilege RBAC, API audit logging and CIS-aligned kubelet flags — so a cluster is never briefly unhardened",
+      "Delivered add-ons through one app-of-apps root so platform state is declared in Git and drift is corrected continuously rather than discovered later",
+      "Wrote the five day-2 runbooks as automation against the same inventory, so the recovery path is exercised by the same code that built the cluster",
+    ],
+    architectureHighlights: [
+      "Three control-plane replicas holding a stacked etcd quorum behind a floating virtual IP, so losing a master never loses the cluster.",
+      "Calico CNI with WireGuard encryption for node-to-node pod traffic, default-deny east-west policy, and Pod Security Standards enforced per namespace.",
+      "One app-of-apps ArgoCD root rendering storage, observability, logging, cost, ingress and HPC workloads — with self-heal and prune enabled.",
+      "Slurm-on-Kubernetes so batch HPC scheduling runs beside the platform's own pods rather than on separate hardware.",
+    ],
+    metrics: [
+      {
+        label: "Manual OS install steps",
+        value: "0",
+        baseline: "every node",
+        note: "Every node PXE-booted and imaged from a machine profile — no operator at the rack.",
+      },
+      {
+        label: "Cluster & add-on state in Git",
+        value: "100%",
+        note: "Declared in Git and auto-synced; drift is reconciled continuously.",
+      },
+      {
+        label: "Control-plane replicas",
+        value: "3x",
+        note: "Stacked etcd quorum behind a floating VIP.",
+      },
+      {
+        label: "Day-2 runbooks as automation",
+        value: "5",
+        note: "Certificate rotation, etcd backup and restore, node replacement, cluster upgrade, disaster recovery — shipped as code, not documentation.",
+      },
+    ],
+    lenses: {
+      infrastructure: {
+        summary:
+          "MAAS zero-touch provisioning, Kubespray hardened HA bootstrap, ArgoCD GitOps delivery — with the five day-2 runbooks shipped as automation against the same inventory.",
+        techFocus: ["MAAS", "Kubespray", "Ansible", "ArgoCD", "Calico", "WireGuard"],
+        metricFocus: ["Manual OS install steps", "Cluster & add-on state in Git", "Day-2 runbooks as automation"],
+      },
+      presales: {
+        summary:
+          "No two environments matched and no rebuild was trustworthy. This is the declarative path from empty rack to hardened, continuously reconciled cluster — and the day-2 model that keeps it that way.",
+        techFocus: ["Kubernetes", "ArgoCD", "Terraform", "MAAS"],
+        metricFocus: ["Cluster & add-on state in Git", "Manual OS install steps"],
+      },
+      development: {
+        summary:
+          "Idempotent Kubespray/Ansible playbooks over a version-controlled inventory, with hardening applied inside the bootstrap run so the cluster is never briefly unhardened.",
+        techFocus: ["Ansible", "Kubespray", "Helm", "YAML", "Kubernetes"],
+        metricFocus: ["Control-plane replicas", "Cluster & add-on state in Git"],
+      },
+    },
+  },
+  {
+    slug: "gpu-cloud-reference-architecture",
+    title: "GPU Cloud Reference Architecture",
+    subtitle:
+      "Multi-tenant GPU-as-a-Service on one physical substrate — hard tenant boundaries at every layer, from the data plane up to identity",
+    category: "Solution Architecture & Technical Pre-Sales",
+    domains: ["architecture", "infra", "hpc"],
+    period: "2026",
+    featured: true,
+    image: gpuCloudDiagram,
+    confidentiality:
+      "Authored at MAK Technology for enterprise bids. Client and product identifiers withheld under NDA.",
+    tagline: "Five isolation layers, one physical substrate",
+    description: [
+      "Enterprise reference architecture and RFP-grade technical documentation for a multi-tenant GPU-as-a-Service platform, authored for large-scale bids.",
+      "A five-layer tenant isolation model — data, GPU/MIG, quota, network, identity — where every layer carries its own boundary rather than relying on the one below it.",
+      "Shared resource pools rather than tenant-dedicated hardware: a bin-packing GPU pool with MIG partitioning and DCGM health gating, tiered storage from NVMe hot through object capacity, and a non-blocking spine-leaf fabric with RoCEv2.",
+      "One tenant-scoped control plane: Keycloak OIDC realms, namespace-per-tenant with ResourceQuota and LimitRange defaults, OPA/Gatekeeper admission policy, and per-tenant KMS keys and audit trails.",
+      "Chargeback and governance designed in rather than added later — cost centre attribution per tenant, monthly showback, and a tenant onboarding path where quota and policy are inherited from a template.",
+      "Around 50 architecture diagrams plus compliance and RACI documentation supporting the bid.",
+    ],
+    technologies: [
+      "Solution Architecture",
+      "Kubernetes",
+      "NVIDIA MIG",
+      "Keycloak",
+      "OIDC",
+      "OPA/Gatekeeper",
+      "Terraform",
+      "Calico",
+      "RoCEv2",
+      "Prometheus",
+      "Grafana",
+      "Kubecost",
+      "Rook-Ceph",
+      "Docker",
+    ],
+    objective:
+      "A GPU cloud bid needed an architecture that could put many tenants on one physical substrate and still defend the isolation claim layer by layer — technically, commercially, and under RFP scrutiny.",
+    strategy: [
+      "Made isolation a stack rather than a feature: each of the five layers holds its own boundary, so no single control is load-bearing for the whole tenancy claim",
+      "Chose shared pools with hard partitioning over dedicated hardware per tenant, so utilisation stays economic without softening the boundary",
+      "Scoped every control-plane API surface to a tenant, so multi-tenancy is enforced at the control plane rather than at the UI",
+      "Designed chargeback and the onboarding template alongside the architecture, so a new tenant inherits quota and policy instead of being configured by hand",
+      "Wrote the compliance and RACI documentation against the same diagram set, so the technical and commercial answers cannot drift apart",
+    ],
+    architectureHighlights: [
+      "Five isolation layers: data (per-tenant KMS key, PV/PVC, bucket scoping), GPU/MIG (isolated resource claims, no cross-tenant node sharing), quota (ResourceQuota, LimitRange, PriorityClass), network (per-tenant VRF/VLAN, default-deny east-west, isolated ingress), and identity (OIDC realm per tenant, SSO/SAML federation, MFA on admin roles).",
+      "One control plane where every API surface is tenant-scoped, with OPA/Gatekeeper blocking on violation at admission.",
+      "Shared GPU pool with a bin-packing scheduler, MIG partitions, node taints and tolerations, and DCGM health gating.",
+      "Tiered storage — NVMe hot tier through object capacity tier — with RDMA transport over a non-blocking spine-leaf fabric.",
+    ],
+    metrics: [
+      {
+        label: "Tenant isolation layers",
+        value: "5",
+        note: "Data, GPU/MIG, quota, network, identity — each holding its own boundary.",
+      },
+      {
+        label: "Architecture diagrams authored",
+        value: "~50",
+        note: "Plus the compliance and RACI documentation for the bid.",
+      },
+      {
+        label: "Tenant-dedicated hardware",
+        value: "0",
+        note: "One physical substrate; isolation is enforced by partitioning and policy, not by separate racks.",
+      },
+    ],
+    lenses: {
+      presales: {
+        summary:
+          "The bid needed a multi-tenant GPU cloud whose isolation claim held up layer by layer. Five isolation layers, shared pools with hard partitioning, chargeback designed in — with ~50 diagrams and the compliance set behind it.",
+        techFocus: ["Solution Architecture", "Kubernetes", "NVIDIA MIG", "Keycloak", "OIDC"],
+        metricFocus: ["Tenant isolation layers", "Architecture diagrams authored", "Tenant-dedicated hardware"],
+      },
+      infrastructure: {
+        summary:
+          "Shared GPU pool with MIG partitioning and DCGM health gating, namespace-per-tenant quota, per-tenant VRF/VLAN with default-deny east-west, and RoCEv2 over a non-blocking spine-leaf fabric.",
+        techFocus: ["Kubernetes", "NVIDIA MIG", "Calico", "RoCEv2", "OPA/Gatekeeper"],
+        metricFocus: ["Tenant isolation layers", "Tenant-dedicated hardware"],
+      },
+      development: {
+        summary:
+          "How the isolation is actually enforced: tenant-scoped control-plane APIs, admission policy that blocks on violation, per-tenant KMS keys, and quota objects with defaults rather than conventions.",
+        techFocus: ["Kubernetes", "OPA/Gatekeeper", "OIDC", "Terraform"],
+        metricFocus: ["Tenant isolation layers"],
+      },
+    },
+  },
+  {
+    slug: "enterprise-sla-framework",
+    title: "Enterprise SLA & Incident-Response Framework",
+    subtitle:
+      "The support operating model behind a multi-tenant GPU platform — severity classification, response and restore commitments, escalation, and the RCA loop that feeds improvements back",
+    category: "Solution Architecture & Technical Pre-Sales",
+    domains: ["architecture"],
+    period: "2026",
+    featured: true,
+    image: slaFrameworkDiagram,
+    confidentiality:
+      "Authored at MAK Technology for enterprise bids. Client and product identifiers withheld under NDA.",
+    tagline: "What the platform promises, and who answers when it does not",
+    description: [
+      "The support operating model that backs a platform's contract: what counts as an incident, how fast someone answers, who they escalate to, and how the fix becomes a permanent change.",
+      "A seven-step incident lifecycle — detect, triage and classify, respond and mitigate, restore service, verify with the tenant, root cause analysis, preventive action — with the tooling named at each step.",
+      "A severity and commitment matrix from P0 (platform-wide outage affecting multiple tenants) to P3 (cosmetic or informational), each with a response and a restore target, and an explicit distinction between the two.",
+      "A four-level escalation ladder from service desk through platform engineering and architecture/SME to vendor TAC and OEM support, with warm handoff — the raising level retains ownership until accepted.",
+      "Governance designed as a cadence rather than a document: monthly service review on SLA attainment and open actions, SLA credit reporting mapped to the commitment matrix, a dependency register, and a quarterly review of the matrix and escalation contacts.",
+    ],
+    technologies: [
+      "Solution Architecture",
+      "Prometheus",
+      "Grafana",
+      "Loki",
+      "Kubernetes",
+      "Slurm",
+      "GPFS",
+      "Ansible",
+      "ArgoCD",
+      "Terraform",
+    ],
+    objective:
+      "A multi-tenant GPU platform was going to contract without a defined support model, so the availability promise had no severity definitions, no named response commitments, and no escalation path to stand behind it.",
+    strategy: [
+      "Separated response from restore in the matrix — acknowledgement with a named engineer engaged is a different promise from service returned to the agreed operating state, and conflating them is how SLAs get disputed",
+      "Made severity a triage decision confirmed with the tenant, with disputes resolved upward and never downward",
+      "Gave P0 a bypass: exec, platform engineering and vendor support engage in parallel rather than climbing the ladder step by step",
+      "Closed the loop back into the platform — every RCA produces a runbook, monitoring rule or config change that is shipped and tracked, so the framework changes the system rather than only describing it",
+      "Tied SLA credit reporting to the same commitment matrix, so the commercial and operational documents cannot disagree",
+    ],
+    architectureHighlights: [
+      "P0: 15-minute response commitment, 4-hour restore target, 24x7 on-call, immediate exec plus OEM/vendor TAC engagement in parallel.",
+      "Four severity tiers each carrying a definition, a response commitment, a restore target and an escalation owner — P1 1h/8h, P2 4h/3 business days, P3 next business day and scheduled release.",
+      "Warm-handoff escalation across four levels, so ownership is never dropped between tiers.",
+      "The preventive-action step feeds runbook and monitoring updates back into the platform, closing the lifecycle rather than ending it at 'restored'.",
+    ],
+    metrics: [
+      {
+        label: "P0 response commitment",
+        value: "15 min",
+        note: "Acknowledgement with a named engineer engaged, 24x7.",
+      },
+      {
+        label: "P0 restore target",
+        value: "4 h",
+        note: "Service returned to the agreed operating state — not necessarily the permanent fix.",
+      },
+      {
+        label: "Severity tiers and escalation levels",
+        value: "4 x 4",
+        note: "P0 through P3 against L1 service desk through L4 vendor TAC/OEM.",
+      },
+      {
+        label: "Service review cadence",
+        value: "Monthly",
+        note: "SLA attainment, trend and open actions; matrix and contacts reviewed quarterly.",
+      },
+    ],
+    lenses: {
+      presales: {
+        summary:
+          "The availability promise had no severity definitions and no escalation path behind it. This is the matrix, the ladder and the RCA loop that make it contractible — and reportable every month.",
+        techFocus: ["Solution Architecture"],
+        metricFocus: [
+          "P0 response commitment",
+          "P0 restore target",
+          "Severity tiers and escalation levels",
+          "Service review cadence",
+        ],
+      },
+      infrastructure: {
+        summary:
+          "The operational side of the platform: what monitoring raises an incident, who is on call, and how an RCA turns into a shipped runbook, monitoring rule or config change.",
+        techFocus: ["Prometheus", "Grafana", "Loki", "Ansible", "ArgoCD"],
+        metricFocus: ["P0 response commitment", "P0 restore target"],
+      },
+      development: {
+        summary:
+          "Where the framework touches the system: the monitoring that detects, the runbooks that respond, and the preventive changes shipped through the same GitOps path as everything else.",
+        techFocus: ["Prometheus", "Loki", "ArgoCD", "Terraform"],
+        metricFocus: ["Severity tiers and escalation levels"],
+      },
+    },
+  },
+
   // Featured (homepage) - match existing ProjectsSection
   {
     slug: "qcanvas",
@@ -192,6 +597,7 @@ export const PROJECTS: ProjectItem[] = [
     category: "High-Performance Computing & GPU",
     domains: ["hpc", "ai"],
     githubUrl: "https://github.com/Umer-Farooq-CS/MNIST-Classification",
+    image: gpuOptimizationDiagram,
     description: [
       "Neural network for MNIST digit classification across five versions (V1–V5) from serial CPU to highly parallel GPU.",
       "6× faster inference using NVIDIA Tensor Cores with FP16 mixed-precision training.",

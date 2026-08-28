@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { getFeaturedProjects } from "@/data/projects";
+import { getProjectBySlug } from "@/data/projects";
 import { getDomain } from "@/data/taxonomy";
 import { accent } from "@/lib/accent";
 import { ChapterHeader, Metric, TextAction } from "@/components/kit/Primitives";
@@ -10,11 +10,18 @@ import { useActiveProfile } from "@/lib/profile";
 /**
  * Chapter 02. Deliberately not a card grid — these are full-width rows, read like
  * entries in a log. The featured projects get room to state a result.
+ *
+ * Which projects lead, and the copy above them, come from the active lens
+ * (`profile.workChapter`) — an ordered subset of the projects already flagged
+ * `featured` in projects.ts, resolved by slug so a rename drops the row rather
+ * than rendering an empty one.
  */
 export default function WorkChapter({ index = 1, basePath = "" }: { index?: number; basePath?: string }) {
-  const featured = getFeaturedProjects();
   const profile = useActiveProfile();
   const { enabled, duration } = useMotionPolicy();
+  const featured = profile.workChapter.slugs
+    .map(getProjectBySlug)
+    .filter((project): project is NonNullable<typeof project> => project !== undefined);
 
   return (
     <section id="work" className="scroll-mt-20 border-t border-border py-20 lg:py-28">
@@ -22,8 +29,8 @@ export default function WorkChapter({ index = 1, basePath = "" }: { index?: numb
         <ChapterHeader
           index={index}
           eyebrow="Selected work"
-          title="Two projects that show the range"
-          lede="A platform that had to be fast and correct across three quantum frameworks, and an AI pipeline that had to stop being confidently wrong."
+          title={profile.workChapter.title}
+          lede={profile.workChapter.lede}
           tone="interface"
         />
 

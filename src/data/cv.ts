@@ -39,19 +39,66 @@ export function getExperiencePoints(item: ExperienceItem, profileId: ProfileId):
 
 export const EXPERIENCE: ExperienceItem[] = [
   {
-    role: "Software engineer",
+    role: "HPC & infrastructure engineer",
+    organisation: "MAK Technology",
+    location: "Dubai, United Arab Emirates",
+    period: "Jun 2026 – present",
+    points: [
+      "Design and automate bare-metal Kubernetes and HPC platforms for enterprise GPU-as-a-Service deployments — zero-touch provisioning, hardened cluster bootstrap, GitOps delivery, and Slurm/GPFS scheduling over parallel storage.",
+      "Built the control plane that replaced manual SSH and ad-hoc playbooks on a production HPC cluster: 15 orchestrated tasks over four host tiers, with live log streaming and OIDC-gated RBAC.",
+      "Ran a nine-part security and performance audit of a delivered platform and remediated every critical finding before handover — 5 critical and 1 high closed out of 20 tracked.",
+      "Author enterprise reference architectures and RFP-grade technical proposals for multi-tenant GPU cloud bids, including a five-layer tenant isolation model and around 50 architecture diagrams.",
+      "Design the support operating models behind those platforms — severity classification, response and restore commitments, escalation ladders, and the RCA loop that feeds fixes back into runbooks and monitoring.",
+    ],
+    technologies: [
+      "Kubernetes",
+      "Ansible",
+      "Kubespray",
+      "MAAS",
+      "ArgoCD",
+      "Terraform",
+      "Slurm",
+      "GPFS",
+      "Keycloak",
+      "Prometheus",
+      "Python",
+      "FastAPI",
+    ],
+    lensEmphasis: {
+      // Infrastructure leads with the platforms; pre-sales leads with the
+      // architecture and support model; development leads with what was built.
+      infrastructure: [0, 1, 2],
+      presales: [3, 4, 0],
+      development: [1, 2, 0],
+    },
+  },
+  {
+    role: "HPC & quantum software engineer",
     organisation: "Open Quantum Workbench, FAST-NUCES",
     location: "Islamabad, Pakistan",
-    period: "Sep 2025 – present",
+    period: "Sep 2025 – Aug 2026",
     points: [
-      "Build the browser-side simulation interface and the Python compute services behind it, so a circuit can be run and inspected without a local quantum toolchain.",
-      "Put Qiskit, Cirq, and PennyLane behind one interface, with OpenQASM 3.0 as the exchange format between them.",
-      "Turn requirements from the group's researchers into APIs and UI that keep the physics legible.",
+      "Built the browser-side simulation interface and the Python compute services behind it, so a circuit could be run and inspected without a local quantum toolchain.",
+      "Put Qiskit, Cirq, and PennyLane behind one interface, with OpenQASM 3.0 as the exchange format between them, and scheduled the simulation jobs on Kubernetes.",
+      "Turned requirements from the group's researchers into APIs and UI that kept the physics legible.",
+      "Built the GPU-accelerated and distributed side: hybrid MPI+OpenMP tensor-network simulation with CUDA contractions, for circuits past 20 qubits.",
     ],
-    technologies: ["Python", "FastAPI", "React", "Qiskit", "PennyLane", "OpenQASM 3.0"],
+    technologies: [
+      "Python",
+      "FastAPI",
+      "React",
+      "Qiskit",
+      "PennyLane",
+      "OpenQASM 3.0",
+      "Kubernetes",
+      "CUDA",
+      "MPI",
+      "OpenMP",
+    ],
     lensEmphasis: {
-      infrastructure: [0, 1],
+      infrastructure: [1, 3, 0],
       presales: [2, 1, 0],
+      development: [3, 0, 1],
     },
   },
   {

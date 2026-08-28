@@ -1,7 +1,17 @@
 import { Suspense, lazy } from "react";
 import { Link, useParams } from "react-router-dom";
 import { motion } from "motion/react";
-import { ArrowLeft, ArrowRight, ChartNoAxesCombined, ExternalLink, FileText, Github, Images, Trophy } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  ChartNoAxesCombined,
+  ExternalLink,
+  FileText,
+  Github,
+  Images,
+  Lock,
+  Trophy,
+} from "lucide-react";
 import { detailLabel, getAdjacentProjects, getProjectBySlug, resolveDetailSections } from "@/data/projects";
 import { getDomain } from "@/data/taxonomy";
 import { accent } from "@/lib/accent";
@@ -107,6 +117,15 @@ export default function ProjectDetailPage() {
           {project.award && (
             <p className="mt-5 border-l-2 border-award pl-3 text-sm text-award-type">
               {project.award}
+            </p>
+          )}
+
+          {/* Client work that can't be named. Stated once, up front, rather than
+              hedged through the copy below it. */}
+          {project.confidentiality && (
+            <p className="readout mt-5 flex items-start gap-2 text-2xs text-muted-foreground">
+              <Lock size={11} className="mt-0.5 shrink-0" aria-hidden="true" />
+              <span>{project.confidentiality}</span>
             </p>
           )}
 
@@ -238,6 +257,7 @@ export default function ProjectDetailPage() {
             </div>
             <figcaption className="mt-2 text-2xs text-muted-foreground">
               Architecture of {project.title}.
+              {project.confidentiality && " Client, site and product identifiers withheld."}
             </figcaption>
           </motion.figure>
         )}

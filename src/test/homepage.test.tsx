@@ -4,7 +4,8 @@ import { MemoryRouter } from "react-router-dom";
 import { ThemeProvider } from "@/lib/theme";
 import { MotionPolicyProvider } from "@/lib/motion-policy";
 import Index from "@/pages/Index";
-import { getFeaturedProjects } from "@/data/projects";
+import { getProjectBySlug } from "@/data/projects";
+import { DEFAULT_PROFILE_ID, getProfile } from "@/data/profiles";
 import { SITE_LINKS } from "@/data/siteLinks";
 import { CHAPTER_SECTIONS } from "@/lib/sections";
 
@@ -29,12 +30,17 @@ describe("homepage", () => {
     }
   });
 
-  it("shows the featured projects from the shared data source", () => {
+  // The homepage leads with the active lens's chosen flagships, not every
+  // featured project — profiles.test.ts is what checks those slugs are real and
+  // are themselves featured. Here we only assert the page renders what the lens
+  // asked for, drawn from the shared project data rather than local copy.
+  it("shows the active lens's leading projects from the shared data source", () => {
     renderHome();
-    const featured = getFeaturedProjects();
-    expect(featured.length).toBeGreaterThan(0);
-    for (const project of featured) {
-      expect(screen.getByText(project.title)).toBeInTheDocument();
+    const leading = getProfile(DEFAULT_PROFILE_ID).workChapter.slugs.map(getProjectBySlug);
+    expect(leading.length).toBeGreaterThan(0);
+    for (const project of leading) {
+      expect(project).toBeDefined();
+      expect(screen.getByText(project!.title)).toBeInTheDocument();
     }
   });
 

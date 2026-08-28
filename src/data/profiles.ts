@@ -65,6 +65,18 @@ export interface ProfileDetailSection {
   label: string;
 }
 
+/**
+ * The homepage "selected work" chapter, per lens. `slugs` is an ordered subset
+ * of the projects already flagged `featured` in projects.ts — a lens chooses
+ * which of the flagships lead and in what order, it does not promote a project
+ * that isn't featured. `src/test/profiles.test.ts` enforces both halves.
+ */
+export interface ProfileWorkChapter {
+  title: string;
+  lede: string;
+  slugs: string[];
+}
+
 export interface ProjectCardTechLimits {
   /** Chips shown on the dense /projects grid card. */
   grid: number;
@@ -93,6 +105,8 @@ export interface ProfileConfig {
   /** Optional relabeling of a skill group's displayed title for this lens. */
   skillGroupLabelOverride?: Partial<Record<string, string>>;
   projectCardTechLimit: ProjectCardTechLimits;
+  /** Which featured projects lead the homepage under this lens, and the copy above them. */
+  workChapter: ProfileWorkChapter;
   /** Default project-detail section order/labels when a project has no authored lens sections. */
   detailTemplate: ProfileDetailSection[];
 }
@@ -113,7 +127,7 @@ export const PROFILES: readonly ProfileConfig[] = [
       { text: "." },
     ],
     heroSubhead:
-      "I work on high-performance and GPU computing, quantum simulation platforms, and AI pipelines that are checked rather than trusted. CS at FAST-NUCES, third at the Huawei ICT national finals, 30 projects shipped.",
+      "I work on high-performance and GPU computing, quantum simulation platforms, and AI pipelines that are checked rather than trusted — a 6× inference speedup taken through five profiled versions to Tensor Cores, and 92% task success where a single-pass baseline managed 52%. Every number here is one I measured.",
     heroSignals: [
       { label: "Compute", detail: "CUDA · MPI", tone: "thermal" },
       { label: "Quantum", detail: "Qiskit · Cirq", tone: "cryo" },
@@ -127,8 +141,15 @@ export const PROFILES: readonly ProfileConfig[] = [
       "Quantum Computing & Simulation",
       "Systems, Distributed & Networking",
       "Full-Stack Development & Platforms",
+      "Infrastructure, Orchestration & Automation",
+      "Solution Architecture & Technical Pre-Sales",
     ],
     projectCardTechLimit: { grid: 3, row: 7 },
+    workChapter: {
+      title: "Three projects that show the range",
+      lede: "An AI pipeline that had to stop being confidently wrong, a platform that had to be fast and correct across three quantum frameworks, and a control plane that had to run a cluster without an SSH session.",
+      slugs: ["cirq-rag", "qcanvas", "hpc-cluster-platform"],
+    },
     detailTemplate: [
       { source: "objective", label: "The problem" },
       { source: "description", label: "What it does" },
@@ -144,7 +165,7 @@ export const PROFILES: readonly ProfileConfig[] = [
     navLabel: "Infrastructure",
     fullLabel: "HPC & AI Infrastructure",
     accent: "systems",
-    selectorBlurb: "GPU platforms, clusters, Kubernetes, HPC systems, and AI infrastructure.",
+    selectorBlurb: "Bare-metal provisioning, Kubernetes and HPC clusters, GitOps delivery, and enterprise GPU platforms.",
     heroHeadline: [
       { text: "I turn raw compute into platforms that " },
       { text: "scale", tone: "systems" },
@@ -153,18 +174,20 @@ export const PROFILES: readonly ProfileConfig[] = [
       { text: "." },
     ],
     heroSubhead:
-      "I design and run the infrastructure underneath the work — GPU scheduling, Kubernetes-backed job management, and the platforms that make CUDA kernels and quantum simulators operable, not just runnable. CS at FAST-NUCES, third at the Huawei ICT national finals, 30 projects shipped.",
+      "I design and automate the infrastructure underneath HPC and AI workloads — zero-touch bare-metal provisioning, hardened Kubernetes bootstrap, GitOps delivery, and Slurm/GPFS scheduling over parallel storage. Enterprise GPU-as-a-Service platforms delivered at MAK Technology: no manual OS installs, all cluster state in Git.",
     heroSignals: [
-      { label: "Compute", detail: "CUDA · MPI · OpenMP", tone: "thermal" },
-      { label: "Orchestration", detail: "Kubernetes job scheduling", tone: "systems" },
-      { label: "Quantum backends", detail: "multi-framework runtime", tone: "cryo" },
+      { label: "Bare metal", detail: "MAAS · Warewulf · IPMI", tone: "systems" },
+      { label: "Orchestration", detail: "Kubernetes · ArgoCD · Slurm", tone: "systems" },
+      { label: "Compute", detail: "CUDA · MPI · GPFS", tone: "thermal" },
       { label: "Platforms", detail: "React · FastAPI", tone: "interface" },
     ],
     homeChapterOrder: ["bench", "work", "techLogos", "proof", "activity", "about", "talk"],
     skillGroupOrder: [
+      "Infrastructure, Orchestration & Automation",
       "Full-Stack Development & Platforms",
       "Systems, Distributed & Networking",
       "High-Performance Computing & Parallelism",
+      "Solution Architecture & Technical Pre-Sales",
       "Machine Learning, Deep Learning & LLM Systems",
       "Quantum Computing & Simulation",
     ],
@@ -173,6 +196,11 @@ export const PROFILES: readonly ProfileConfig[] = [
       "Systems, Distributed & Networking": "Systems & Infrastructure",
     },
     projectCardTechLimit: { grid: 4, row: 6 },
+    workChapter: {
+      title: "Three platforms, from bare metal upward",
+      lede: "A control plane over a bare-metal HPC cluster, a declarative path from an empty rack to a hardened Kubernetes cluster, and the multi-tenant GPU cloud architecture they were built to serve.",
+      slugs: ["hpc-cluster-platform", "k8s-bare-metal-automation", "gpu-cloud-reference-architecture"],
+    },
     detailTemplate: [
       { source: "objective", label: "Infrastructure challenge" },
       { source: "architectureHighlights", label: "Architecture" },
@@ -188,7 +216,7 @@ export const PROFILES: readonly ProfileConfig[] = [
     navLabel: "Solutions",
     fullLabel: "Pre-Sales Solution Architect",
     accent: "neural",
-    selectorBlurb: "Requirements, architecture, solution design, technical proposals, and customer-facing engineering.",
+    selectorBlurb: "Reference architectures, multi-tenant design, technical proposals, SLA models, and customer-facing engineering.",
     heroHeadline: [
       { text: "I turn " },
       { text: "requirements", tone: "neural" },
@@ -197,15 +225,17 @@ export const PROFILES: readonly ProfileConfig[] = [
       { text: "." },
     ],
     heroSubhead:
-      "I translate HPC and AI requirements into practical architectures — working out what a system actually needs, choosing the technology to match, and being able to defend both. CS at FAST-NUCES, third at the Huawei ICT national finals, 30 projects shipped.",
+      "I translate HPC and AI requirements into architectures that survive customer review — multi-tenant GPU cloud reference designs, five-layer tenant isolation models, and the SLA and incident-response frameworks that let a platform be sold with a support commitment. Around 50 architecture diagrams authored for enterprise bids.",
     heroSignals: [
-      { label: "Discovery", detail: "requirements · trade-offs", tone: "neural" },
-      { label: "Architecture", detail: "systems · quantum · AI", tone: "systems" },
+      { label: "Architecture", detail: "reference designs · RFP", tone: "neural" },
+      { label: "Isolation", detail: "5 layers · multi-tenant", tone: "systems" },
+      { label: "Support model", detail: "P0–P3 · SLA · RCA", tone: "systems" },
       { label: "Validation", detail: "measured, not claimed", tone: "thermal" },
-      { label: "Delivery", detail: "React · FastAPI", tone: "interface" },
     ],
     homeChapterOrder: ["bench", "proof", "work", "techLogos", "activity", "about", "talk"],
     skillGroupOrder: [
+      "Solution Architecture & Technical Pre-Sales",
+      "Infrastructure, Orchestration & Automation",
       "Full-Stack Development & Platforms",
       "High-Performance Computing & Parallelism",
       "Machine Learning, Deep Learning & LLM Systems",
@@ -218,6 +248,11 @@ export const PROFILES: readonly ProfileConfig[] = [
       "Quantum Computing & Simulation": "Quantum Computing Platforms",
     },
     projectCardTechLimit: { grid: 3, row: 5 },
+    workChapter: {
+      title: "Three engagements, architecture through to contract",
+      lede: "A multi-tenant GPU cloud reference architecture, the SLA and incident-response model that lets it be sold with a support commitment, and the HPC platform whose delivery I audited before handover.",
+      slugs: ["gpu-cloud-reference-architecture", "enterprise-sla-framework", "hpc-cluster-platform"],
+    },
     detailTemplate: [
       { source: "objective", label: "Requirements" },
       { source: "strategy", label: "Proposed approach" },

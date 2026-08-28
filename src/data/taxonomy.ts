@@ -22,6 +22,18 @@ export const DOMAINS = [
     accent: "thermal",
   },
   {
+    id: "infra",
+    label: "Infrastructure & Platforms",
+    blurb: "Bare-metal provisioning, Kubernetes and HPC clusters, GitOps delivery, and the platforms over them.",
+    accent: "systems",
+  },
+  {
+    id: "architecture",
+    label: "Solution Architecture",
+    blurb: "Reference architectures, multi-tenant isolation design, and the support models behind a platform contract.",
+    accent: "neural",
+  },
+  {
     id: "quantum",
     label: "Quantum",
     blurb: "Circuit simulation, multi-framework tooling, hybrid classical–quantum systems.",
