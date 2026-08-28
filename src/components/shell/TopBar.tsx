@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, Moon, Sun } from "lucide-react";
+import { Menu, Moon, MoveVertical, Sun } from "lucide-react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useTheme } from "@/lib/theme";
+import { useScrollMotion } from "@/lib/scroll-motion";
 import { useMotionPolicy } from "@/lib/motion-policy";
 import { NOTES_ARE_PUBLIC } from "@/data/notes";
 import { accent, type VisualAccent } from "@/lib/accent";
@@ -38,6 +39,7 @@ export default function TopBar() {
   const { pathname, hash } = useLocation();
   const navigate = useNavigate();
   const { resolved, toggle } = useTheme();
+  const { guided, toggle: toggleGuided } = useScrollMotion();
   const { enabled } = useMotionPolicy();
   const profile = useActiveProfile();
   const isDark = resolved === "dark";
@@ -127,6 +129,29 @@ export default function TopBar() {
                 Talk to me
               </Link>
             </>
+          )}
+
+          {/* Guided scrolling is a reading preference, not a design decision,
+              so it gets a control rather than being imposed. Hidden on the
+              selector, which always travels: there the two screens are the
+              page, and plain scrolling would park the reader between them. */}
+          {!onSelector && (
+            <button
+              type="button"
+              onClick={toggleGuided}
+              aria-pressed={guided}
+              aria-label={
+                guided
+                  ? "Turn off guided section scrolling"
+                  : "Turn on guided section scrolling"
+              }
+              title={guided ? "Guided scrolling: on" : "Guided scrolling: off"}
+              className={`pressable flex h-11 w-11 items-center justify-center rounded-md transition-[color,transform] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                guided ? "text-primary-type" : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <MoveVertical size={16} />
+            </button>
           )}
 
           <button

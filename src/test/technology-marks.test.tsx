@@ -8,6 +8,7 @@ import {
   getTechnologyMark,
 } from "@/data/technologyMarks";
 import { MotionPolicyProvider } from "@/lib/motion-policy";
+import { ScrollMotionProvider } from "@/lib/scroll-motion";
 
 describe("technology marks", () => {
   it("grounds every rail entry in an exact project technology", () => {
@@ -33,9 +34,9 @@ describe("technology marks", () => {
 describe("technology logo rail", () => {
   it("exposes one truthful list and hides the seamless duplicate", () => {
     const { container } = render(
-      <MotionPolicyProvider>
+      <MotionPolicyProvider><ScrollMotionProvider>
         <TechLogoRail />
-      </MotionPolicyProvider>,
+      </ScrollMotionProvider></MotionPolicyProvider>,
     );
 
     const primary = container.querySelector('[data-technology-loop="primary"]');
@@ -49,9 +50,9 @@ describe("technology logo rail", () => {
 
   it("provides a persistent pause control when motion is available", () => {
     const { container } = render(
-      <MotionPolicyProvider>
+      <MotionPolicyProvider><ScrollMotionProvider>
         <TechLogoRail />
-      </MotionPolicyProvider>,
+      </ScrollMotionProvider></MotionPolicyProvider>,
     );
 
     const pause = screen.getByRole("button", { name: "Pause technology rail" });

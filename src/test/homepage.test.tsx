@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { ThemeProvider } from "@/lib/theme";
 import { MotionPolicyProvider } from "@/lib/motion-policy";
+import { ScrollMotionProvider } from "@/lib/scroll-motion";
 import Index from "@/pages/Index";
 import { getProjectBySlug } from "@/data/projects";
 import { DEFAULT_PROFILE_ID, getProfile } from "@/data/profiles";
@@ -12,11 +13,11 @@ import { CHAPTER_SECTIONS } from "@/lib/sections";
 function renderHome() {
   return render(
     <ThemeProvider>
-      <MotionPolicyProvider>
+      <MotionPolicyProvider><ScrollMotionProvider>
         <MemoryRouter initialEntries={["/"]}>
           <Index />
         </MemoryRouter>
-      </MotionPolicyProvider>
+      </ScrollMotionProvider></MotionPolicyProvider>
     </ThemeProvider>,
   );
 }

@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { ReactElement } from "react";
 import { MotionPolicyProvider } from "@/lib/motion-policy";
+import { ScrollMotionProvider } from "@/lib/scroll-motion";
 import PipelineTrace from "@/components/lab/PipelineTrace";
 import ProjectFigures, {
   BeforeAfterBars,
@@ -42,7 +43,7 @@ function setReducedMotion(reduce: boolean) {
 }
 
 const withMotionPolicy = (ui: ReactElement) =>
-  render(<MotionPolicyProvider>{ui}</MotionPolicyProvider>);
+  render(<MotionPolicyProvider><ScrollMotionProvider>{ui}</ScrollMotionProvider></MotionPolicyProvider>);
 
 beforeEach(() => {
   setReducedMotion(false);

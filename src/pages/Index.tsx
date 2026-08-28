@@ -11,6 +11,10 @@ import AboutChapter from "@/components/home/AboutChapter";
 import TalkChapter from "@/components/home/TalkChapter";
 import TechLogoRail from "@/components/technology/TechLogoRail";
 import { pathForProfile, useActiveProfile } from "@/lib/profile";
+import { useMotionPolicy } from "@/lib/motion-policy";
+import { useScrollMotion } from "@/lib/scroll-motion";
+import { offsetsForIds, useSectionTravel } from "@/lib/useSectionTravel";
+import { CHAPTER_SECTIONS } from "@/lib/sections";
 import type { HomeChapterKey } from "@/data/profiles";
 
 // Below the fold, and its data module imports zod — so it loads on demand rather
@@ -30,7 +34,22 @@ export default function Index() {
   // profile's own home entry in route-meta.json.
   const { pathname } = useLocation();
   const profile = useActiveProfile();
+  const { enabled } = useMotionPolicy();
+  const { guided } = useScrollMotion();
   useDocumentMeta({ ...routeMeta(pathname), path: pathname });
+
+  // Chapter-to-chapter travel, the same move the landing page makes, but
+  // `reachableOnly` so it never fights a chapter taller than the screen: those
+  // scroll normally until the next chapter's top comes into view, and only then
+  // does one gesture complete the transition. Off when the visitor turns guided
+  // scrolling off in the top bar.
+  useSectionTravel({
+    active: guided,
+    motionEnabled: enabled,
+    reachableOnly: true,
+    stops: () =>
+      offsetsForIds(profile.homeChapterOrder.map((key) => CHAPTER_SECTIONS[key].id)),
+  });
 
   // "techLogos" is unnumbered (a marquee, not a step in the sequence) — every
   // other chapter's ChapterHeader `index` is its 0-based position in the

@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { MotionPolicyProvider } from "@/lib/motion-policy";
+import { ScrollMotionProvider } from "@/lib/scroll-motion";
 import { ThemeProvider } from "@/lib/theme";
 import AppShell from "./components/shell/AppShell";
 import Index from "./pages/Index";
@@ -49,6 +50,7 @@ const App = () => (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <MotionPolicyProvider>
+          <ScrollMotionProvider>
           <TooltipProvider>
             <Sonner />
             <BrowserRouter basename={getBasename()}>
@@ -88,6 +90,7 @@ const App = () => (
               </Routes>
             </BrowserRouter>
           </TooltipProvider>
+          </ScrollMotionProvider>
         </MotionPolicyProvider>
       </ThemeProvider>
     </QueryClientProvider>

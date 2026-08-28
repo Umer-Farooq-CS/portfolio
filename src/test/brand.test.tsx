@@ -2,14 +2,15 @@ import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it } from "vitest";
 import UFMark from "@/components/brand/UFMark";
 import { MotionPolicyProvider } from "@/lib/motion-policy";
+import { ScrollMotionProvider } from "@/lib/scroll-motion";
 import { THEME_STORAGE_KEY, ThemeProvider } from "@/lib/theme";
 
 function renderMark(label?: string) {
   return render(
     <ThemeProvider>
-      <MotionPolicyProvider>
+      <MotionPolicyProvider><ScrollMotionProvider>
         <UFMark label={label} />
-      </MotionPolicyProvider>
+      </ScrollMotionProvider></MotionPolicyProvider>
     </ThemeProvider>,
   );
 }

@@ -3,6 +3,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "@/lib/theme";
 import { MotionPolicyProvider } from "@/lib/motion-policy";
+import { ScrollMotionProvider } from "@/lib/scroll-motion";
 import AppShell from "@/components/shell/AppShell";
 import ProjectsPage from "@/pages/ProjectsPage";
 import ProjectDetailPage from "@/pages/ProjectDetailPage";
@@ -12,7 +13,7 @@ import { PROJECTS } from "@/data/projects";
 function renderAt(path: string) {
   return render(
     <ThemeProvider>
-      <MotionPolicyProvider>
+      <MotionPolicyProvider><ScrollMotionProvider>
         <MemoryRouter initialEntries={[path]}>
           <Routes>
             <Route element={<AppShell />}>
@@ -22,7 +23,7 @@ function renderAt(path: string) {
             </Route>
           </Routes>
         </MemoryRouter>
-      </MotionPolicyProvider>
+      </ScrollMotionProvider></MotionPolicyProvider>
     </ThemeProvider>,
   );
 }

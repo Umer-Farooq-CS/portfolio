@@ -4,7 +4,7 @@ import { motion } from "motion/react";
 import JsonLd from "@/components/JsonLd";
 import LandingHero from "@/components/landing/LandingHero";
 import LensChoice from "@/components/landing/LensChoice";
-import { useSectionHandoff } from "@/components/landing/useSectionHandoff";
+import { useSectionTravel } from "@/lib/useSectionTravel";
 import { PROFILES } from "@/data/profiles";
 import { routeMeta } from "@/data/routeMeta";
 import { accent } from "@/lib/accent";
@@ -41,9 +41,22 @@ export default function ProfileSelectorPage() {
   const storedId = getStoredProfileId();
   const storedProfile = storedId ? PROFILES.find((p) => p.id === storedId) : undefined;
 
-  // One wheel notch anywhere on the first screen moves to the choice, and one
-  // back up returns. See the hook for why CSS snap alone cannot do this.
-  useSectionHandoff("choose", enabled);
+  // Three stops: the hero, the choice, and the foot of the page. Every move
+  // between them is an eased travel in both directions, so the reader is never
+  // parked between two screens. `reachableOnly` is off because these stops are
+  // one screen apart by construction, unlike the chapter pages.
+  useSectionTravel({
+    active: true,
+    motionEnabled: enabled,
+    stops: () => {
+      const choose = document.getElementById("choose");
+      const maxScroll = Math.max(
+        0,
+        document.documentElement.scrollHeight - window.innerHeight,
+      );
+      return choose ? [0, choose.offsetTop, maxScroll] : [0, maxScroll];
+    },
+  });
 
   const rise = (delay: number) => ({
     initial: enabled ? { opacity: 0, y: 14 } : false,

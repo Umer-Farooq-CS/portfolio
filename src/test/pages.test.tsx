@@ -3,6 +3,7 @@ import { fireEvent, render, screen, within } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "@/lib/theme";
 import { MotionPolicyProvider } from "@/lib/motion-policy";
+import { ScrollMotionProvider } from "@/lib/scroll-motion";
 import AppShell from "@/components/shell/AppShell";
 import CvPage from "@/pages/CvPage";
 import NotesPage from "@/pages/NotesPage";
@@ -29,7 +30,7 @@ import { pathForProfile } from "@/lib/profile";
 function renderAt(path: string) {
   return render(
     <ThemeProvider>
-      <MotionPolicyProvider>
+      <MotionPolicyProvider><ScrollMotionProvider>
         <MemoryRouter initialEntries={[path]}>
           <Routes>
             <Route element={<AppShell />}>
@@ -38,7 +39,7 @@ function renderAt(path: string) {
             </Route>
           </Routes>
         </MemoryRouter>
-      </MotionPolicyProvider>
+      </ScrollMotionProvider></MotionPolicyProvider>
     </ThemeProvider>,
   );
 }
@@ -224,6 +225,17 @@ describe("top bar navigation", () => {
     // than "/". That difference from the wordmark's "/" is the point.
     expect(home).toHaveAttribute("href", pathForProfile("/", DEFAULT_PROFILE_ID));
     expect(home.getAttribute("href")).not.toBe("/");
+  });
+
+  it("offers a guided-scrolling toggle that flips its pressed state", () => {
+    renderAt("/cv");
+    const toggle = screen.getByRole("button", { name: /guided section scrolling/i });
+    // On by default: guided scrolling is the intended first read.
+    expect(toggle).toHaveAttribute("aria-pressed", "true");
+    fireEvent.click(toggle);
+    expect(
+      screen.getByRole("button", { name: /guided section scrolling/i }),
+    ).toHaveAttribute("aria-pressed", "false");
   });
 
   it("no longer offers the removed /uses page anywhere in the shell", () => {

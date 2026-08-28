@@ -3,6 +3,7 @@ import { cleanup, render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "@/lib/theme";
 import { MotionPolicyProvider } from "@/lib/motion-policy";
+import { ScrollMotionProvider } from "@/lib/scroll-motion";
 import ProfileLayout from "@/components/profile/ProfileLayout";
 import ProjectsPage from "@/pages/ProjectsPage";
 import NotFound from "@/pages/NotFound";
@@ -11,7 +12,7 @@ import { PROFILES } from "@/data/profiles";
 function renderAt(path: string) {
   return render(
     <ThemeProvider>
-      <MotionPolicyProvider>
+      <MotionPolicyProvider><ScrollMotionProvider>
         <MemoryRouter initialEntries={[path]}>
           <Routes>
             <Route path=":profile" element={<ProfileLayout />}>
@@ -20,7 +21,7 @@ function renderAt(path: string) {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </MemoryRouter>
-      </MotionPolicyProvider>
+      </ScrollMotionProvider></MotionPolicyProvider>
     </ThemeProvider>,
   );
 }
