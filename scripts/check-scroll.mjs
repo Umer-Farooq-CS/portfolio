@@ -4,7 +4,11 @@
 // fine pointers and computed `scroll-snap-*` all need a real engine. The unit
 // suite cannot protect any of it, so this does.
 //
-//   npm run check:scroll        (requires `npm run build` first)
+//   npm run build:gh-pages && npm run check:scroll
+//
+// The prerendered build matters: without it every route falls through the SPA
+// fallback, no per-route directory exists, and the harness cannot reproduce the
+// trailing-slash redirect that Pages actually performs.
 //
 // Covers, on desktop plus two phone profiles:
 //   - chapter pages ease rather than step, and accumulate exactly
@@ -17,14 +21,23 @@
 import { chromium, devices } from "playwright";
 import { createServer } from "node:http";
 import { readFile, stat } from "node:fs/promises";
-import { extname, join, resolve } from "node:path";
+import { extname, dirname, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const dist = resolve("D:/Profile Data/portfolio/dist");
+const dist = resolve(dirname(fileURLToPath(import.meta.url)), "..", "dist");
 const MIME = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css", ".json": "application/json", ".svg": "image/svg+xml", ".png": "image/png", ".webp": "image/webp", ".avif": "image/avif", ".jpg": "image/jpeg", ".woff2": "font/woff2", ".ico": "image/x-icon", ".xml": "application/xml" };
 const server = createServer(async (req, res) => {
   const p = decodeURIComponent(new URL(req.url, "http://x").pathname);
   let f = join(dist, p);
-  try { if ((await stat(f)).isDirectory()) f = join(f, "index.html"); }
+  try {
+    if ((await stat(f)).isDirectory()) {
+      // Pages 301s a directory URL to its trailing-slash form. Serving both as
+      // 200 made this harness disagree with production, which is how a crash on
+      // every lens home page got past it.
+      if (!p.endsWith("/")) { res.writeHead(301, { location: `${p}/` }); res.end(); return; }
+      f = join(f, "index.html");
+    }
+  }
   catch { f = join(dist, p, "index.html"); try { await stat(f); } catch { f = join(dist, "index.html"); } }
   try { res.writeHead(200, { "content-type": MIME[extname(f)] ?? "application/octet-stream" }); res.end(await readFile(f)); }
   catch { res.writeHead(404).end("x"); }
@@ -38,6 +51,31 @@ const check = (label, ok, detail) => {
 };
 
 const browser = await chromium.launch();
+
+// ================================================== SERVED URL FORMS
+// Pages redirects every route to its trailing-slash form, so that is the
+// pathname the app reads back. Index.tsx passes it straight to routeMeta, which
+// used to match keys exactly and threw, taking every lens home page down. This
+// checks the form a real visitor actually lands on.
+{
+  const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  const page = await ctx.newPage();
+  console.log("");
+  console.log("served URL forms (as Pages redirects them)");
+  for (const route of ["/development", "/infrastructure", "/solutions", "/about", "/projects", "/cv"]) {
+    await page.goto(`http://localhost:4395${route}`, { waitUntil: "networkidle" });
+    await page.waitForTimeout(700);
+    const state = await page.evaluate(() => ({
+      path: window.location.pathname,
+      broke: document.body.innerText.includes("This page failed to render"),
+      h1: document.querySelector("h1")?.textContent?.trim() ?? null,
+    }));
+    check(`${route} renders at its served URL`,
+      state.broke === false && state.path.endsWith("/") && !!state.h1,
+      `landed on ${state.path}, h1=${JSON.stringify(state.h1)}${state.broke ? ", ERROR BOUNDARY" : ""}`);
+  }
+  await ctx.close();
+}
 
 // ============================================================ DESKTOP
 {

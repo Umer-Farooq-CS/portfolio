@@ -51,6 +51,23 @@ describe("route metadata", () => {
     expect(PRERENDER_TITLE_SUFFIX).toBe(SITE.role);
   });
 
+  // GitHub Pages 301s /development to /development/, so the trailing-slash form
+  // is what a visitor's browser actually holds. Index.tsx passes that live
+  // pathname straight to routeMeta to work out which lens it is, and an exact
+  // key match threw: all three lens home pages died on load or refresh.
+  it("resolves the trailing-slash form every route is actually served as", () => {
+    for (const path of ROUTE_META_PATHS) {
+      if (path === "/") continue; // already the slashed form
+      const served = `${path}/`;
+      expect(() => routeMeta(served), `${served} must resolve`).not.toThrow();
+      expect(routeMeta(served)).toEqual(routeMeta(path));
+    }
+  });
+
+  it("still throws on an unknown route that merely ends in a slash", () => {
+    expect(() => routeMeta("/does-not-exist/")).toThrow(/No route metadata/);
+  });
+
   it("throws on an unknown route rather than rendering a blank head", () => {
     expect(() => routeMeta("/does-not-exist")).toThrow(/No route metadata/);
   });

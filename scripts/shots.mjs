@@ -76,7 +76,20 @@ function serve(port) {
     let filePath = join(dist, url);
     try {
       const info = await stat(filePath);
-      if (info.isDirectory()) filePath = join(filePath, "index.html");
+      if (info.isDirectory()) {
+        // Pages 301s a directory URL to its trailing-slash form, so the URL the
+        // browser ends up holding is "/development/", not "/development". That
+        // difference is not cosmetic: it is the pathname the app reads back, and
+        // serving both forms as 200 hid a crash on every lens home page from
+        // this harness until a human hit it in production. Redirect like the
+        // real host does.
+        if (!url.endsWith("/")) {
+          res.writeHead(301, { location: `${BASE}${url}/` });
+          res.end();
+          return;
+        }
+        filePath = join(filePath, "index.html");
+      }
     } catch {
       filePath = join(dist, "index.html"); // SPA fallback
     }
