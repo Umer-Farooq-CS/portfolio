@@ -1,0 +1,30 @@
+/* Scroll-linked depth for the telemetry field.
+
+   The two planes are laid out by `.telemetry-backdrop__*` in src/index.css.
+   This file exists only because they now drift at different rates, and holds
+   the two things that drifting needs. Both classes are applied only while the
+   parallax actually runs, so a visitor on reduced motion gets exactly the
+   static backdrop they got before. */
+
+/* The grid tiles the viewport exactly, so drifting it upwards would leave a
+   gridless band along the bottom edge. Overscanning by more than the travel
+   keeps the pattern continuous. `.telemetry-backdrop` is `contain: strict`, so
+   the extra height is clipped and can never reach layout or the scrollbar.
+   `bottom: 0` still arrives from the shared `inset: 0`; with `top` and `height`
+   both set it is over-constrained and dropped, which is what we want. */
+.farPlane {
+  top: -1.5rem;
+  height: calc(100% + 3rem);
+}
+
+/* The trace field opens from its centre rather than a corner, so its 2% scale
+   reads as the field breathing instead of sliding towards one edge. Outermost
+   <svg> defaults vary by engine; naming it removes the question. */
+.nearPlane {
+  transform-origin: 50% 50%;
+}
+
+.farPlane,
+.nearPlane {
+  will-change: transform;
+}

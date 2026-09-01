@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "motion/react";
@@ -45,6 +46,14 @@ export default function ProfileSelectorPage() {
   // between them is an eased travel in both directions, so the reader is never
   // parked between two screens. `reachableOnly` is off because these stops are
   // one screen apart by construction, unlike the chapter pages.
+  // Touch is handled by CSS snap instead, scoped to this route by a class on
+  // <html>. The chapter pages must never snap, which is why it is not global.
+  useEffect(() => {
+    const root = document.documentElement;
+    root.classList.add("landing-snap");
+    return () => root.classList.remove("landing-snap");
+  }, []);
+
   useSectionTravel({
     active: true,
     motionEnabled: enabled,
@@ -70,6 +79,12 @@ export default function ProfileSelectorPage() {
       <JsonLd id="person-selector" data={personSchema()} />
 
       <div className="relative">
+        {/* The snap position for the first screen. It has to be this static,
+            zero-height element rather than the hero: a `position: sticky` box
+            used as a snap target re-snaps to its own moving position every
+            frame and pins the scroll outright. */}
+        <span aria-hidden="true" className="snap-anchor block h-0" />
+
         <section className="sticky top-0 z-0" aria-labelledby="landing-name">
           <LandingHero />
         </section>
@@ -80,7 +95,7 @@ export default function ProfileSelectorPage() {
         <section
           id="choose"
           aria-labelledby="choose-heading"
-          className="relative z-10 border-t-2 border-thermal bg-background shadow-[0_-18px_40px_rgba(11,13,16,0.09)] dark:shadow-[0_-24px_56px_rgba(0,0,0,0.5)]"
+          className="snap-screen relative z-10 border-t-2 border-thermal bg-background shadow-[0_-18px_40px_rgba(11,13,16,0.09)] dark:shadow-[0_-24px_56px_rgba(0,0,0,0.5)]"
         >
           <LensChoice />
 

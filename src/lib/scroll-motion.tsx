@@ -1,24 +1,24 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 
 /**
- * Whether the chapter pages scroll section by section, or plainly.
+ * Whether scrolling is weighted and eased, or left entirely to the browser.
  *
  * This is a visitor preference, not a design decision, which is why it gets a
- * control in the top bar beside the theme. Guided scrolling suits a first read
- * and gets in the way of a second one, and neither answer is right for
+ * control in the top bar beside the theme. Eased scrolling reads as expensive
+ * on a first pass and as latency on a second, and neither answer is right for
  * everyone.
  *
- * Scope: chapter pages only. The landing page always travels, because there the
- * two screens *are* the page and plain scrolling would leave the reader parked
- * between them. `prefers-reduced-motion` still wins over both: the travel then
- * happens instantly rather than being animated (see useSectionTravel).
+ * Scope: every route except the selector, and pointer devices only. The
+ * selector drives its own three-stop travel, and touch is always left native
+ * (see useSmoothScroll for why). `prefers-reduced-motion` still wins over the
+ * preference in both cases.
  */
 
 const STORAGE_KEY = "uf-scroll-motion";
 
 interface ScrollMotionValue {
-  /** True when chapter pages should travel section to section. */
-  guided: boolean;
+  /** True when scrolling should be weighted and eased rather than native. */
+  smooth: boolean;
   toggle: () => void;
 }
 
@@ -36,18 +36,18 @@ function readStored(): boolean {
 }
 
 export function ScrollMotionProvider({ children }: { children: ReactNode }) {
-  const [guided, setGuided] = useState(readStored);
+  const [smooth, setSmooth] = useState(readStored);
 
   useEffect(() => {
     try {
-      window.localStorage.setItem(STORAGE_KEY, guided ? "on" : "off");
+      window.localStorage.setItem(STORAGE_KEY, smooth ? "on" : "off");
     } catch {
       // Not being able to remember the choice is not a reason to break it.
     }
-  }, [guided]);
+  }, [smooth]);
 
-  const toggle = useCallback(() => setGuided((value) => !value), []);
-  const value = useMemo(() => ({ guided, toggle }), [guided, toggle]);
+  const toggle = useCallback(() => setSmooth((value) => !value), []);
+  const value = useMemo(() => ({ smooth, toggle }), [smooth, toggle]);
 
   return <ScrollMotionContext.Provider value={value}>{children}</ScrollMotionContext.Provider>;
 }

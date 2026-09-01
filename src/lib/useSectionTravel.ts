@@ -1,28 +1,26 @@
 import { useEffect, useRef } from "react";
 
 /**
- * Turns one scroll gesture into one eased travel to the next stop.
+ * Turns one wheel gesture into one eased travel to the next stop.
+ *
+ * Used only by the landing page, which genuinely is three screens: the hero,
+ * the choice, and the foot. Everywhere else the sections are 1 to 4 viewports
+ * tall and any form of snapping would either skip content or behave differently
+ * from one gesture to the next, so those routes get weighted scrolling instead
+ * (see useSmoothScroll).
  *
  * Why this is scripted rather than CSS. `scroll-snap-type: y mandatory` looks
- * like the answer and is wrong twice over: a `position: sticky` element used as
- * a snap target re-snaps to its own moving box every frame and pins the scroll
- * outright, and snap resolves to the *nearest* position, so a mouse wheel notch
- * (about 120px, against a viewport of travel) gets returned to where it
- * started. Snap also has no duration or easing of its own, which is what made
- * an earlier version of this feel rigid.
+ * like the answer and is wrong for a pointer: a `position: sticky` element used
+ * as a snap target re-snaps to its own moving box every frame and pins the
+ * scroll outright, and snap resolves to the *nearest* position, so a wheel
+ * notch of ~120px against a viewport of travel gets returned to where it
+ * started. Snap also has no duration or easing of its own.
  *
- * `reachableOnly` is what makes this safe on long pages. With it set, a gesture
- * is only taken over when the destination is already within a viewport, so a
- * chapter taller than the screen scrolls normally until its successor comes
- * into view, and only then does one gesture complete the transition. Nothing is
- * ever skipped and the reader is never trapped. The landing page turns it off,
- * because there both stops are exactly one screen apart by construction.
- *
- * Scroll hijacking earns its bad reputation when it is not narrow, so:
- *   - only the events actually consumed are preventDefaulted
- *   - reduced motion gets the same destination with no travel
- *   - keyboard paging is untouched; those keys have defined scroll semantics
- *   - `active: false` removes every listener rather than merely ignoring them
+ * Touch is deliberately not handled here. A fling covers the distance between
+ * two stops on its own, so CSS scroll-snap resolves it correctly, and it does
+ * so while the content still tracks the finger 1:1. Intercepting `touchmove`
+ * instead breaks that tracking, along with fling and pull-to-refresh. The
+ * coarse-pointer snap rules live in index.css under `html.landing-snap`.
  */
 
 /** Slow in, slow out. The travel should read as a camera move, not a cut. */
@@ -42,54 +40,52 @@ export interface SectionTravelOptions {
    * so lazily mounted content and resizes are picked up without a listener.
    */
   stops: () => number[];
-  /** False removes the listeners entirely. */
+  /** False removes the listener entirely. */
   active: boolean;
   /** False still travels, instantly, so the behaviour matches for everyone. */
   motionEnabled: boolean;
-  /** Only take over when the destination is already within one viewport. */
-  reachableOnly?: boolean;
 }
 
-export function useSectionTravel({
-  stops,
-  active,
-  motionEnabled,
-  reachableOnly = false,
-}: SectionTravelOptions) {
+export function useSectionTravel({ stops, active, motionEnabled }: SectionTravelOptions) {
   const lockedUntil = useRef(0);
   const frame = useRef(0);
-  // Kept in a ref so a changing closure does not re-bind the listeners.
+  // Kept in a ref so a changing closure does not re-bind the listener.
   const stopsRef = useRef(stops);
   stopsRef.current = stops;
 
   useEffect(() => {
     if (!active) return;
-    const root = document.documentElement;
+    if (typeof window === "undefined") return;
+    // Touch is served by CSS snap; two mechanisms on one gesture would fight.
+    if (window.matchMedia("(pointer: coarse)").matches) return;
+
+    /**
+     * `behavior: "instant"` overrides `html { scroll-behavior: smooth }` from
+     * index.css for this call only. Without it every frame of the tween below
+     * restarts a browser-smooth scroll and the page never advances.
+     */
+    const jumpTo = (top: number) => window.scrollTo({ top, behavior: "instant" });
 
     const travelTo = (to: number) => {
       const from = window.scrollY;
       const distance = to - from;
 
       if (!motionEnabled || Math.abs(distance) < 2) {
-        window.scrollTo(0, to);
+        jumpTo(to);
         lockedUntil.current = Date.now() + 80;
         return;
       }
 
-      // The global `scroll-behavior: smooth` would re-smooth every frame of the
-      // tween below and turn it into mush.
-      root.style.scrollBehavior = "auto";
       const startedAt = performance.now();
       lockedUntil.current = Date.now() + TRAVEL_MS + SETTLE_MS;
 
       const step = (now: number) => {
         const progress = Math.min(1, (now - startedAt) / TRAVEL_MS);
-        window.scrollTo(0, from + distance * easeInOutCubic(progress));
+        jumpTo(from + distance * easeInOutCubic(progress));
         if (progress < 1) {
           frame.current = requestAnimationFrame(step);
         } else {
           frame.current = 0;
-          root.style.scrollBehavior = "";
         }
       };
       frame.current = requestAnimationFrame(step);
@@ -104,19 +100,8 @@ export function useSectionTravel({
       if (list.length < 2) return null;
 
       const y = window.scrollY;
-      const reach = window.innerHeight + TOLERANCE;
-
-      if (direction > 0) {
-        const next = list.find((s) => s > y + TOLERANCE);
-        if (next === undefined) return null;
-        if (reachableOnly && next > y + reach) return null;
-        return next;
-      }
-
-      const previous = [...list].reverse().find((s) => s < y - TOLERANCE);
-      if (previous === undefined) return null;
-      if (reachableOnly && previous < y - reach) return null;
-      return previous;
+      if (direction > 0) return list.find((s) => s > y + TOLERANCE) ?? null;
+      return [...list].reverse().find((s) => s < y - TOLERANCE) ?? null;
     };
 
     const onWheel = (event: WheelEvent) => {
@@ -131,47 +116,13 @@ export function useSectionTravel({
       travelTo(to);
     };
 
-    let touchStartY = 0;
-    const onTouchStart = (event: TouchEvent) => {
-      touchStartY = event.touches[0]?.clientY ?? 0;
-    };
-
-    const onTouchMove = (event: TouchEvent) => {
-      if (Date.now() < lockedUntil.current) {
-        event.preventDefault();
-        return;
-      }
-      const y = event.touches[0]?.clientY ?? 0;
-      const dragged = touchStartY - y; // positive when swiping up, i.e. scrolling down
-      if (Math.abs(dragged) < 12) return;
-      const to = destinationFor(dragged);
-      if (to === null) return;
-      event.preventDefault();
-      travelTo(to);
-    };
-
     window.addEventListener("wheel", onWheel, { passive: false });
-    window.addEventListener("touchstart", onTouchStart, { passive: true });
-    window.addEventListener("touchmove", onTouchMove, { passive: false });
 
     return () => {
       window.removeEventListener("wheel", onWheel);
-      window.removeEventListener("touchstart", onTouchStart);
-      window.removeEventListener("touchmove", onTouchMove);
       if (frame.current) cancelAnimationFrame(frame.current);
       frame.current = 0;
-      root.style.scrollBehavior = "";
       lockedUntil.current = 0;
     };
-  }, [active, motionEnabled, reachableOnly]);
-}
-
-/** Offsets of the given element ids that are actually in the document. */
-export function offsetsForIds(ids: string[]): number[] {
-  const offsets: number[] = [];
-  for (const id of ids) {
-    const element = document.getElementById(id);
-    if (element) offsets.push(element.getBoundingClientRect().top + window.scrollY);
-  }
-  return offsets;
+  }, [active, motionEnabled]);
 }

@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { sectionIndex } from "@/lib/sections";
 import { accent, type VisualAccent } from "@/lib/accent";
 import { useMotionPolicy } from "@/lib/motion-policy";
+import { useCountUp } from "@/lib/useCountUp";
 
 /**
  * The small pieces the pages are assembled from. They exist so the type roles and
@@ -36,6 +37,11 @@ export function Panel({
  *
  * Renders a real `dt`/`dd` pair, so it must live inside a `<dl>`. The label comes
  * first in the DOM, as the spec requires, and CSS order puts the value on top.
+ *
+ * The number counts up once when the metric scrolls into view — see
+ * `useCountUp`. Every number on this site is something that was measured, and a
+ * readout that converges on its reading is what an instrument does; it is not
+ * decoration. At rest the DOM is a single text node holding `value` exactly.
  */
 export function Metric({
   value,
@@ -53,13 +59,46 @@ export function Metric({
   className?: string;
 }) {
   const toneClasses = accent(tone);
+  const { ref, running } = useCountUp(value);
 
   return (
-    <div className={cn("flex flex-col", className)}>
+    <div ref={ref} className={cn("flex flex-col", className)}>
       <dt className="label-mono order-2 mt-2">{label}</dt>
       <dd className="order-1">
         <span className={cn("readout block text-2xl leading-none sm:text-3xl", toneClasses.value)}>
-          {value}
+          {running ? (
+            <>
+              {/*
+                Layout shift: `.readout` is monospaced and `tabular-nums`, so
+                every character advances by at most `1ch` (its slight negative
+                tracking makes it a hair less, which only over-reserves) — but
+                0 → 100 still grows from one glyph to three and would shove the
+                suffix sideways mid-count. The digits therefore sit in an
+                inline-block reserved at the *final* number's character count
+                and right-aligned inside it. The count only ever goes up, so no
+                intermediate frame can exceed that reservation: the suffix
+                (`%`, `×`, ` min`) never moves, the box never reflows, and the
+                number fills in from the right the way a right-aligned
+                instrument display does.
+
+                Screen readers: announcing sixty intermediate readings would be
+                noise, and a value still converging is not what the visitor is
+                being told. The animating digits are `aria-hidden` and the real
+                value is carried by an `sr-only` sibling, so the accessible text
+                is the measured value for the whole of the count and after it.
+              */}
+              <span aria-hidden="true">
+                {running.prefix}
+                <span className="inline-block text-right" style={{ minWidth: running.width }}>
+                  {running.digits}
+                </span>
+                {running.suffix}
+              </span>
+              <span className="sr-only">{value}</span>
+            </>
+          ) : (
+            value
+          )}
         </span>
       </dd>
       {baseline && (

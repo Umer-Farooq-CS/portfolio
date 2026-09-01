@@ -22,7 +22,8 @@
     "shots": "node scripts/shots.mjs",
     "a11y": "node scripts/shots.mjs --a11y-only",
     "check:build": "node scripts/check-build.mjs",
-    "prerender": "node scripts/prerender-routes.mjs"
+    "prerender": "node scripts/prerender-routes.mjs",
+    "check:scroll": "node scripts/check-scroll.mjs"
   },
   "dependencies": {
     "@fontsource-variable/archivo": "^5.3.0",

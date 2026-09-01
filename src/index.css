@@ -711,6 +711,31 @@
     border-top: 1px solid var(--color-border);
   }
 
+  /* --- landing snap, touch only -----------------------------------------
+     A fling covers the distance between two stops on its own, so mandatory
+     snap resolves it correctly while the content still tracks the finger. A
+     wheel notch does not, which is why pointer devices get the scripted travel
+     in useSectionTravel instead and this is gated on a coarse pointer.
+
+     The footer is a snap target too: under `mandatory`, content past the last
+     snap position can become unreachable, and the footer carries the contact
+     details. */
+  @media (pointer: coarse) {
+    html.landing-snap {
+      scroll-snap-type: y mandatory;
+    }
+
+    html.landing-snap .snap-anchor,
+    html.landing-snap footer {
+      scroll-snap-align: start;
+    }
+
+    html.landing-snap .snap-screen {
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+    }
+  }
+
   /* Press feedback. Every pressable surface gives way slightly under the
      pointer, so the interface reads as having heard the press before the route
      changes. 140ms is short enough that it never delays the action, and the

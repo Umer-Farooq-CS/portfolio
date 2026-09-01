@@ -227,15 +227,16 @@ describe("top bar navigation", () => {
     expect(home.getAttribute("href")).not.toBe("/");
   });
 
-  it("offers a guided-scrolling toggle that flips its pressed state", () => {
+  it("offers a smooth-scrolling toggle that flips its pressed state", () => {
     renderAt("/cv");
-    const toggle = screen.getByRole("button", { name: /guided section scrolling/i });
-    // On by default: guided scrolling is the intended first read.
+    const toggle = screen.getByRole("button", { name: /smooth scrolling/i });
+    // On by default: eased scrolling is the intended first impression.
     expect(toggle).toHaveAttribute("aria-pressed", "true");
     fireEvent.click(toggle);
-    expect(
-      screen.getByRole("button", { name: /guided section scrolling/i }),
-    ).toHaveAttribute("aria-pressed", "false");
+    expect(screen.getByRole("button", { name: /smooth scrolling/i })).toHaveAttribute(
+      "aria-pressed",
+      "false",
+    );
   });
 
   it("no longer offers the removed /uses page anywhere in the shell", () => {

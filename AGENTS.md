@@ -29,6 +29,17 @@
 - Maintain keyboard focus, reduced-motion behavior, semantic heading order, and WCAG AA text contrast.
 - Prefer existing components, icons, and assets. Do not add dependencies for styling that the current system can express.
 
+## Scroll model
+
+- Three different behaviours, and they are not interchangeable. `src/lib/useSmoothScroll.ts` gives every route except `/` weighted, eased scrolling on **pointer devices**. `src/lib/useSectionTravel.ts` gives `/` a scripted travel between its three screens, also pointer-only. **Touch is never intercepted** anywhere: the landing page gets CSS `scroll-snap` under `@media (pointer: coarse)` instead (`html.landing-snap` in `src/index.css`), and the chapter pages get nothing at all.
+- Do not add section snapping to the chapter pages. It was tried and removed. Measured on `/development`, no chapter fits a viewport on any device: 1.02-1.89 screens at 1440x900, 1.28-2.38 at 1280x720, 1.64-3.87 on a phone. Snapping therefore has to either skip content or behave differently from one gesture to the next.
+- A `position: sticky` element must never be a `scroll-snap-align` target. It re-snaps to its own moving box every frame and pins the scroll. The landing page uses a zero-height static `.snap-anchor` for the first stop for exactly this reason.
+- `window.addEventListener("scroll", …)` stays banned. Both hooks resync by comparing the offset they last wrote against `window.scrollY`, which is also how an anchor jump or route change cancels an in-flight animation.
+- Any per-frame scrolling must call `window.scrollTo({ top, behavior: "instant" })`. `src/index.css` sets `html { scroll-behavior: smooth }`, so a plain `window.scrollTo` starts a *browser* smooth scroll; calling it once per frame restarts that animation every frame and the page never advances at all. Measured: a rAF loop stepping 12px produced `[0,0,0,0,0,0,0,0]`. Naming the behaviour overrides the stylesheet for that call only and leaves anchor links smooth.
+- If you add a guard that detects "someone else scrolled", it must skip its own write on the frame it is unsure, and require two consecutive frames before acting. A guard that writes every frame erases the divergence it is trying to observe, and a single-frame test with a tight threshold reads ordinary motion as interference. Both mistakes were made here, and the second one broke scrolling outright.
+- `npm run check:scroll` drives a real browser over all of this (desktop plus two phone profiles) after a build. None of it is reachable from jsdom, so it is the only thing protecting the scroll model. Run it whenever you touch either hook.
+- The visitor can turn eased scrolling off in the top bar (`src/lib/scroll-motion.tsx`, persisted). `prefers-reduced-motion` overrides the preference in both directions.
+
 ## Implementation conventions
 
 - Use the `@/` alias for imports from `src/` and keep TypeScript strict.

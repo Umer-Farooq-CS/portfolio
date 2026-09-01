@@ -6,6 +6,8 @@ import ScrollProgress from "./ScrollProgress";
 import SiteFooter from "./SiteFooter";
 import TelemetryBackdrop from "./TelemetryBackdrop";
 import { useMotionPolicy } from "@/lib/motion-policy";
+import { useScrollMotion } from "@/lib/scroll-motion";
+import { useSmoothScroll } from "@/lib/useSmoothScroll";
 import { telemetryToneForPath } from "@/lib/telemetry";
 
 function RouteFallback() {
@@ -20,6 +22,12 @@ function RouteFallback() {
 export default function AppShell() {
   const { pathname, hash } = useLocation();
   const { enabled } = useMotionPolicy();
+  const { smooth } = useScrollMotion();
+
+  // Weighted scrolling everywhere except the selector, which drives its own
+  // three-stop travel and would fight this. Pointer devices only; the hook
+  // leaves touch native. Off when the visitor turns it off in the top bar.
+  useSmoothScroll({ active: smooth && pathname !== "/", motionEnabled: enabled });
 
   // One place owns scroll behaviour on navigation: hash links scroll to their
   // target, everything else lands at the top. The short observer window matters
