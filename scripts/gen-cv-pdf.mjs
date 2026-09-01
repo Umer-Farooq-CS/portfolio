@@ -5,8 +5,14 @@
 // Compiling master_detailed_cv.tex would reintroduce the second one (and needs a
 // LaTeX toolchain that isn't installed).
 //
-// Run after a build, and commit the result:
-//   npm run build && npm run cv
+// Run after a build, and commit the result. Set VITE_SITE_URL as well as
+// VITE_BASE_PATH, because the PDF prints the site URL in its footer and this is
+// generated locally rather than in CI: without it the footer silently falls back
+// to the github.io address instead of the custom domain, on a document whose
+// whole job is to be handed to someone.
+//
+//   VITE_BASE_PATH=/ VITE_SITE_URL=https://umerfarooqcs.me npm run build
+//   npm run cv
 //
 // Note the ordering quirk: the PDF lands in public/, so it is picked up by the NEXT
 // build. That is intentional — regenerating on every build would make the output
